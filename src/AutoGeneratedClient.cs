@@ -728,7 +728,7 @@ namespace MyAnimelist.NET
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            return default(void)!;
+                            return;
                         }
                         else
                         if (status_ == 404)
@@ -1677,7 +1677,7 @@ namespace MyAnimelist.NET
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            return default(void)!;
+                            return;
                         }
                         else
                         if (status_ == 404)
@@ -3853,6 +3853,7 @@ namespace MyAnimelist.NET
 #pragma warning restore  114
 #pragma warning restore  472
 #pragma warning restore  612
+#pragma warning restore  649
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073
@@ -3862,3 +3863,4 @@ namespace MyAnimelist.NET
 #pragma warning restore 8603
 #pragma warning restore 8604
 #pragma warning restore 8625
+#pragma warning restore 8765
