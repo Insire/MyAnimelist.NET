@@ -1,0 +1,18 @@
+﻿[
+  {
+    Message: Authentication successful...,
+    Progress: 1.0
+  },
+  {
+    Message: Waiting for authentication in browser...,
+    Progress: 0.5
+  },
+  {
+    Message: Redirecting to MyAnimeList...,
+    Progress: 0.3
+  },
+  {
+    Message: Preparing OAuth flow,
+    Progress: 0.1
+  }
+]

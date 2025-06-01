@@ -5,6 +5,7 @@
     <File Path="Directory.Build.targets" />
     <File Path="Directory.Packages.props" />
     <File Path="LICENSE" />
+    <File Path="nuget.config" />
     <File Path="README.md" />
     <File Path="version.json" />
     <File Path="versioning.md" />

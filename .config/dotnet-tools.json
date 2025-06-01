@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "diffenginetray": {
+      "version": "16.2.2",
+      "commands": [
+        "DiffEngineTray"
+      ],
+      "rollForward": false
+    }
+  }
+}
