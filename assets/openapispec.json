@@ -1,0 +1,2406 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MyAnimeList API (beta ver.)",
+    "version": "2"
+  },
+  "servers": [
+    {
+      "url": "https://api.myanimelist.net/v2"
+    }
+  ],
+  "paths": {
+    "/anime": {
+      "get": {
+        "tags": [
+          "anime"
+        ],
+        "operationId": "anime_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimeList"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/anime/{anime_id}": {
+      "get": {
+        "tags": [
+          "anime"
+        ],
+        "operationId": "anime_anime_id_get",
+        "parameters": [
+          {
+            "name": "anime_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimeForDetails"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/anime/{anime_id}/my_list_status": {
+      "parameters": [
+        {
+          "name": "anime_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "patch": {
+        "tags": [
+          "user animelist"
+        ],
+        "operationId": "anime_anime_id_my_list_status_put",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  },
+                  "is_rewatching": {
+                    "type": "boolean"
+                  },
+                  "score": {
+                    "type": "integer"
+                  },
+                  "num_watched_episodes": {
+                    "type": "integer"
+                  },
+                  "priority": {
+                    "type": "integer"
+                  },
+                  "num_times_rewatched": {
+                    "type": "integer"
+                  },
+                  "rewatch_value": {
+                    "type": "integer"
+                  },
+                  "tags": {
+                    "type": "string"
+                  },
+                  "comments": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimeListStatus"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user animelist"
+        ],
+        "operationId": "anime_anime_id_my_list_status_delete",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": ""
+          },
+          "404": {
+            "content": {
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ]
+      }
+    },
+    "/anime/ranking": {
+      "get": {
+        "tags": [
+          "anime"
+        ],
+        "operationId": "anime_ranking_get",
+        "parameters": [
+          {
+            "name": "ranking_type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimeListForRanking"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/anime/season/{year}/{season}": {
+      "get": {
+        "tags": [
+          "anime"
+        ],
+        "operationId": "anime_season_year_season_get",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "season",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimeList"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/anime/suggestions": {
+      "get": {
+        "tags": [
+          "anime"
+        ],
+        "operationId": "anime_suggestions_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimeList"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ]
+      }
+    },
+    "/forum/boards": {
+      "get": {
+        "tags": [
+          "forum"
+        ],
+        "operationId": "forum_boards_get",
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumBoards"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/forum/topic/{topic_id}": {
+      "get": {
+        "tags": [
+          "forum"
+        ],
+        "operationId": "forum_topic_get",
+        "parameters": [
+          {
+            "name": "topic_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 100.0
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumTopic"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/forum/topics": {
+      "get": {
+        "tags": [
+          "forum"
+        ],
+        "operationId": "forum_topics_get",
+        "parameters": [
+          {
+            "name": "board_id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "subboard_id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 100.0
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "recent"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "topic_user_name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumTopics"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/manga": {
+      "get": {
+        "tags": [
+          "manga"
+        ],
+        "operationId": "manga_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MangaList"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/manga/{manga_id}": {
+      "get": {
+        "tags": [
+          "manga"
+        ],
+        "operationId": "manga_manga_id_get",
+        "parameters": [
+          {
+            "name": "manga_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MangaForDetails"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/manga/{manga_id}/my_list_status": {
+      "parameters": [
+        {
+          "name": "manga_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "patch": {
+        "tags": [
+          "user mangalist"
+        ],
+        "operationId": "manga_manga_id_my_list_status_put",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  },
+                  "is_rereading": {
+                    "type": "boolean"
+                  },
+                  "score": {
+                    "type": "integer"
+                  },
+                  "num_volumes_read": {
+                    "type": "integer"
+                  },
+                  "num_chapters_read": {
+                    "type": "integer"
+                  },
+                  "priority": {
+                    "type": "integer"
+                  },
+                  "num_times_reread": {
+                    "type": "integer"
+                  },
+                  "reread_value": {
+                    "type": "integer"
+                  },
+                  "tags": {
+                    "type": "string"
+                  },
+                  "comments": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MangaListStatus"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user mangalist"
+        ],
+        "operationId": "manga_manga_id_my_list_status_delete",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": ""
+          },
+          "404": {
+            "content": {
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ]
+      }
+    },
+    "/manga/ranking": {
+      "get": {
+        "tags": [
+          "manga"
+        ],
+        "operationId": "manga_ranking_get",
+        "parameters": [
+          {
+            "name": "ranking_type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MangaListForRanking"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/{user_name}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "operationId": "users_user_id_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/{user_name}/animelist": {
+      "get": {
+        "tags": [
+          "user animelist"
+        ],
+        "operationId": "users_user_id_animelist_get",
+        "parameters": [
+          {
+            "name": "user_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAnimeList"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/{user_name}/mangalist": {
+      "get": {
+        "tags": [
+          "user mangalist"
+        ],
+        "operationId": "users_user_id_mangalist_get",
+        "parameters": [
+          {
+            "name": "user_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserMangaList"
+                }
+              },
+              "application/json": {}
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnimeForDetails": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AnimeForList"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pictures": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/Picture"
+                }
+              },
+              "background": {
+                "type": "string",
+                "nullable": true
+              },
+              "related_anime": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/RelatedAnimeEdge"
+                }
+              },
+              "related_manga": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/RelatedMangaEdge"
+                }
+              },
+              "recommendations": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/AnimeRecommendationAggregationEdgeBase"
+                }
+              },
+              "statistics": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/AnimeStatistics"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AnimeForList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/WorkForList"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "media_type": {
+                "type": "string",
+                "nullable": false
+              },
+              "status": {
+                "type": "string",
+                "nullable": false
+              },
+              "my_list_status": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/AnimeListStatus"
+                  }
+                ]
+              },
+              "num_episodes": {
+                "type": "integer",
+                "nullable": false
+              },
+              "start_season": {
+                "allOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/AnimeSeason"
+                  }
+                ]
+              },
+              "broadcast": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "day_of_the_week": {
+                    "type": "string",
+                    "nullable": false
+                  },
+                  "start_time": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              },
+              "source": {
+                "type": "string",
+                "nullable": true
+              },
+              "average_episode_duration": {
+                "type": "integer",
+                "nullable": true
+              },
+              "rating": {
+                "type": "string",
+                "nullable": true
+              },
+              "studios": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/AnimeStudio"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AnimeList": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "node": {
+                      "$ref": "#/components/schemas/AnimeForList"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/List"
+          }
+        ]
+      },
+      "AnimeListForRanking": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "node": {
+                      "$ref": "#/components/schemas/AnimeForList"
+                    },
+                    "ranking": {
+                      "$ref": "#/components/schemas/RankingInfo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/List"
+          }
+        ]
+      },
+      "AnimeListStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "score": {
+            "type": "integer",
+            "nullable": false
+          },
+          "num_episodes_watched": {
+            "type": "integer",
+            "nullable": false
+          },
+          "is_rewatching": {
+            "type": "boolean",
+            "nullable": false
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "finish_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "nullable": false
+          },
+          "num_times_rewatched": {
+            "type": "integer",
+            "nullable": false
+          },
+          "rewatch_value": {
+            "type": "integer",
+            "nullable": false
+          },
+          "tags": {
+            "type": "array",
+            "nullable": false,
+            "items": {
+              "type": "string"
+            }
+          },
+          "comments": {
+            "type": "string",
+            "nullable": false
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": false
+          }
+        }
+      },
+      "AnimeRecommendationAggregationEdgeBase": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/AnimeForList"
+          },
+          "num_recommendations": {
+            "type": "integer",
+            "nullable": false
+          }
+        }
+      },
+      "AnimeSeason": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "nullable": false
+          },
+          "season": {
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "winter",
+              "spring",
+              "summer",
+              "fall"
+            ]
+          }
+        }
+      },
+      "AnimeStatistics": {
+        "type": "object",
+        "properties": {
+          "num_list_users": {
+            "type": "integer",
+            "nullable": false
+          },
+          "status": {
+            "type": "object",
+            "nullable": false,
+            "properties": {
+              "watching": {
+                "type": "integer"
+              },
+              "completed": {
+                "type": "integer"
+              },
+              "on_hold": {
+                "type": "integer"
+              },
+              "dropped": {
+                "type": "integer"
+              },
+              "plan_to_watch": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "AnimeStudio": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "Date": {
+        "type": "string"
+      },
+      "ForumBoard": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "nullable": false
+              },
+              "title": {
+                "type": "string",
+                "nullable": false
+              },
+              "description": {
+                "type": "string",
+                "nullable": false
+              },
+              "subboards": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/ForumSubboard"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ForumBoards": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "categories": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/ForumCategory"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ForumCategory": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "nullable": false
+              },
+              "boards": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/ForumBoard"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ForumSubboard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false
+          },
+          "title": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "ForumTopic": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/ForumTopicData"
+                }
+              },
+              "paging": {
+                "$ref": "#/components/schemas/ForumTopicPaging"
+              }
+            }
+          }
+        ]
+      },
+      "ForumTopicData": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "nullable": false
+              },
+              "posts": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/ForumTopicPost"
+                }
+              },
+              "poll": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/ForumTopicPoll"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ForumTopicPaging": {
+        "type": "object",
+        "properties": {
+          "previous": {
+            "type": "string",
+            "nullable": true
+          },
+          "next": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ForumTopicPoll": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "nullable": false
+              },
+              "question": {
+                "type": "string",
+                "nullable": false
+              },
+              "close": {
+                "type": "boolean",
+                "nullable": false
+              },
+              "options": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/ForumTopicPollOption"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ForumTopicPollOption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false
+          },
+          "text": {
+            "type": "string",
+            "nullable": false
+          },
+          "votes": {
+            "type": "integer",
+            "nullable": false
+          }
+        }
+      },
+      "ForumTopicPost": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "nullable": false
+              },
+              "number": {
+                "type": "integer",
+                "nullable": false
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": false
+              },
+              "created_by": {
+                "$ref": "#/components/schemas/ForumTopicPostCreatedBy"
+              },
+              "body": {
+                "type": "string",
+                "nullable": false
+              },
+              "signature": {
+                "type": "string",
+                "nullable": false
+              }
+            }
+          }
+        ]
+      },
+      "ForumTopicPostCreatedBy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "nullable": false
+          },
+          "forum_avator": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "ForumTopics": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/ForumTopicsData"
+                }
+              },
+              "paging": {
+                "$ref": "#/components/schemas/ForumTopicPaging"
+              }
+            }
+          }
+        ]
+      },
+      "ForumTopicsCreatedBy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "ForumTopicsData": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "nullable": false
+              },
+              "title": {
+                "type": "string",
+                "nullable": false
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": false
+              },
+              "created_by": {
+                "$ref": "#/components/schemas/ForumTopicsCreatedBy"
+              },
+              "number_of_posts": {
+                "type": "integer",
+                "nullable": false
+              },
+              "last_post_created_at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": false
+              },
+              "last_post_created_by": {
+                "$ref": "#/components/schemas/ForumTopicsCreatedBy"
+              },
+              "is_locked": {
+                "type": "boolean",
+                "nullable": false
+              }
+            }
+          }
+        ]
+      },
+      "Genre": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "List": {
+        "type": "object",
+        "properties": {
+          "paging": {
+            "type": "object",
+            "properties": {
+              "previous": {
+                "type": "string"
+              },
+              "next": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Magazine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "MangaForDetails": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MangaForList"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pictures": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/Picture"
+                }
+              },
+              "background": {
+                "type": "string",
+                "nullable": true
+              },
+              "related_anime": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/RelatedAnimeEdge"
+                }
+              },
+              "related_manga": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/RelatedMangaEdge"
+                }
+              },
+              "recommendations": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/MangaRecommendationAggregationEdgeBase"
+                }
+              },
+              "serialization": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/MangaMagazineRelationEdge"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "MangaForList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/WorkForList"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "media_type": {
+                "type": "string",
+                "nullable": false
+              },
+              "status": {
+                "type": "string",
+                "nullable": false
+              },
+              "my_list_status": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/MangaListStatus"
+                  }
+                ]
+              },
+              "num_volumes": {
+                "type": "integer",
+                "nullable": false
+              },
+              "num_chapters": {
+                "type": "integer",
+                "nullable": false
+              },
+              "authors": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/PersonRoleEdge"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "MangaList": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "node": {
+                      "$ref": "#/components/schemas/MangaForList"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/List"
+          }
+        ]
+      },
+      "MangaListForRanking": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "node": {
+                      "$ref": "#/components/schemas/MangaForList"
+                    },
+                    "ranking": {
+                      "$ref": "#/components/schemas/RankingInfo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/List"
+          }
+        ]
+      },
+      "MangaListStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "score": {
+            "type": "integer",
+            "nullable": false
+          },
+          "num_volumes_read": {
+            "type": "integer",
+            "nullable": false
+          },
+          "num_chapters_read": {
+            "type": "integer",
+            "nullable": false
+          },
+          "is_rereading": {
+            "type": "boolean",
+            "nullable": false
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "finish_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "nullable": false
+          },
+          "num_times_reread": {
+            "type": "integer",
+            "nullable": false
+          },
+          "reread_value": {
+            "type": "integer",
+            "nullable": false
+          },
+          "tags": {
+            "type": "array",
+            "nullable": false,
+            "items": {
+              "type": "string"
+            }
+          },
+          "comments": {
+            "type": "string",
+            "nullable": false
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": false
+          }
+        }
+      },
+      "MangaMagazineRelationEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/Magazine"
+          },
+          "role": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "MangaRecommendationAggregationEdgeBase": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/MangaForList"
+          },
+          "num_recommendations": {
+            "type": "integer",
+            "nullable": false
+          }
+        }
+      },
+      "PersonBase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": false
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "PersonRoleEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/PersonBase"
+          },
+          "role": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "Picture": {
+        "type": "object",
+        "properties": {
+          "large": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "medium": {
+            "type": "string",
+            "format": "uri",
+            "nullable": false
+          }
+        }
+      },
+      "RankingInfo": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "nullable": false
+          },
+          "previous_rank": {
+            "type": "integer",
+            "nullable": true
+          }
+        }
+      },
+      "RelatedAnimeEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/AnimeForList"
+          },
+          "relation_type": {
+            "type": "string",
+            "nullable": false
+          },
+          "relation_type_formatted": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "RelatedMangaEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/MangaForList"
+          },
+          "relation_type": {
+            "type": "string",
+            "nullable": false
+          },
+          "relation_type_formatted": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "User": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/UserBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "gender": {
+                "type": "string",
+                "nullable": true
+              },
+              "birthday": {
+                "type": "string",
+                "format": "date",
+                "nullable": true
+              },
+              "location": {
+                "type": "string",
+                "nullable": true
+              },
+              "joined_at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": false
+              },
+              "anime_statistics": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "num_items_watching": {
+                    "type": "integer",
+                    "nullable": false
+                  },
+                  "num_items_completed": {
+                    "type": "integer",
+                    "nullable": false
+                  },
+                  "num_items_on_hold": {
+                    "type": "integer",
+                    "nullable": false
+                  },
+                  "num_items_dropped": {
+                    "type": "integer",
+                    "nullable": false
+                  },
+                  "num_items_plan_to_watch": {
+                    "type": "integer",
+                    "nullable": false
+                  },
+                  "num_items": {
+                    "type": "integer",
+                    "nullable": false
+                  },
+                  "num_days_watched": {
+                    "type": "number",
+                    "format": "float",
+                    "nullable": false
+                  },
+                  "num_days_watching": {
+                    "type": "number",
+                    "format": "float",
+                    "nullable": false
+                  },
+                  "num_days_completed": {
+                    "type": "number",
+                    "format": "float",
+                    "nullable": false
+                  },
+                  "num_days_on_hold": {
+                    "type": "number",
+                    "format": "float",
+                    "nullable": false
+                  },
+                  "num_days_dropped": {
+                    "type": "number",
+                    "format": "float",
+                    "nullable": false
+                  },
+                  "num_days": {
+                    "type": "number",
+                    "format": "float",
+                    "nullable": false
+                  },
+                  "num_episodes": {
+                    "type": "integer",
+                    "nullable": false
+                  },
+                  "num_times_rewatched": {
+                    "type": "integer",
+                    "nullable": false
+                  },
+                  "mean_score": {
+                    "type": "number",
+                    "format": "float",
+                    "nullable": false
+                  }
+                },
+                "x-optional": true
+              },
+              "time_zone": {
+                "type": "string",
+                "nullable": true
+              },
+              "is_supporter": {
+                "type": "boolean",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "UserAnimeList": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UserAnimeListEdge"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/List"
+          }
+        ]
+      },
+      "UserAnimeListEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/AnimeForList"
+          },
+          "list_status": {
+            "$ref": "#/components/schemas/AnimeListStatus"
+          }
+        }
+      },
+      "UserBase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "nullable": false
+          },
+          "picture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": false
+          }
+        }
+      },
+      "UserMangaList": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UserMangaListEdge"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/List"
+          }
+        ]
+      },
+      "UserMangaListEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/MangaForList"
+          },
+          "list_status": {
+            "$ref": "#/components/schemas/MangaListStatus"
+          }
+        }
+      },
+      "WorkBase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false
+          },
+          "title": {
+            "type": "string",
+            "nullable": false
+          },
+          "main_picture": {
+            "allOf": [
+              {
+                "type": "object",
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/Picture"
+              }
+            ]
+          }
+        }
+      },
+      "WorkForList": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/WorkBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "alternative_titles": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "synonyms": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "en": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "ja": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              },
+              "start_date": {
+                "type": "string",
+                "nullable": true
+              },
+              "end_date": {
+                "type": "string",
+                "nullable": true
+              },
+              "synopsis": {
+                "type": "string",
+                "nullable": true
+              },
+              "mean": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "rank": {
+                "type": "integer",
+                "nullable": true
+              },
+              "popularity": {
+                "type": "integer",
+                "nullable": true
+              },
+              "num_list_users": {
+                "type": "integer",
+                "nullable": false
+              },
+              "num_scoring_users": {
+                "type": "integer",
+                "nullable": false
+              },
+              "nsfw": {
+                "type": "string",
+                "nullable": true
+              },
+              "genres": {
+                "type": "array",
+                "nullable": false,
+                "items": {
+                  "$ref": "#/components/schemas/Genre"
+                }
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": false
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "main_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://myanimelist.net/v1/oauth2/authorize",
+            "scopes": {
+              "write:users": ""
+            }
+          }
+        }
+      },
+      "client_auth": {
+        "type": "apiKey",
+        "name": "X-MAL-CLIENT-ID",
+        "in": "header"
+      }
+    }
+  }
+}
