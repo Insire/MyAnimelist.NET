@@ -1,14 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "MyAnimeList API (beta ver.)",
-    "version": "2"
+    "version": "2",
+    "title": "MyAnimeList API (beta ver.)"
   },
-  "servers": [
-    {
-      "url": "https://api.myanimelist.net/v2"
-    }
-  ],
   "paths": {
     "/anime": {
       "get": {
@@ -20,6 +15,7 @@
           {
             "name": "q",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -48,6 +44,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -60,19 +68,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/anime/{anime_id}": {
@@ -98,6 +94,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -110,19 +118,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/anime/{anime_id}/my_list_status": {
@@ -179,6 +175,13 @@
             }
           }
         },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -191,20 +194,20 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
           "user animelist"
         ],
         "operationId": "anime_anime_id_my_list_status_delete",
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -218,14 +221,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          }
-        ]
+        }
       }
     },
     "/anime/ranking": {
@@ -267,6 +263,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -279,19 +287,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/anime/season/{year}/{season}": {
@@ -348,6 +344,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -360,19 +368,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/anime/suggestions": {
@@ -406,6 +402,13 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -418,14 +421,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          }
-        ]
+        }
       }
     },
     "/forum/boards": {
@@ -434,6 +430,18 @@
           "forum"
         ],
         "operationId": "forum_boards_get",
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -446,19 +454,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/forum/topic/{topic_id}": {
@@ -481,8 +477,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100,
-              "maximum": 100.0
+              "maximum": 100,
+              "default": 100
             }
           },
           {
@@ -492,6 +488,18 @@
               "type": "integer",
               "default": 0
             }
+          }
+        ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
           }
         ],
         "responses": {
@@ -506,19 +514,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/forum/topics": {
@@ -547,8 +543,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100,
-              "maximum": 100.0
+              "maximum": 100,
+              "default": 100
             }
           },
           {
@@ -589,6 +585,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -601,19 +609,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/manga": {
@@ -626,6 +622,7 @@
           {
             "name": "q",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -654,6 +651,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -666,19 +675,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/manga/{manga_id}": {
@@ -704,6 +701,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -716,19 +725,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/manga/{manga_id}/my_list_status": {
@@ -788,6 +785,13 @@
             }
           }
         },
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -800,20 +804,20 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
           "user mangalist"
         ],
         "operationId": "manga_manga_id_my_list_status_delete",
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -827,14 +831,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          }
-        ]
+        }
       }
     },
     "/manga/ranking": {
@@ -876,6 +873,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -888,19 +897,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/users/{user_name}": {
@@ -913,10 +910,10 @@
           {
             "name": "user_id",
             "in": "path",
-            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "required": true
           },
           {
             "name": "fields",
@@ -924,6 +921,13 @@
             "schema": {
               "type": "string"
             }
+          }
+        ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
           }
         ],
         "responses": {
@@ -938,14 +942,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          }
-        ]
+        }
       }
     },
     "/users/{user_name}/animelist": {
@@ -994,6 +991,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -1006,19 +1015,7 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     },
     "/users/{user_name}/mangalist": {
@@ -1067,6 +1064,18 @@
             }
           }
         ],
+        "security": [
+          {
+            "main_auth": [
+              "write:users"
+            ]
+          },
+          {
+            "client_auth": [
+              "-"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -1079,23 +1088,34 @@
             },
             "description": ""
           }
-        },
-        "security": [
-          {
-            "main_auth": [
-              "write:users"
-            ]
-          },
-          {
-            "client_auth": [
-              "-"
-            ]
-          }
-        ]
+        }
       }
     }
   },
+  "servers": [
+    {
+      "url": "https://api.myanimelist.net/v2"
+    }
+  ],
   "components": {
+    "securitySchemes": {
+      "main_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://myanimelist.net/v1/oauth2/authorize",
+            "scopes": {
+              "write:users": ""
+            }
+          }
+        }
+      },
+      "client_auth": {
+        "type": "apiKey",
+        "name": "X-MAL-CLIENT-ID",
+        "in": "header"
+      }
+    },
     "schemas": {
       "AnimeForDetails": {
         "allOf": [
@@ -1107,10 +1127,10 @@
             "properties": {
               "pictures": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/Picture"
-                }
+                },
+                "nullable": false
               },
               "background": {
                 "type": "string",
@@ -1118,24 +1138,24 @@
               },
               "related_anime": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/RelatedAnimeEdge"
-                }
+                },
+                "nullable": false
               },
               "related_manga": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/RelatedMangaEdge"
-                }
+                },
+                "nullable": false
               },
               "recommendations": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/AnimeRecommendationAggregationEdgeBase"
-                }
+                },
+                "nullable": false
               },
               "statistics": {
                 "allOf": [
@@ -1195,7 +1215,6 @@
               },
               "broadcast": {
                 "type": "object",
-                "nullable": true,
                 "properties": {
                   "day_of_the_week": {
                     "type": "string",
@@ -1205,7 +1224,8 @@
                     "type": "string",
                     "nullable": true
                   }
-                }
+                },
+                "nullable": true
               },
               "source": {
                 "type": "string",
@@ -1221,10 +1241,10 @@
               },
               "studios": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/AnimeStudio"
-                }
+                },
+                "nullable": false
               }
             }
           }
@@ -1322,10 +1342,10 @@
           },
           "tags": {
             "type": "array",
-            "nullable": false,
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": false
           },
           "comments": {
             "type": "string",
@@ -1359,13 +1379,13 @@
           },
           "season": {
             "type": "string",
-            "nullable": false,
             "enum": [
               "winter",
               "spring",
               "summer",
               "fall"
-            ]
+            ],
+            "nullable": false
           }
         }
       },
@@ -1378,7 +1398,6 @@
           },
           "status": {
             "type": "object",
-            "nullable": false,
             "properties": {
               "watching": {
                 "type": "integer"
@@ -1395,7 +1414,8 @@
               "plan_to_watch": {
                 "type": "integer"
               }
-            }
+            },
+            "nullable": false
           }
         }
       },
@@ -1434,10 +1454,10 @@
               },
               "subboards": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/ForumSubboard"
-                }
+                },
+                "nullable": false
               }
             }
           }
@@ -1450,10 +1470,10 @@
             "properties": {
               "categories": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/ForumCategory"
-                }
+                },
+                "nullable": false
               }
             }
           }
@@ -1470,10 +1490,10 @@
               },
               "boards": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/ForumBoard"
-                }
+                },
+                "nullable": false
               }
             }
           }
@@ -1499,10 +1519,10 @@
             "properties": {
               "data": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/ForumTopicData"
-                }
+                },
+                "nullable": false
               },
               "paging": {
                 "$ref": "#/components/schemas/ForumTopicPaging"
@@ -1522,17 +1542,17 @@
               },
               "posts": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/ForumTopicPost"
-                }
+                },
+                "nullable": false
               },
               "poll": {
                 "type": "array",
-                "nullable": true,
                 "items": {
                   "$ref": "#/components/schemas/ForumTopicPoll"
-                }
+                },
+                "nullable": true
               }
             }
           }
@@ -1570,10 +1590,10 @@
               },
               "options": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/ForumTopicPollOption"
-                }
+                },
+                "nullable": false
               }
             }
           }
@@ -1653,10 +1673,10 @@
             "properties": {
               "data": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/ForumTopicsData"
-                }
+                },
+                "nullable": false
               },
               "paging": {
                 "$ref": "#/components/schemas/ForumTopicPaging"
@@ -1771,10 +1791,10 @@
             "properties": {
               "pictures": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/Picture"
-                }
+                },
+                "nullable": false
               },
               "background": {
                 "type": "string",
@@ -1782,31 +1802,31 @@
               },
               "related_anime": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/RelatedAnimeEdge"
-                }
+                },
+                "nullable": false
               },
               "related_manga": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/RelatedMangaEdge"
-                }
+                },
+                "nullable": false
               },
               "recommendations": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/MangaRecommendationAggregationEdgeBase"
-                }
+                },
+                "nullable": false
               },
               "serialization": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/MangaMagazineRelationEdge"
-                }
+                },
+                "nullable": false
               }
             }
           }
@@ -1849,10 +1869,10 @@
               },
               "authors": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/PersonRoleEdge"
-                }
+                },
+                "nullable": false
               }
             }
           }
@@ -1954,10 +1974,10 @@
           },
           "tags": {
             "type": "array",
-            "nullable": false,
             "items": {
               "type": "string"
-            }
+            },
+            "nullable": false
           },
           "comments": {
             "type": "string",
@@ -2111,7 +2131,7 @@
               },
               "anime_statistics": {
                 "type": "object",
-                "nullable": true,
+                "x-optional": true,
                 "properties": {
                   "num_items_watching": {
                     "type": "integer",
@@ -2181,7 +2201,7 @@
                     "nullable": false
                   }
                 },
-                "x-optional": true
+                "nullable": true
               },
               "time_zone": {
                 "type": "string",
@@ -2306,14 +2326,13 @@
             "properties": {
               "alternative_titles": {
                 "type": "object",
-                "nullable": true,
                 "properties": {
                   "synonyms": {
                     "type": "array",
-                    "nullable": true,
                     "items": {
                       "type": "string"
-                    }
+                    },
+                    "nullable": true
                   },
                   "en": {
                     "type": "string",
@@ -2323,7 +2342,8 @@
                     "type": "string",
                     "nullable": true
                   }
-                }
+                },
+                "nullable": true
               },
               "start_date": {
                 "type": "string",
@@ -2364,10 +2384,10 @@
               },
               "genres": {
                 "type": "array",
-                "nullable": false,
                 "items": {
                   "$ref": "#/components/schemas/Genre"
-                }
+                },
+                "nullable": false
               },
               "created_at": {
                 "type": "string",
@@ -2382,24 +2402,6 @@
             }
           }
         ]
-      }
-    },
-    "securitySchemes": {
-      "main_auth": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://myanimelist.net/v1/oauth2/authorize",
-            "scopes": {
-              "write:users": ""
-            }
-          }
-        }
-      },
-      "client_auth": {
-        "type": "apiKey",
-        "name": "X-MAL-CLIENT-ID",
-        "in": "header"
       }
     }
   }

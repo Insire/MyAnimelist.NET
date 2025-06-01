@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Build": {
+      "commandName": "Project"
+    },
+    "Tree": {
+      "commandName": "Project",
+      "commandLineArgs": "--tree"
+    }
+  }
+}

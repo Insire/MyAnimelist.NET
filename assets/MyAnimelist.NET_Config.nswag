@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "openapispec.json",
+      "url": "MyAnimelist.NET_OpenApiSpec.json",
       "output": null,
       "newLineBehavior": "Auto"
     }
