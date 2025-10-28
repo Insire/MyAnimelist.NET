@@ -1,5 +1,5 @@
 {
-  "runtime": "Net80",
+  "runtime": "Net90",
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
@@ -35,6 +35,7 @@
       "typeAccessModifier": "public",
       "propertySetterAccessModifier": "",
       "generateNativeRecords": false,
+      "useRequiredKeyword": false,
       "generateContractsOutput": false,
       "contractsNamespace": null,
       "contractsOutputFilePath": null,

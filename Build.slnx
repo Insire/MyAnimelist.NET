@@ -1,6 +1,8 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path="assets/MyAnimelist.NET_Config.nswag" />
+    <File Path="assets/MyAnimelist.NET_OpenApiSpec.json" />
     <File Path="build.ps1" />
     <File Path="build.sh" />
     <File Path="codecov.yml" />

@@ -6,6 +6,10 @@
     "Tree": {
       "commandName": "Project",
       "commandLineArgs": "--tree"
+    },
+    "Update OpenApi spec": {
+      "commandName": "Project",
+      "commandLineArgs": "--target UpdateOpenApiSpec"
     }
   }
 }

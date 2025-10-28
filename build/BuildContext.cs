@@ -12,6 +12,8 @@ namespace Build
 {
     public class BuildContext : FrostingContext
     {
+        public string DotnetExeName { get; }
+
         public DirectoryPath ReportsFolder { get; }
         public DirectoryPath ResultsFolder { get; }
         public DirectoryPath PackagesFolder { get; }
@@ -54,6 +56,8 @@ namespace Build
                     "-Microsoft*",
                 }
             };
+
+            DotnetExeName = Environment.Platform.IsWindows() ? "dotnet.exe" : "dotnet";
         }
     }
 }
