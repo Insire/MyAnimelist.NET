@@ -57,8 +57,9 @@ namespace Build.Tasks
                 }
             };
 
+#if !DEBUG
             context.CreateAssemblyInfo(new FilePath(Constants.AssemblyInfoPath), settings);
-
+#endif
             base.Run(context);
         }
     }

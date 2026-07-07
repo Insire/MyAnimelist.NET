@@ -15,7 +15,7 @@ namespace Build.Util
         public const string ReportsPath = "./tmp_build/results/reports";
         public const string CoberturaPath = "./tmp_build/results/reports/cobertura";
 
-        public const string LocalNugetDirectory = @"D:\Drop\NuGet";
+        public const string LocalNugetDirectory = @"E:\Drop\NuGet";
 
         public const string OpenApiSpecPath = "./assets/MyAnimelist.NET_OpenApiSpec.json";
         public const string NswagConfigFilePath = "./assets/MyAnimelist.NET_Config.nswag";
