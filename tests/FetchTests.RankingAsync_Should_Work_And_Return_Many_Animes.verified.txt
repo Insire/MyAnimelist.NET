@@ -1,0 +1,33 @@
+﻿{
+  Data: [
+    {
+      Node: {
+        Id: 52991,
+        Title: Sousou no Frieren,
+        Main_picture: {
+          Large: https://cdn.myanimelist.net/images/anime/1015/138006l.jpg,
+          Medium: https://cdn.myanimelist.net/images/anime/1015/138006.jpg
+        }
+      },
+      Ranking: {
+        Rank: 1
+      }
+    },
+    {
+      Node: {
+        Id: 61316,
+        Title: Re:Zero kara Hajimeru Isekai Seikatsu 4th Season,
+        Main_picture: {
+          Large: https://cdn.myanimelist.net/images/anime/1540/155824l.jpg,
+          Medium: https://cdn.myanimelist.net/images/anime/1540/155824.jpg
+        }
+      },
+      Ranking: {
+        Rank: 2
+      }
+    }
+  ],
+  Paging: {
+    Next: https://api.myanimelist.net/v2/anime/ranking?offset=2&ranking_type=all&limit=2&fields=title
+  }
+}

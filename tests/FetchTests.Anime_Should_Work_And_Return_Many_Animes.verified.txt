@@ -1,0 +1,27 @@
+﻿{
+  Data: [
+    {
+      Node: {
+        Id: 459,
+        Title: One Piece Movie 01,
+        Main_picture: {
+          Large: https://cdn.myanimelist.net/images/anime/1770/97704l.jpg,
+          Medium: https://cdn.myanimelist.net/images/anime/1770/97704.jpg
+        }
+      }
+    },
+    {
+      Node: {
+        Id: 21,
+        Title: One Piece,
+        Main_picture: {
+          Large: https://cdn.myanimelist.net/images/anime/1244/138851l.jpg,
+          Medium: https://cdn.myanimelist.net/images/anime/1244/138851.jpg
+        }
+      }
+    }
+  ],
+  Paging: {
+    Next: https://api.myanimelist.net/v2/anime?offset=2&q=one&limit=2&fields=title
+  }
+}

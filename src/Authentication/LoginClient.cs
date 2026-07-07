@@ -26,6 +26,12 @@ namespace MyAnimelist.NET.Authentication
 
         public async Task StartOAuthFlowAsync(IProgress<AuthProgress>? progressReporter = null, CancellationToken cancellationToken = default)
         {
+            var response = await _authCache.Get(cancellationToken);
+            if (response is not null)
+            {
+                return;
+            }
+
             var codeVerifier = GenerateCodeVerifier(progressReporter);
 
             using var httpListener = new HttpListener();
