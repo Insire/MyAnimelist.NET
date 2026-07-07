@@ -58,7 +58,7 @@ namespace Build.Util
                     }
                 }
 
-                if (cleanOutput)
+                if (cleanOutput && project.Path.HasExtension)
                 {
                     var customProject = context.ParseProject(project.Path, configuration: Constants.Configuration, platform: Constants.Platform);
                     foreach (var path in customProject.OutputPaths)

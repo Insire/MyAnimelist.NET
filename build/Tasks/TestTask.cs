@@ -24,7 +24,7 @@ namespace Build.Tasks
                     .AppendSwitchQuoted("--results-directory", context.CoberturaFolder.FullPath)
                     .Append("-p:DebugType=full") // required for opencover codecoverage and sourcelinking
                     .Append("-p:DebugSymbols=true") // required for opencover codecoverage
-                    .AppendSwitchQuoted("--collect", ":", "\"\"Code Coverage\"\"")
+                    .AppendSwitchQuoted("--collect", ":", "Code Coverage")
                     .Append($"--logger:trx;LogFileName={context.ResultsFolder.CombineWithFilePath("vsTestResults.trx").FullPath}")
                 );
 
