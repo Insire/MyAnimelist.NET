@@ -11,6 +11,7 @@ namespace MyAnimelist.NET
         public static IServiceCollection AddMyAnimelist(this IServiceCollection services, ClientConfiguration clientConfiguration)
         {
             services.TryAddSingleton<IAuthCache, AuthCache>();
+            services.TryAddSingleton<IBrowserLoginHandler, BrowserLoginHandler>();
             services.AddSingleton<MyAnimelistLoginHandler>();
             services.AddSingleton<MyAnimelistService>();
             services.AddSingleton(clientConfiguration);

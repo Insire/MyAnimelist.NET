@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,13 +12,15 @@ namespace MyAnimelist.NET.Authentication
 
         private readonly HttpClient _httpClient;
         private readonly IAuthCache _authCache;
+        private readonly IBrowserLoginHandler _loginHandler;
         private readonly string _clientId;
         private readonly string _redirectUri;
 
-        public LoginClient(HttpClient httpClient, ClientConfiguration clientConfiguration, IAuthCache authCache)
+        public LoginClient(HttpClient httpClient, ClientConfiguration clientConfiguration, IAuthCache authCache, IBrowserLoginHandler loginHandler)
         {
             _httpClient = httpClient;
             _authCache = authCache;
+            _loginHandler = loginHandler;
             _clientId = clientConfiguration.ClientId;
             _redirectUri = clientConfiguration.RedirectUrl;
         }
@@ -102,7 +103,7 @@ namespace MyAnimelist.NET.Authentication
                              $"&redirect_uri={Uri.EscapeDataString(_redirectUri)}" +
                              $"&state={Guid.NewGuid()}";
 
-            Process.Start(new ProcessStartInfo(authUrl) { UseShellExecute = true });
+            _loginHandler.Handle(authUrl);
         }
 
         private static string GenerateCodeVerifier(IProgress<AuthProgress>? progressReporter = null)

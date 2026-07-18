@@ -1,6 +1,6 @@
 ﻿namespace MyAnimelist.NET.Authentication
 {
-    internal sealed class MyAnimelistLoginHandler(IAuthCache authCache, ClientConfiguration clientConfiguration) : DelegatingHandler
+    internal sealed class MyAnimelistLoginHandler(IAuthCache authCache) : DelegatingHandler
     {
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {

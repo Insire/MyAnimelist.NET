@@ -12,11 +12,16 @@ namespace MyAnimelist.NET.Tests
             var sut = fixture.GetMyAnimelistService();
 
             // Act
-            var response = await sut.Anime.AnimeGetAsync("one", limit: 2, offset: 0, fields:
+            var response = await sut.Anime.AnimeGetAsync("one", limit: 2, offset: 1, fields:
                 "title", cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            await Verify(response);
+            Assert.NotNull(response);
+            Assert.NotNull(response.Data);
+            Assert.True(response.Data.Count > 0);
+            Assert.NotNull(response.Paging);
+            Assert.NotNull(response.Paging.Next);
+            Assert.NotNull(response.Paging.Previous);
         }
 
         [Fact]
@@ -26,11 +31,16 @@ namespace MyAnimelist.NET.Tests
             var sut = fixture.GetMyAnimelistService();
 
             // Act
-            var response = await sut.MyAnime.RankingAsync(ranking_type: "all", limit: 2, offset: 0, fields:
+            var response = await sut.MyAnime.RankingAsync(ranking_type: "all", limit: 2, offset: 1, fields:
                 "title", cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            await Verify(response);
+            Assert.NotNull(response);
+            Assert.NotNull(response.Data);
+            Assert.True(response.Data.Count > 0);
+            Assert.NotNull(response.Paging);
+            Assert.NotNull(response.Paging.Next);
+            Assert.NotNull(response.Paging.Previous);
         }
     }
 }

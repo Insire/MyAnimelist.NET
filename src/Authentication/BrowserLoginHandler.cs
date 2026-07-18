@@ -1,0 +1,14 @@
+﻿using System.Diagnostics;
+
+namespace MyAnimelist.NET.Authentication
+{
+    public sealed class BrowserLoginHandler : IBrowserLoginHandler
+    {
+        public ValueTask Handle(string authUrl)
+        {
+            Process.Start(new ProcessStartInfo(authUrl) { UseShellExecute = true });
+
+            return ValueTask.CompletedTask;
+        }
+    }
+}
