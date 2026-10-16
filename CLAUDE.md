@@ -59,6 +59,12 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
 - Full pipeline: `./build.ps1`. Regenerate the client: `./build.ps1 --target UpdateOpenApiSpec`
 - Environment: Windows, PowerShell. Python is **not** installed, so don't use it for scripting.
 
+## Pending work
+
+- `package-updates.md` is the permanent NuGet/tool update queue. Follow its workflow and remove only the steps that are completed.
+  - Never delete the file or its Workflow section.
+  - For a new update round, add new steps below the workflow.
+
 ## Known quirks / open issues (as of 2026-10-16)
 
 - `RedirectUrl` must end with `/` because it is used as the `HttpListener` prefix.
