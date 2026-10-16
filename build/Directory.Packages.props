@@ -11,14 +11,10 @@
     <PackageVersion Include="CodecovUploader" Version="0.8.0" />
     <PackageVersion Include="HtmlAgilityPack" Version="1.12.1" />
     <PackageVersion Include="Jint" Version="4.2.2" />
-    <PackageVersion Include="Microsoft.CodeCoverage" Version="17.14.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.5" />
-    <PackageVersion Include="NUnit.ConsoleRunner" Version="3.20.1" />
     <PackageVersion Include="ReportGenerator" Version="5.4.7" />
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.13.1" />
-    <PackageVersion Include="System.Text.Json" Version="9.0.5" />
+    <PackageVersion Include="Roslynator.Analyzers" Version="5.0.1" />
   </ItemGroup>
   <ItemGroup Label="vulnerable transitive dependencies">
-    <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="9.0.21" />
   </ItemGroup>
 </Project>

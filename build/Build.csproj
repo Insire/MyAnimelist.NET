@@ -13,9 +13,6 @@
     <PackageReference Include="CodecovUploader" />
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="Jint" />
-    <PackageReference Include="Microsoft.CodeCoverage" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
-    <PackageReference Include="NUnit.ConsoleRunner" />
     <PackageReference Include="ReportGenerator" />
   </ItemGroup>
 </Project>

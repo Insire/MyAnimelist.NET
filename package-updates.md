@@ -50,58 +50,11 @@ If a step fails and the fix isn't obvious, revert that step's change, write the 
 
 ---
 
-## Step 1: Patch updates for Microsoft.Extensions.* (10.0.9 → 10.0.13)
+**Progress (2026-10-16):**
 
-**Risk:** low. These are servicing releases with no breaking changes.
-
-- In `Directory.Packages.props`, change every `Version="10.0.9"` to `10.0.13`:
-  - `Caching.Abstractions`, `Caching.Memory`
-  - `Configuration.UserSecrets`, `Configuration.Binder`, `Configuration.EnvironmentVariables`
-  - `DependencyInjection`, `DependencyInjection.Abstractions`
-  - `Http`
-- **Checks:** run the unit and integration tests.
-
-## Step 2: Minor updates for the test tooling
-
-**Risk:** low.
-
-| Package | From | To | Notes |
-| --- | --- | --- | --- |
-| Microsoft.NET.Test.Sdk | 18.7.0 | 18.11.0 | Minor release. |
-| Microsoft.Playwright.Xunit.v3 | 1.61.0 | 1.63.0 | New Playwright versions need new browser builds. |
-
-- **Checks:**
-  - After building, run `pwsh tests/MyAnimelist.NET.IntegrationTests/bin/Debug/net10.0/playwright.ps1 install`.
-  - Run the integration tests. The OAuth login uses Playwright, so this is the real check.
-
-## Step 3: Remove unused or stale package declarations
-
-**Risk:** low. Deleting declarations doesn't change what ships, but confirm each one is unused before removing it.
-
-**Main solution (`Directory.Packages.props`):**
-
-| Entry | Why it can go |
-| --- | --- |
-| `coverlet.collector` (8.0.0, latest 10.1.0) | VSTest data collector, unused since the switch to Microsoft.Testing.Platform. Coverage now comes from `Microsoft.Testing.Extensions.CodeCoverage`. Remove the `PackageReference` from the integration test `.csproj` and the version entry. Don't upgrade it. |
-| `Nerdbank.GitVersioning` | Declared but not referenced by any project. Versioning goes through `Cake.GitVersioning` and `SharedAssemblyInfo.cs`. |
-| `Microsoft.SourceLink.GitHub` | Declared but not referenced. The .NET 8+ SDK includes Source Link for GitHub. Optional: confirm a packed `.nupkg` has Source Link info. |
-
-`xunit.analyzers` is also declared, but it belongs to step 4. Leave it here.
-
-**Build project (`build/Directory.Packages.props` and `build/Build.csproj`):**
-
-| Entry | Why it can go |
-| --- | --- |
-| `NUnit.ConsoleRunner` | The tests are xUnit, and the Cake tool install was already removed. |
-| `Microsoft.CodeCoverage` | No build code uses it. Coverage tooling is `dotnet-coverage`. |
-| `Microsoft.Extensions.Configuration.UserSecrets` (9.0.5) | No build code uses it. |
-| `System.Text.Json` (9.0.5 pin) | `UpdateOpenApiSpecTask` uses `System.Text.Json`, but it's part of the shared framework. Check `build/Build.csproj`'s target framework first: if it's `net9.0` or later, the pin does nothing and can go. |
-| `System.Text.RegularExpressions` (4.3.1, "vulnerable transitive dependencies") | Remove it, then run `dotnet list build/Build.csproj package --vulnerable --include-transitive`. Keep it only if the vulnerable 4.3.0 shows up again. |
-
-- **Checks:**
-  - Build both solutions.
-  - Run the unit and integration tests.
-  - Run `dotnet test --solution MyAnimelist.NET.slnx --coverage` and confirm a `.coverage` file is still written.
+- Steps 1, 2, 3 and 6 are done and verified: both builds are clean and all 10 tests pass. They are not committed yet.
+- Step 3 found a vulnerable transitive `System.Security.Cryptography.Pkcs` 9.0.16 in the build project. It is now pinned to 9.0.21 in `build/Directory.Packages.props` (`vulnerable transitive dependencies`). Remove the pin once Cake's dependencies resolve a fixed version on their own.
+- Next: step 7. Steps 4 and 5 wait for the Verify decision.
 
 ## Step 4: xUnit v4 (major). Depends on step 5
 
@@ -173,29 +126,6 @@ Our only snapshot holds strings and doubles, so a diff is unlikely.
   - Update `diffenginetray` in step 9 to match DiffEngine 20.
 
 Release notes: [Verify 32.0.0](https://github.com/VerifyTests/Verify/releases/tag/32.0.0), [Verify 33.0.0](https://github.com/VerifyTests/Verify/releases/tag/33.0.0).
-
-## Step 6: Roslynator.Analyzers → 5.0.1 (major)
-
-| Where | From | To |
-| --- | --- | --- |
-| `Directory.Packages.props` | 4.15.0 | 5.0.1 |
-| `build/Directory.Packages.props` | 4.13.1 | 5.0.1 (keep the two in sync) |
-
-**Breaking changes in 5.0 and how they affect this repo:**
-
-| Change | Effect here |
-| --- | --- |
-| Obsolete analyzers removed (RCS0014, RCS0022, RCS0038, RCS1008–1012, RCS1035/1036, RCS1038/1040/1041, RCS1063–1066, RCS1072, RCS1091, RCS1100/1101, RCS1106, RCS1176/1177, RCS1237), each with a successor rule | None. `.editorconfig` doesn't configure any of these IDs. |
-| Legacy config keys removed (`roslynator.max_line_length`, `roslynator.prefix_field_identifier_with_underscore`, `roslynator_suppress_unity_script_methods`) | None. `.editorconfig` has no `roslynator` keys. |
-| Built against Roslyn 5.0 (a new `roslyn5.0` flavor) | Needs a .NET 10 SDK or later, and VS 2022 17.14+ or VS 2026 for IDE analysis. The machine has SDK 11.0.100-rc.2. |
-| VS 2022 VSIX dropped; the VS and VS Code extensions no longer ship analyzers | None. We use the NuGet package. |
-| API, test-package and CLI changes (`SyntaxInverter`, `Roslynator.Testing.*`, `generate-doc-root`) | None. |
-
-The analyzer only runs in Debug builds (see `Directory.Build.targets`).
-
-- **Checks:** do a Debug build of both solutions. New Roslynator diagnostics may appear as warnings. List them, fix the trivial ones, and report the rest instead of silencing them.
-
-Release notes: [Roslynator releases](https://github.com/dotnet/roslynator/releases).
 
 ## Step 7: Cake build project packages
 
