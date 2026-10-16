@@ -1,6 +1,6 @@
-﻿using MyAnimelist.NET.Tests.OAuth;
+﻿using MyAnimelist.NET.IntegrationTests.OAuth;
 
-namespace MyAnimelist.NET.Tests
+namespace MyAnimelist.NET.IntegrationTests
 {
     [Trait(Traits.CategoryTraitName, Traits.IntegrationTestTraitValue)]
     public sealed class FetchTests(OAuthFlowTestFixture fixture)

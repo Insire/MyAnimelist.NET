@@ -1,7 +1,7 @@
 ﻿using MyAnimelist.NET.Authentication;
 using System.Collections.Concurrent;
 
-namespace MyAnimelist.NET.Tests.OAuth
+namespace MyAnimelist.NET.IntegrationTests.OAuth
 {
     internal sealed class AuthTestProgressCollector : IProgress<AuthProgress>
     {

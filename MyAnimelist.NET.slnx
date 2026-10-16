@@ -15,6 +15,7 @@
     <Project Path="src/MyAnimelist.NET.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/MyAnimelist.NET.Tests.csproj" />
+    <Project Path="tests/MyAnimelist.NET.IntegrationTests/MyAnimelist.NET.IntegrationTests.csproj" />
+    <Project Path="tests/MyAnimelist.NET.UnitTests/MyAnimelist.NET.UnitTests.csproj" />
   </Folder>
 </Solution>

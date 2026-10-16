@@ -3,11 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 using Microsoft.Playwright.Xunit.v3;
 using MyAnimelist.NET.Authentication;
-using MyAnimelist.NET.Tests.OAuth;
+using MyAnimelist.NET.IntegrationTests.OAuth;
 
 [assembly: AssemblyFixture(typeof(OAuthFlowTestFixture))]
 
-namespace MyAnimelist.NET.Tests.OAuth
+namespace MyAnimelist.NET.IntegrationTests.OAuth
 {
     public sealed class OAuthFlowTestFixture : PageTest, IAsyncLifetime, IBrowserLoginHandler
     {
@@ -25,7 +25,7 @@ namespace MyAnimelist.NET.Tests.OAuth
         {
             var configuration = new ConfigurationBuilder()
 #if DEBUG
-                .AddUserSecrets<Traits>()
+                .AddUserSecrets<OAuthFlowTestFixture>()
 #endif
                 .AddEnvironmentVariables()
                 .Build();

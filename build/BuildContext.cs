@@ -46,7 +46,7 @@ namespace Build
             {
                 AssemblyFilters = new[]
                 {
-                    "-MyAnimelist.NET.Tests*",
+                    "-MyAnimelist.NET.*Tests*",
                     "-xunit*"
                 },
                 ClassFilters = new[]

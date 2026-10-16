@@ -19,6 +19,5 @@ namespace Build.Util
         public const string OpenApiSpecPath = "./assets/MyAnimelist.NET_OpenApiSpec.json";
         public const string NswagConfigFilePath = "./assets/MyAnimelist.NET_Config.nswag";
         public const string ProjectPath = "./src//MyAnimelist.NET.csproj";
-        public const string TestProjectPath = "./tests/MyAnimelist.NET.Tests.csproj";
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MyAnimelist.NET.Tests.OAuth
+﻿namespace MyAnimelist.NET.IntegrationTests.OAuth
 {
     internal sealed class MalAuthSettings
     {

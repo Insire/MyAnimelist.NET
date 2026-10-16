@@ -16,9 +16,9 @@ namespace MyAnimelist.NET
 
         public LoginClient Login { get; }
 
-        public MyAnimelistService(HttpClient httpClient, ClientConfiguration clientConfiguration, IAuthCache authCache, IBrowserLoginHandler loginHandler)
+        public MyAnimelistService(HttpClient httpClient, ClientConfiguration clientConfiguration, IBrowserLoginHandler loginHandler, TokenClient tokenClient)
         {
-            Login = new LoginClient(httpClient, clientConfiguration, authCache, loginHandler);
+            Login = new LoginClient(clientConfiguration, loginHandler, tokenClient);
             Catalog = new Client(httpClient);
             Anime = new AnimeClient(httpClient);
             Forum = new ForumClient(httpClient);

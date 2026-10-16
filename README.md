@@ -55,7 +55,7 @@ var progress = new Progress<AuthProgress>(p => Console.WriteLine($"{p.Progress:P
 var signedIn = await mal.Login.StartOAuthFlowAsync(progress);
 ```
 
-The default `BrowserLoginHandler` opens the login page in the user's default browser. After the user approves access, the token is stored in the `IAuthCache` until it expires. If a valid token is already cached, `StartOAuthFlowAsync` returns `true` right away. It returns `false` if the user denies access or the token exchange fails.
+The default `BrowserLoginHandler` opens the login page in the user's default browser. After the user approves access, the token is stored in the `IAuthCache`. Expired access tokens are refreshed automatically with the refresh token before the next request. If a valid token is already cached, or an expired one can be refreshed, `StartOAuthFlowAsync` returns `true` without opening the browser. It returns `false` if the user denies access or the token exchange fails.
 
 ### 4. Call the API
 
@@ -98,7 +98,7 @@ When a request fails, the client throws an `ApiException`.
 
 ### Store tokens somewhere else
 
-The default `AuthCache` keeps tokens in memory until they expire, so they are gone when the app restarts. To keep users signed in, implement `IAuthCache`, for example with a file or the OS credential store:
+The default `AuthCache` keeps tokens in memory, so they are gone when the app restarts. To keep users signed in, implement `IAuthCache`, for example with a file or the OS credential store. Store the whole `AuthResponse`, including `ExpiresAt`; without it the library can't tell when to refresh the token.
 
 ```csharp
 public sealed class FileAuthCache : IAuthCache
@@ -129,7 +129,9 @@ src/            The library
   CustomizedModels.cs      Hand-written list and paging models
 assets/         OpenAPI spec, NSwag config, and Liquid templates used for code generation
 build/          Cake Frosting build project
-tests/          xUnit v3 integration tests (they call the real API)
+tests/
+  MyAnimelist.NET.UnitTests/          Tests with no network access
+  MyAnimelist.NET.IntegrationTests/   Tests against the live MyAnimeList API
 ```
 
 ## Building from source
@@ -157,18 +159,33 @@ Packages are written to `tmp_build/packages`. Versions come from [Nerdbank.GitVe
 
 ## Running the tests
 
-The tests are integration tests that sign in to a real MyAnimeList account and call the live API. Playwright fills in the login form automatically.
+The tests are split into two projects:
 
-1. Install the Playwright browsers once (after building the test project):
+| Project | What it tests | Needs |
+| --- | --- | --- |
+| `tests/MyAnimelist.NET.UnitTests` | Library logic, with no network access | Nothing |
+| `tests/MyAnimelist.NET.IntegrationTests` | Signing in to a real MyAnimeList account and calling the live API. Playwright fills in the login form automatically. | Credentials and Playwright browsers (see below) |
+
+Both use [Microsoft.Testing.Platform](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-intro). `global.json` turns it on for `dotnet test`.
+
+### Unit tests
+
+```sh
+dotnet test --project tests/MyAnimelist.NET.UnitTests/MyAnimelist.NET.UnitTests.csproj
+```
+
+### Integration tests
+
+1. Install the Playwright browsers once (after building the project):
 
    ```sh
-   pwsh tests/bin/Debug/net10.0/playwright.ps1 install
+   pwsh tests/MyAnimelist.NET.IntegrationTests/bin/Debug/net10.0/playwright.ps1 install
    ```
 
 2. Add your credentials as [user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) (Debug builds) or as environment variables:
 
    ```sh
-   cd tests
+   cd tests/MyAnimelist.NET.IntegrationTests
    dotnet user-secrets set "ClientConfiguration:ClientId"    "<client id>"
    dotnet user-secrets set "ClientConfiguration:RedirectUrl" "http://localhost:5000/callback/"
    dotnet user-secrets set "MalAuthSettings:UserName"        "<mal user name>"
@@ -180,8 +197,10 @@ The tests are integration tests that sign in to a real MyAnimeList account and c
 3. Run the tests:
 
    ```sh
-   dotnet run --project tests/MyAnimelist.NET.Tests.csproj
+   dotnet test --project tests/MyAnimelist.NET.IntegrationTests/MyAnimelist.NET.IntegrationTests.csproj
    ```
+
+To run both projects, use `dotnet test --solution MyAnimelist.NET.slnx` from the repository root. The solution has to be named because `Build.slnx` sits next to it. Add `--coverage` to collect code coverage.
 
 > [!WARNING]
 > Use a dedicated test account. The tests sign in with these credentials and approve API access for your client.

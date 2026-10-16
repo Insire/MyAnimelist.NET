@@ -15,17 +15,18 @@ namespace Build.Tasks
             var settings = new ProcessSettings()
                 .UseWorkingDirectory(".")
                 .WithArguments(builder => builder
+                    // global.json opts dotnet test into Microsoft.Testing.Platform, so these are MTP/xUnit v3 options
                     .Append("test")
-                    .AppendQuoted(Constants.SolutionPath)
+                    .AppendSwitchQuoted("--solution", Constants.SolutionPath)
                     .Append($"--configuration {Constants.Configuration}")
                     .Append("--no-restore")
-                    .Append("--nologo")
-                    .Append("--filter \"TestCategory=Unit-Test|TestCategory=Integration-Test\"")
                     .AppendSwitchQuoted("--results-directory", context.CoberturaFolder.FullPath)
-                    .Append("-p:DebugType=full") // required for opencover codecoverage and sourcelinking
-                    .Append("-p:DebugSymbols=true") // required for opencover codecoverage
-                    .AppendSwitchQuoted("--collect", ":", "Code Coverage")
-                    .Append($"--logger:trx;LogFileName={context.ResultsFolder.CombineWithFilePath("vsTestResults.trx").FullPath}")
+                    .Append("-p:DebugType=full") // required for codecoverage and sourcelinking
+                    .Append("-p:DebugSymbols=true") // required for codecoverage
+                    .AppendSwitchQuoted("--filter-trait", "TestCategory=Unit-Test")
+                    .AppendSwitchQuoted("--filter-trait", "TestCategory=Integration-Test")
+                    .Append("--coverage") // writes *.coverage files, merged by ConvertCoverageTask
+                    .Append("--report-xunit-trx")
                 );
 
             context.StartProcess(context.Tools.Resolve(context.DotnetExeName), settings);

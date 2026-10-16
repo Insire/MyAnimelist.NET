@@ -1,9 +1,8 @@
-﻿namespace MyAnimelist.NET.Tests
+﻿namespace MyAnimelist.NET.IntegrationTests
 {
-    public sealed class Traits
+    public static class Traits
     {
         public const string CategoryTraitName = "TestCategory";
-        public const string UnitTestTraitValue = "Unit-Test";
         public const string IntegrationTestTraitValue = "Integration-Test";
     }
 }

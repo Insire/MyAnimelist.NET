@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -9,30 +8,26 @@ namespace MyAnimelist.NET.Authentication
     {
         private const string ResponseString = "<html><head><title>Auth Success</title></head><body><h1>Authentication successful!</h1><p>You can close this browser tab/window and return to the application.</p><script>window.close();</script></body></html>";
         private const string FailedResponseString = "<html><head><title>Auth Failed</title></head><body><h1>Authentication failed.</h1><p>You can close this browser tab/window and return to the application.</p></body></html>";
-        private const string BaseUri = "https://myanimelist.net/v1/oauth2/";
-
-        private readonly HttpClient _httpClient;
-        private readonly IAuthCache _authCache;
         private readonly IBrowserLoginHandler _loginHandler;
+        private readonly TokenClient _tokenClient;
         private readonly string _clientId;
         private readonly string _redirectUri;
 
-        public LoginClient(HttpClient httpClient, ClientConfiguration clientConfiguration, IAuthCache authCache, IBrowserLoginHandler loginHandler)
+        public LoginClient(ClientConfiguration clientConfiguration, IBrowserLoginHandler loginHandler, TokenClient tokenClient)
         {
-            _httpClient = httpClient;
-            _authCache = authCache;
             _loginHandler = loginHandler;
+            _tokenClient = tokenClient;
             _clientId = clientConfiguration.ClientId;
             _redirectUri = clientConfiguration.RedirectUrl;
         }
 
         /// <summary>
-        /// Signs the user in, unless a valid token is already cached.
+        /// Signs the user in, unless a valid token is already cached or an expired one can be refreshed.
         /// </summary>
         /// <returns><see langword="true"/> when a valid token is available afterwards.</returns>
         public async Task<bool> StartOAuthFlowAsync(IProgress<AuthProgress>? progressReporter = null, CancellationToken cancellationToken = default)
         {
-            var response = await _authCache.Get(cancellationToken);
+            var response = await _tokenClient.GetValidTokenAsync(cancellationToken);
             if (response is not null)
             {
                 return true;
@@ -64,7 +59,7 @@ namespace MyAnimelist.NET.Authentication
 
             await loginTask;
 
-            if (!string.IsNullOrEmpty(code) && await ExchangeCodeForTokenAsync(code, codeVerifier, cancellationToken))
+            if (!string.IsNullOrEmpty(code) && await _tokenClient.ExchangeCodeAsync(code, codeVerifier, _redirectUri, cancellationToken))
             {
                 progressReporter?.Report(new AuthProgress("Authentication successful...", 1));
                 return true;
@@ -72,29 +67,6 @@ namespace MyAnimelist.NET.Authentication
 
             progressReporter?.Report(new AuthProgress("Authentication failed or cancelled.", 1));
             return false;
-        }
-
-        private async Task<bool> ExchangeCodeForTokenAsync(string code, string codeVerifier, CancellationToken cancellationToken)
-        {
-            var content = new FormUrlEncodedContent(
-            [
-                new KeyValuePair<string, string>("client_id", _clientId),
-                new KeyValuePair<string, string>("code", code),
-                new KeyValuePair<string, string>("code_verifier", codeVerifier),
-                new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                new KeyValuePair<string, string>("redirect_uri", _redirectUri)
-            ]);
-
-            var response = await _httpClient.PostAsync(BaseUri + "token", content, cancellationToken);
-            if (!response.IsSuccessStatusCode)
-            {
-                return false;
-            }
-
-            var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>(cancellationToken);
-            await _authCache.SaveAsync(authResponse, cancellationToken);
-
-            return true;
         }
 
         private static async Task<string?> GetCodeFromBrowserAuth(HttpListenerContext context, string expectedState, CancellationToken cancellationToken)
@@ -115,7 +87,7 @@ namespace MyAnimelist.NET.Authentication
         {
             progressReporter?.Report(new AuthProgress("Redirecting to MyAnimeList...", 0.3));
 
-            var authUrl = BaseUri + "authorize?response_type=code" +
+            var authUrl = TokenClient.BaseUri + "authorize?response_type=code" +
                              $"&client_id={_clientId}" +
                              $"&code_challenge={codeVerifier}" +
                              $"&code_challenge_method=plain" +

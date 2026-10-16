@@ -6,9 +6,6 @@ namespace MyAnimelist.NET.Authentication
     {
         private const string MemoryCache_KEY = "MyAnimelist.NET_TokenCache_Key";
 
-        // drop the token a bit before MyAnimeList does, so requests in flight don't use an expired token
-        private static readonly TimeSpan ExpirationMargin = TimeSpan.FromMinutes(1);
-
         private readonly IMemoryCache _memoryCache;
 
         public AuthCache(IMemoryCache memoryCache)
@@ -16,16 +13,10 @@ namespace MyAnimelist.NET.Authentication
             _memoryCache = memoryCache;
         }
 
+        // kept past the access token's expiry, since the refresh token is still needed to get a new one
         public Task SaveAsync(AuthResponse authResponse, CancellationToken cancellationToken = default)
         {
-            var lifetime = TimeSpan.FromSeconds(authResponse.ExpiresIn) - ExpirationMargin;
-            if (lifetime <= TimeSpan.Zero)
-            {
-                _memoryCache.Remove(MemoryCache_KEY);
-                return Task.CompletedTask;
-            }
-
-            _memoryCache.Set(MemoryCache_KEY, authResponse, lifetime);
+            _memoryCache.Set(MemoryCache_KEY, authResponse);
 
             return Task.CompletedTask;
         }

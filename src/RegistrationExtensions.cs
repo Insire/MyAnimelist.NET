@@ -12,6 +12,9 @@ namespace MyAnimelist.NET
         {
             services.TryAddSingleton<IAuthCache, AuthCache>();
             services.TryAddSingleton<IBrowserLoginHandler, BrowserLoginHandler>();
+            services.TryAddSingleton(TimeProvider.System);
+            services.TryAddSingleton<TokenClient>();
+            services.AddHttpClient(TokenClient.HttpClientName);
             services.AddSingleton<MyAnimelistLoginHandler>();
             services.AddSingleton<MyAnimelistService>();
             services.AddSingleton(clientConfiguration);
