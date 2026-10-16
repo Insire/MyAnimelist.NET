@@ -54,9 +54,9 @@ If a step fails and the fix isn't obvious, revert that step's change, write the 
 
 - Steps 1, 2, 3 and 6 are done and verified: both builds are clean and all 10 tests pass. They are not committed yet.
 - Step 3 found a vulnerable transitive `System.Security.Cryptography.Pkcs` 9.0.16 in the build project. It is now pinned to 9.0.21 in `build/Directory.Packages.props` (`vulnerable transitive dependencies`). Remove the pin once Cake's dependencies resolve a fixed version on their own.
-- Next: step 7. Steps 4 and 5 wait for the Verify decision.
+- Next: step 5 (Verify 33), then step 4 (xUnit 4), then steps 7–9.
 
-## Step 4: xUnit v4 (major). Depends on step 5
+## Step 4: xUnit v4 (major). Do step 5 first
 
 | Package | From | To |
 | --- | --- | --- |
@@ -91,7 +91,9 @@ If a step fails and the fix isn't obvious, revert that step's change, write the 
 
 Release notes: [xunit.v3 4.0.0](https://xunit.net/releases/v3/4.0.0), [xunit.runner.visualstudio 4.0.0](https://xunit.net/releases/visualstudio/4.0.0).
 
-## Step 5: Verify.XunitV3 31.21.0 → 33.3.4 (two majors). Decision needed
+## Step 5: Verify.XunitV3 31.21.0 → 33.3.4 (two majors)
+
+**Decided 2026-10-16: option (a), go to 33.x.** The owner says this project stays open source and free, with no revenue, so the fee for revenue-generating organizations doesn't apply. Don't set `Verify_GitHubSponsorAccount`. If SponsorCheck still warns or fails on the first build, write down the exact message here and ask the owner. Don't silence it.
 
 **What needs deciding: the Open Source Maintenance Fee (OSMF).**
 
