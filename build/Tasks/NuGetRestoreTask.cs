@@ -22,7 +22,7 @@ namespace Build.Tasks
                     .Append("--force-evaluate")
                 );
 
-            context.StartProcess(context.Tools.Resolve("dotnet.exe"), settings);
+            context.StartProcess(context.Tools.Resolve(context.DotnetExeName), settings);
 
             base.Run(context);
         }

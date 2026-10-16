@@ -31,7 +31,7 @@ namespace Build
             }
 
             context.Information($"nuget.exe ({context.Tools.Resolve("nuget.exe")}) {(context.FileExists(context.Tools.Resolve("nuget.exe")) ? "was found" : "is missing")}.");
-            context.Information($"dotnet.exe ({context.Tools.Resolve("dotnet.exe")}) {(context.FileExists(context.Tools.Resolve("dotnet.exe")) ? "was found" : "is missing")}.");
+            context.Information($"{context.DotnetExeName} ({context.Tools.Resolve(context.DotnetExeName)}) {(context.FileExists(context.Tools.Resolve(context.DotnetExeName)) ? "was found" : "is missing")}.");
             context.Information($"dotnet-coverage ({context.Tools.Resolve("dotnet-coverage.dll")}) {(context.FileExists(context.Tools.Resolve("dotnet-coverage.dll")) ? "was found" : "is missing")}.");
 
             context.Information($"NUGETORG_APIKEY was{(string.IsNullOrEmpty(context.EnvironmentVariable("NUGETORG_APIKEY")) ? " not" : "")} set.");
@@ -40,7 +40,7 @@ namespace Build
             context.Information("reportsFolder: {0}", context.ReportsFolder.FullPath);
             context.Information("coberturaResultFile: {0}", context.CoberturaResultFile.FullPath);
 
-            context.Information("dotnet tool: {0}", context.Tools.Resolve("dotnet.exe"));
+            context.Information("dotnet tool: {0}", context.Tools.Resolve(context.DotnetExeName));
         }
 
         public override void Teardown(BuildContext context, ITeardownContext info)

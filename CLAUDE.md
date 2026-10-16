@@ -11,8 +11,8 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
 - `src/` is the library (`MyAnimelist.NET.csproj`, namespace `MyAnimelist.NET`).
   - `RegistrationExtensions.cs`: `AddMyAnimelist(ClientConfiguration)` is the DI entry point. It registers `IAuthCache`/`IBrowserLoginHandler` with `TryAdd` (overridable), a typed `HttpClient` for `MyAnimelistService`, and `MyAnimelistLoginHandler` (DelegatingHandler that adds the Bearer token).
   - `MyAnimelistService.cs` is the facade. Property names don't match the generated class names:
-    - `Anime` → `Client`: anime and manga search/details, `UsersAsync`
-    - `MyAnime` → `AnimeClient`: ranking, season, suggestions, list status patch
+    - `Catalog` → `Client`: anime and manga search/details, `UsersAsync`
+    - `Anime` → `AnimeClient`: ranking, season, suggestions, list status patch
     - `Manga` → `MangaClient`
     - `Forum` → `ForumClient`
     - `Users` → `UsersClient`: animelist, mangalist
@@ -21,7 +21,9 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
   - `CustomizedModels.cs` holds hand-written list/paging models (`AnimeList`, `MangaList`, `UserAnimeList`, ...) that the generated code uses.
   - `Authentication/`:
     - `LoginClient`: PKCE flow with `code_challenge_method=plain`, an `HttpListener` on `RedirectUrl`, and a token exchange at `https://myanimelist.net/v1/oauth2/token`
-    - `AuthCache`: in-memory `IMemoryCache` only, so tokens are lost on restart
+      - `StartOAuthFlowAsync` returns `bool` and validates `state`.
+      - It awaits the listener and `IBrowserLoginHandler.Handle` at the same time, because the Playwright handler only completes after the redirect has been answered.
+    - `AuthCache`: in-memory `IMemoryCache` only, so tokens are lost on restart. Entries expire after `ExpiresIn` minus 1 minute; `SaveAsync` overwrites. Refresh tokens are not used yet.
     - `BrowserLoginHandler`: `Process.Start` with the shell
     - `ClientConfiguration`/`ClientConfigurationOptions`: the options variant is nullable, for config binding
 - `assets/`: `MyAnimelist.NET_OpenApiSpec.json` (scraped from the MAL Redoc page), `MyAnimelist.NET_Config.nswag`, `Templates/*.liquid` (custom NSwag templates).
@@ -30,21 +32,32 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
   - `UpdateOpenApiSpec`: re-scrapes the spec with HtmlAgilityPack and Jint, then runs nswag to regenerate the client.
 - `tests/`: xUnit v3 (MTP), Verify, and Playwright. **These are live integration tests against the real MAL API.**
   - `OAuth/OAuthFlowTestFixture` is an assembly fixture and a Playwright `PageTest`. It implements `IBrowserLoginHandler` to fill in the MAL login form automatically.
-  - Config comes from user secrets (Debug, `UserSecretsId cc5b08ee-...`) or environment variables. It needs `ClientConfiguration:{ClientId,RedirectUrl,Port}` and `MalAuthSettings:{UserName,Password}`.
+  - Config comes from user secrets (Debug, `UserSecretsId cc5b08ee-...`) or environment variables. It needs `ClientConfiguration:{ClientId,RedirectUrl}` and `MalAuthSettings:{UserName,Password}`. Secrets are set up on the user's machine.
   - The tests can't run without those secrets and installed Playwright browsers.
 - Central package management is in `Directory.Packages.props`; `build/` has its own. Versioning uses Nerdbank.GitVersioning (`version.json`).
 
 ## Commands
 
 - Build: `dotnet build MyAnimelist.NET.slnx`
-- Test: `dotnet test` (needs secrets, see above)
+- Test: `dotnet run --project tests/MyAnimelist.NET.Tests.csproj` (needs secrets, see above). Plain `dotnet test` fails on the .NET 10+ SDK because the repo hasn't opted in to Microsoft.Testing.Platform mode in `global.json`. The `Test` Cake task uses `dotnet test` too, so it has the same problem.
 - Full pipeline: `./build.ps1`. Regenerate the client: `./build.ps1 --target UpdateOpenApiSpec`
 - Environment: Windows, PowerShell. Python is **not** installed, so don't use it for scripting.
 
-## Known quirks / leftovers (as of 2026-10-16)
+## Known quirks / open issues (as of 2026-10-16)
 
-- `ClientConfiguration.Port` is required but unused; only `RedirectUrl` is used. It must end with `/` because it is used as the `HttpListener` prefix.
-- `LoginClient` success HTML says "return to Aniki", which looks copied from another app.
-- `versioning.md` and the `BuildContext` ReportGenerator filter (`MonstercatNet.Tests*`) look copied from the MonstercatNet project.
-- `build/Util/Constants.cs` has `TargetFramework = "net90"`, but the projects target `net10.0`.
-- It's unconfirmed whether the package is published on NuGet.
+- `RedirectUrl` must end with `/` because it is used as the `HttpListener` prefix.
+- The package is not published on NuGet yet (confirmed by the user).
+- Refresh tokens are never used. When the access token expires, the user has to sign in again.
+- `dotnet test` / the Cake `Test` task need an MTP opt-in (see Commands).
+- Verify warns about two solution files (`Build.slnx`, `MyAnimelist.NET.slnx`) next to `tests/`.
+
+Resolved on 2026-10-16:
+
+- removed `Port`
+- renamed the facade (`Anime` → `Catalog`, `MyAnime` → `Anime`)
+- removed the "Aniki" text and the MonstercatNet/NUnit leftovers
+- removed the unused `TargetFramework` constant
+- fixed `AuthCache` overwrite and expiry
+- the login handler is now awaited
+- token exchange failures are reported
+- the build resolves `DotnetExeName` instead of a hardcoded `dotnet.exe`

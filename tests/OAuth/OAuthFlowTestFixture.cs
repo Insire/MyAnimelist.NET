@@ -57,7 +57,6 @@ namespace MyAnimelist.NET.Tests.OAuth
             {
                 ClientId = clientConfiguration.ClientId!,
                 RedirectUrl = clientConfiguration.RedirectUrl!,
-                Port = clientConfiguration.Port!.Value,
             });
 
             _serviceProvider = _services.BuildServiceProvider();

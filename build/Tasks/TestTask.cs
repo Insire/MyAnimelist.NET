@@ -28,7 +28,7 @@ namespace Build.Tasks
                     .Append($"--logger:trx;LogFileName={context.ResultsFolder.CombineWithFilePath("vsTestResults.trx").FullPath}")
                 );
 
-            context.StartProcess(context.Tools.Resolve("dotnet.exe"), settings);
+            context.StartProcess(context.Tools.Resolve(context.DotnetExeName), settings);
         }
     }
 }

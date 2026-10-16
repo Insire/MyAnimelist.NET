@@ -4,6 +4,5 @@
     {
         required public string ClientId { get; init; }
         required public string RedirectUrl { get; init; }
-        required public int Port { get; init; }
     }
 }

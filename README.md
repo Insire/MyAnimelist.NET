@@ -6,6 +6,7 @@ It lets you search for anime and manga, read rankings and seasonal lists, browse
 
 - **Target framework:** .NET 10
 - **License:** [MIT](LICENSE)
+- **Status:** early development (0.x). The package isn't published on NuGet yet, so [build it from source](#building-from-source).
 
 ## Features
 
@@ -37,7 +38,6 @@ services.AddMyAnimelist(new ClientConfiguration
 {
     ClientId    = "<your client id>",
     RedirectUrl = "http://localhost:5000/callback/", // must match the URL registered with MyAnimeList
-    Port        = 5000,
 });
 
 var provider = services.BuildServiceProvider();
@@ -52,16 +52,16 @@ var mal = provider.GetRequiredService<MyAnimelistService>();
 ```csharp
 var progress = new Progress<AuthProgress>(p => Console.WriteLine($"{p.Progress:P0} {p.Message}"));
 
-await mal.Login.StartOAuthFlowAsync(progress);
+var signedIn = await mal.Login.StartOAuthFlowAsync(progress);
 ```
 
-The default `BrowserLoginHandler` opens the login page in the user's default browser. After the user approves access, the token is stored in the `IAuthCache`. If a token is already cached, `StartOAuthFlowAsync` returns right away.
+The default `BrowserLoginHandler` opens the login page in the user's default browser. After the user approves access, the token is stored in the `IAuthCache` until it expires. If a valid token is already cached, `StartOAuthFlowAsync` returns `true` right away. It returns `false` if the user denies access or the token exchange fails.
 
 ### 4. Call the API
 
 ```csharp
 // Search for anime
-var results = await mal.Anime.AnimeGetAsync("frieren", limit: 5, fields: "title,mean");
+var results = await mal.Catalog.AnimeGetAsync("frieren", limit: 5, fields: "title,mean");
 
 foreach (var entry in results.Data ?? [])
 {
@@ -69,7 +69,7 @@ foreach (var entry in results.Data ?? [])
 }
 
 // Top-ranked anime
-var ranking = await mal.MyAnime.RankingAsync(ranking_type: "all", limit: 10);
+var ranking = await mal.Anime.RankingAsync(ranking_type: "all", limit: 10);
 
 // A user's anime list
 var list = await mal.Users.AnimelistAsync("@me", status: "watching");
@@ -82,8 +82,8 @@ var list = await mal.Users.AnimelistAsync("@me", status: "watching");
 | Property | Client | What it covers |
 | --- | --- | --- |
 | `Login` | `LoginClient` | OAuth2 sign-in (`StartOAuthFlowAsync`) |
-| `Anime` | `Client` | Anime search and details (`AnimeGetAsync`), manga search and details (`MangaGetAsync`), user profile (`UsersAsync`) |
-| `MyAnime` | `AnimeClient` | Anime ranking, seasonal anime, suggestions, and updating your anime list status |
+| `Catalog` | `Client` | Anime search and details (`AnimeGetAsync`), manga search and details (`MangaGetAsync`), user profile (`UsersAsync`) |
+| `Anime` | `AnimeClient` | Anime ranking, seasonal anime, suggestions, and updating your anime list status |
 | `Manga` | `MangaClient` | Manga ranking and updating your manga list status |
 | `Forum` | `ForumClient` | Forum boards, topics, and topic details |
 | `Users` | `UsersClient` | A user's anime list and manga list |
@@ -98,7 +98,7 @@ When a request fails, the client throws an `ApiException`.
 
 ### Store tokens somewhere else
 
-The default `AuthCache` keeps tokens in memory, so they are gone when the app restarts. To keep users signed in, implement `IAuthCache`, for example with a file or the OS credential store:
+The default `AuthCache` keeps tokens in memory until they expire, so they are gone when the app restarts. To keep users signed in, implement `IAuthCache`, for example with a file or the OS credential store:
 
 ```csharp
 public sealed class FileAuthCache : IAuthCache
@@ -171,7 +171,6 @@ The tests are integration tests that sign in to a real MyAnimeList account and c
    cd tests
    dotnet user-secrets set "ClientConfiguration:ClientId"    "<client id>"
    dotnet user-secrets set "ClientConfiguration:RedirectUrl" "http://localhost:5000/callback/"
-   dotnet user-secrets set "ClientConfiguration:Port"        "5000"
    dotnet user-secrets set "MalAuthSettings:UserName"        "<mal user name>"
    dotnet user-secrets set "MalAuthSettings:Password"        "<mal password>"
    ```
@@ -181,7 +180,7 @@ The tests are integration tests that sign in to a real MyAnimeList account and c
 3. Run the tests:
 
    ```sh
-   dotnet test
+   dotnet run --project tests/MyAnimelist.NET.Tests.csproj
    ```
 
 > [!WARNING]

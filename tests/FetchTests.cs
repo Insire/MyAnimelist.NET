@@ -12,7 +12,7 @@ namespace MyAnimelist.NET.Tests
             var sut = fixture.GetMyAnimelistService();
 
             // Act
-            var response = await sut.Anime.AnimeGetAsync("one", limit: 2, offset: 1, fields:
+            var response = await sut.Catalog.AnimeGetAsync("one", limit: 2, offset: 1, fields:
                 "title", cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
@@ -31,7 +31,7 @@ namespace MyAnimelist.NET.Tests
             var sut = fixture.GetMyAnimelistService();
 
             // Act
-            var response = await sut.MyAnime.RankingAsync(ranking_type: "all", limit: 2, offset: 1, fields:
+            var response = await sut.Anime.RankingAsync(ranking_type: "all", limit: 2, offset: 1, fields:
                 "title", cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert

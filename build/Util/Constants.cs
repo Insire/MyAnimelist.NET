@@ -4,7 +4,6 @@ namespace Build.Util
     {
         public const string Configuration = "Release";
         public const string Platform = "AnyCPU";
-        public const string TargetFramework = "net90";
 
         public const string SolutionPath = "./MyAnimelist.NET.slnx";
         public const string NuGetConfigPath = "./nuget.config";

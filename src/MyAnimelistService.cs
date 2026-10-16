@@ -4,9 +4,9 @@ namespace MyAnimelist.NET
 {
     public sealed class MyAnimelistService
     {
-        public Client Anime { get; }
+        public Client Catalog { get; }
 
-        public AnimeClient MyAnime { get; }
+        public AnimeClient Anime { get; }
 
         public ForumClient Forum { get; }
 
@@ -19,8 +19,8 @@ namespace MyAnimelist.NET
         public MyAnimelistService(HttpClient httpClient, ClientConfiguration clientConfiguration, IAuthCache authCache, IBrowserLoginHandler loginHandler)
         {
             Login = new LoginClient(httpClient, clientConfiguration, authCache, loginHandler);
-            Anime = new Client(httpClient);
-            MyAnime = new AnimeClient(httpClient);
+            Catalog = new Client(httpClient);
+            Anime = new AnimeClient(httpClient);
             Forum = new ForumClient(httpClient);
             Manga = new MangaClient(httpClient);
             Users = new UsersClient(httpClient);
