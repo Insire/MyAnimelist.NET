@@ -9,6 +9,9 @@
 		<!-- two solution files sit next to this project; tell Verify which one to use -->
 		<SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*Undefined*'">$(MSBuildThisFileDirectory)..\..\</SolutionDir>
 		<SolutionName Condition="'$(SolutionName)' == '' or '$(SolutionName)' == '*Undefined*'">MyAnimelist.NET</SolutionName>
+		<!-- Verify's Open Source Maintenance Fee: this project is open source and generates no revenue. Renew before it expires (max 12 months ahead). -->
+		<Verify_SponsorshipExemption>OpenSource</Verify_SponsorshipExemption>
+		<Verify_SponsorshipExemptionUntil>2027-10</Verify_SponsorshipExemptionUntil>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -18,7 +21,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
 		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
-		<PackageReference Include="Verify.XunitV3 " />
+		<PackageReference Include="Verify.XunitV3" />
 		<PackageReference Include="xunit.v3.mtp-v2" />
 		<PackageReference Include="xunit.runner.visualstudio">
 			<PrivateAssets>all</PrivateAssets>

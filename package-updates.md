@@ -52,82 +52,11 @@ If a step fails and the fix isn't obvious, revert that step's change, write the 
 
 **Progress (2026-10-16):**
 
-- Steps 1, 2, 3 and 6 are done and verified: both builds are clean and all 10 tests pass. They are not committed yet.
+- Steps 1, 2, 3 and 6 are done and committed on `main`.
+- Steps 4 and 5 are done (2026-10-17) on branch `chore/package-updates` as one commit, because Verify 33 pulls in xUnit 4. The versions are Verify.XunitV3 33.3.4, xunit.v3.mtp-v2 4.0.2 and xunit.runner.visualstudio 4.0.1. The `xunit.analyzers` pin was removed (it now resolves 2.2.0, and MTP resolves 2.5.1).
+- Verify 33 fails the build (SponsorCheck SC021) unless a license property is set. The integration test csproj declares `Verify_SponsorshipExemption=OpenSource` with `Verify_SponsorshipExemptionUntil=2027-10`, approved by the owner. **Renew it before 2027-10**: bump it by at most 12 months, and only if the project is still open source with no revenue. After that month the build fails again.
 - Step 3 found a vulnerable transitive `System.Security.Cryptography.Pkcs` 9.0.16 in the build project. It is now pinned to 9.0.21 in `build/Directory.Packages.props` (`vulnerable transitive dependencies`). Remove the pin once Cake's dependencies resolve a fixed version on their own.
-- Next: step 5 (Verify 33), then step 4 (xUnit 4), then steps 7–9.
-
-## Step 4: xUnit v4 (major). Do step 5 first
-
-| Package | From | To |
-| --- | --- | --- |
-| xunit.v3.mtp-v2 | 3.2.2 | 4.0.2 |
-| xunit.runner.visualstudio | 3.1.5 | 4.0.1 |
-| xunit.analyzers (central pin) | 1.27.0 | Remove the pin, or raise it to what xunit 4 requires |
-
-**Breaking changes in xunit 4 and how they affect this repo:**
-
-| Change | Effect here |
-| --- | --- |
-| Microsoft Testing Platform v1 support dropped; the default is now MTP v2 (2.3.3) | None. We already use `mtp-v2`. Check that `Microsoft.Testing.Extensions.CodeCoverage` 18.12.0 restores against MTP 2.3.3 without NU1605/NU1109 errors. |
-| The `Xunit.Runners` namespace was removed | None. Not used. |
-| `[assembly: CollectionBehavior]` parallelization properties are obsolete | None. Not used. |
-| New ordering model, which breaks custom `ITestCaseOrderer` implementations | None. Not used. |
-| MTP report switches renamed (`--report-ctrf` → `--report-xunit-ctrf`, `--report-junit` → `--report-xunit-junit`, and so on) | None. `--report-xunit-trx` (used in `build/Tasks/TestTask.cs`) is unchanged. Confirm that `--filter-trait` still works. |
-| Mono support dropped; the native console tool needs the .NET 10 SDK | None. |
-| xunit.runner.visualstudio 4.0 only supports xunit v3 4.0 projects and uses the new config file schema | Update it together with xunit.v3.mtp-v2. |
-
-`CentralPackageTransitivePinningEnabled` is on, so the `xunit.analyzers` 1.27.0 entry pins that version for every project. If xunit 4 needs a newer analyzer, restore fails with a downgrade error. Remove the entry, or set it to the version xunit 4 asks for.
-
-**Coupling:** Verify 33 contains a change titled "xunit3 v4" (Verify PR #1848). Verify.XunitV3 31.x probably doesn't work with xunit v4. Do step 5 first, or both together.
-
-- **Checks:**
-  - Run all tests through the Cake task's options:
-
-    ```sh
-    dotnet test --solution MyAnimelist.NET.slnx --filter-trait "TestCategory=Unit-Test" --filter-trait "TestCategory=Integration-Test" --coverage --report-xunit-trx
-    ```
-
-  - Confirm that a `.trx` and a `.coverage` file are written.
-
-Release notes: [xunit.v3 4.0.0](https://xunit.net/releases/v3/4.0.0), [xunit.runner.visualstudio 4.0.0](https://xunit.net/releases/visualstudio/4.0.0).
-
-## Step 5: Verify.XunitV3 31.21.0 → 33.3.4 (two majors)
-
-**Decided 2026-10-16: option (a), go to 33.x.** The owner says this project stays open source and free, with no revenue, so the fee for revenue-generating organizations doesn't apply. Don't set `Verify_GitHubSponsorAccount`. If SponsorCheck still warns or fails on the first build, write down the exact message here and ask the owner. Don't silence it.
-
-**What needs deciding: the Open Source Maintenance Fee (OSMF).**
-
-- **Who it applies to:** Verify versions released after 2026-09-01 are covered by a maintenance fee for **organizations that generate revenue, and for government agencies**. The fee is a GitHub sponsorship of $5–$100 per month, depending on organization size.
-- **How it's enforced:** from v33, a build-time "SponsorCheck" runs. A sponsoring organization declares `Verify_GitHubSponsorAccount` in `Directory.Build.props`. Nothing phones home and there are no license keys.
-- **Not documented:** whether a missing sponsorship gives a warning or fails the build. Find out on the first restore or build.
-- **Other users:** individuals and open-source projects are not named as covered. The exemptions are listed in the [fee terms](https://github.com/VerifyTests/Verify/blob/main/docs/maintenance-fee.md).
-- **Verify 32.0.1** says "OSMF is not required for this release". It's unclear whether 32.x supports xunit v4.
-
-**Options:**
-
-- (a) Go to 33.x, accepting or confirming exemption from the fee. This unblocks xunit v4.
-- (b) Stay on 31.x and skip xunit v4 (step 4) for now.
-- (c) Replace Verify. It's used for exactly one snapshot test (`OAuthFlowTests`), which could become a plain `Assert.Equal` on the progress list.
-
-**Behaviour changes in 32/33 that could change snapshots:**
-
-| Version | Change |
-| --- | --- |
-| 32 | Date precision is now decided by ticks. |
-| 32 | Explicit `DefaultValueHandling` for bools is honored. |
-| 32 | Member converters prefer the exact type. |
-| 33 | Dates and UTC offsets are formatted with the invariant culture. |
-| 33 | `VerifyResult.Text` is read with the configured encoding. |
-| 33 | Argon 0.36 and DiffEngine 20.3. |
-
-Our only snapshot holds strings and doubles, so a diff is unlikely.
-
-- **Checks:**
-  - Run the integration tests.
-  - If `OAuthFlowTests.*.received.txt` appears, review the diff before accepting it.
-  - Update `diffenginetray` in step 9 to match DiffEngine 20.
-
-Release notes: [Verify 32.0.0](https://github.com/VerifyTests/Verify/releases/tag/32.0.0), [Verify 33.0.0](https://github.com/VerifyTests/Verify/releases/tag/33.0.0).
+- Next: steps 7–9. Step 9 should take `diffenginetray` to 20.x to match the DiffEngine 20 that Verify 33 uses.
 
 ## Step 7: Cake build project packages
 

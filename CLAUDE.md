@@ -62,6 +62,10 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
 ## Project status
 
 - Open source (MIT) and free. The owner doesn't plan to generate revenue from it (stated 2026-10-16). This matters for dependency licensing and fee models such as Verify's Open Source Maintenance Fee.
+- Verify 33+ runs a build-time SponsorCheck.
+  - The integration test csproj claims `Verify_SponsorshipExemption=OpenSource` until `Verify_SponsorshipExemptionUntil=2027-10`, approved by the owner on 2026-10-17.
+  - After that month the build fails with SC021.
+  - Renewing means bumping it by at most 12 months, and only while the project is still open source with no revenue. Confirm with the owner before changing what is claimed.
 
 ## Pending work
 
