@@ -7,13 +7,16 @@ using System.Reflection;
 
 [assembly: AssemblyCompany("SoftThorn")]
 [assembly: AssemblyProduct("SoftThorn.MAL.ApiClient")]
-[assembly: AssemblyCopyright("© 2025 Insire")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.42853")]
+[assembly: AssemblyInformationalVersion("0.1.0-ga765e3eaa6")]
+[assembly: AssemblyCopyright("Copyright (c) 2026 Peter Vietense")]
 [assembly: AssemblyTrademark("")]
 
 // Metadata Attributes
 [assembly: AssemblyMetadata("Platform", "AnyCPU")]
-[assembly: AssemblyMetadata("CompileDate", "[UTC]01.06.2025 10:48:23")]
+[assembly: AssemblyMetadata("CompileDate", "2026-10-17T10:46:24.3122138Z")]
 [assembly: AssemblyMetadata("PublicRelease", "False")]
-[assembly: AssemblyMetadata("Branch", "main")]
-[assembly: AssemblyMetadata("Commit", "920355e3975ded5185668397b0a5ff4ab50a9e50")]
-[assembly: AssemblyMetadata("Version", "0.0.0")]
+[assembly: AssemblyMetadata("Branch", "feature/prepare_prerelease")]
+[assembly: AssemblyMetadata("Commit", "a765e3eaa60bc84ac3b2c9a5c393875dc214e2bd")]
+[assembly: AssemblyMetadata("Version", "0.1.0-ga765e3eaa6")]
