@@ -20,14 +20,13 @@ namespace Build.Tasks
                 var settings = new ProcessSettings()
                     .UseWorkingDirectory(".")
                     .WithArguments(builder => builder
-                        .Append("push")
+                        .Append("nuget push")
                         .AppendQuoted(path.FullPath)
-                        .AppendSwitchSecret("-apikey", context.EnvironmentVariable("NUGETORG_APIKEY"))
-                        .AppendSwitchQuoted("-source", "https://api.nuget.org/v3/index.json")
-                        .AppendSwitch("-Verbosity", "detailed")
+                        .AppendSwitchSecret("--api-key", context.EnvironmentVariable("NUGETORG_APIKEY"))
+                        .AppendSwitchQuoted("--source", "https://api.nuget.org/v3/index.json")
                     );
 
-                context.RunProcess(context.Tools.Resolve("nuget.exe"), settings);
+                context.RunProcess(context.Tools.Resolve(context.DotnetExeName), settings);
             }
 
             context.PackagesPushedToNuGet = true;
@@ -46,12 +45,6 @@ namespace Build.Tasks
             if (string.IsNullOrEmpty(context.EnvironmentVariable("NUGETORG_APIKEY")))
             {
                 context.Log.Information($"Skipped {nameof(PushRemoteTask)}, since environment variable NUGETORG_APIKEY missing or empty.");
-                return false;
-            }
-
-            if (!context.FileExists(context.Tools.Resolve("nuget.exe")))
-            {
-                context.Log.Information($"Skipped {nameof(PushRemoteTask)}, since there is no nuget.exe registered with cake");
                 return false;
             }
 

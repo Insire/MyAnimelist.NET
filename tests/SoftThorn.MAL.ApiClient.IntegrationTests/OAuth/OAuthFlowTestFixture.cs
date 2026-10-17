@@ -23,10 +23,9 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
 
         public OAuthFlowTestFixture()
         {
+            // user secrets in every configuration, since the Cake build runs the tests in Release; CI has no secrets file and uses the environment variables, which win
             var configuration = new ConfigurationBuilder()
-#if DEBUG
                 .AddUserSecrets<OAuthFlowTestFixture>()
-#endif
                 .AddEnvironmentVariables()
                 .Build();
 

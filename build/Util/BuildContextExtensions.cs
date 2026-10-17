@@ -52,6 +52,8 @@ namespace Build.Util
                 type
             };
 
+            context.ReportGeneratorSettings.ToolPath ??= context.GetReportGeneratorPath();
+
             context.ReportGenerator(files, context.ReportsFolder.Combine(subFolder), context.ReportGeneratorSettings);
         }
 
@@ -62,7 +64,18 @@ namespace Build.Util
                 type
             };
 
+            context.ReportGeneratorSettings.ToolPath ??= context.GetReportGeneratorPath();
+
             context.ReportGenerator(inputFile, context.ReportsFolder.Combine(subFolder), context.ReportGeneratorSettings);
+        }
+
+        /// <summary>
+        /// Returns the launcher of the ReportGenerator dotnet tool. Cake would otherwise pick ReportGenerator.exe, the .NET Framework build that only runs on Windows.
+        /// </summary>
+        private static FilePath GetReportGeneratorPath(this BuildContext context)
+        {
+            var fileName = context.Environment.Platform.IsWindows() ? "reportgenerator.exe" : "reportgenerator";
+            return context.Tools.Resolve(fileName) ?? throw new CakeException($"{fileName} wasn't installed.");
         }
 
         public static void Clean(this BuildContext context, bool cleanBin, bool cleanObj, bool cleanOutput, bool cleanMisc)

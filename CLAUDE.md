@@ -64,7 +64,7 @@ SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an uno
     - New tests that don't call MAL go here.
   - `SoftThorn.MAL.ApiClient.IntegrationTests`: **live tests against the real MAL API**, using Verify and Playwright.
     - `OAuth/OAuthFlowTestFixture` is an assembly fixture and a Playwright `PageTest`. It implements `IBrowserLoginHandler` to fill in the MAL login form automatically.
-    - Config comes from user secrets (Debug, `UserSecretsId cc5b08ee-...`) or environment variables. It needs `ClientConfiguration:{ClientId,RedirectUrl}` and `MalAuthSettings:{UserName,Password}`. Secrets are set up on the user's machine.
+    - Config comes from user secrets (`UserSecretsId cc5b08ee-...`, every configuration) and environment variables, which override them. It needs `ClientConfiguration:{ClientId,RedirectUrl}` and `MalAuthSettings:{UserName,Password}`. Secrets are set up on the user's machine.
     - The csproj sets `SolutionDir`/`SolutionName` because two `.slnx` files confuse Verify's auto-discovery.
     - The tests run one at a time (`[assembly: Xunit.v3.Parallelization(Mode = Xunit.Sdk.ParallelMode.None)]` in `Properties/AssemblyInfo.cs`; xUnit 4 made `CollectionBehavior.DisableTestParallelization` an error).
       - When all test classes started together, MAL left about 7 of the first burst of requests unanswered until `HttpClient`'s 100s timeout.
@@ -90,7 +90,15 @@ SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an uno
   - `icon.svg` is the source. `icon.png` (128×128, packed as `PackageIcon`) and `icon-512.png` were rendered from it with Playwright's headless Chromium (`chrome.exe --headless --default-background-color=00000000 --screenshot`), since ImageMagick and Inkscape aren't installed.
   - Re-render both PNGs after you change the SVG.
   - The README shows `icon.png` through an absolute `raw.githubusercontent.com/.../main/...` URL (nuget.org only shows images from trusted hosts), so the image only appears once it is pushed to `main`.
-- CI is **Azure DevOps** (`azure-pipelines.yml`), not GitHub Actions (owner's choice, 2026-10-17). It runs `./build.ps1` on pushes to `main`/`v*.*`, with `pr: none` because fork PRs get no secrets. Secrets come from the variable group `SoftThorn.MAL.ApiClient` (the owner has to rename the existing `MyAnimelist.NET` group) and are mapped to env vars in the YAML. Every pipeline build of those branches pushes to nuget.org.
+- CI is **Azure DevOps** (`azure-pipelines.yml`), not GitHub Actions (owner's choice, 2026-10-17). It runs `./build.ps1` on pushes to `main`/`v*.*`, with `pr: none` because fork PRs get no secrets.
+  - Since 2026-10-17 it runs as a container job on `ubuntu-latest` in `mcr.microsoft.com/playwright/dotnet:v<version>-noble`. That image is built on `dotnet/sdk:10.0-noble` and includes pwsh, git and the Playwright browsers with their system libraries, so the pipeline has no SDK or browser install steps.
+    - The image tag must match `Microsoft.Playwright.Xunit.v3` in `Directory.Packages.props`, or the integration tests can't find their browser.
+    - The steps run as a non-root user.
+  - The build has no Windows-only tools:
+    - Pushes use `dotnet nuget push`; `nuget.exe` and NuGet.CommandLine are gone.
+    - ReportGenerator is the `dotnet-reportgenerator-globaltool` dotnet tool. Cake's own lookup would pick the NuGet package's .NET Framework `ReportGenerator.exe`, so `BuildContextExtensions.GetReportGeneratorPath` sets `ToolPath` to the tool's launcher.
+    - GitVersion.Tool is gone too. Branch and commit come from Nerdbank's `VersionOracle` (`BuildingRef`, `GitCommitId`). On Linux, Cake couldn't find GitVersion's executable.
+  - To test the pipeline locally, pack the working tree with `.git` into a tar and run it in that image as `pwuser`. Pass the user secrets as an `--env-file`, using `__` in the keys and keeping the values unchanged. Then run `pwsh ./build.ps1` and `git config --global --add safe.directory '*'`. On 2026-10-17 the full `Default` target passed this way (60/60 tests; pushes and Codecov skip off Azure). In Git Bash, set `MSYS_NO_PATHCONV=1`, or `docker run` turns container paths into Windows paths. Secrets come from the variable group `SoftThorn.MAL.ApiClient` (the owner has to rename the existing `MyAnimelist.NET` group) and are mapped to env vars in the YAML. Every pipeline build of those branches pushes to nuget.org.
 - Release notes (added 2026-10-17): the Cake `ReleaseNotes` task (`build/Tasks/ReleaseNotesTask.cs`, parsing and rendering in `build/Util/ReleaseNotes.cs`) runs `git log <last v* tag>..HEAD` and groups conventional commits. Breaking changes come from `type!:` or a `BREAKING CHANGE:` footer, and highlights from `Release-Note:` footers. A count line is always included.
   - Output goes to `tmp_build/results/release-notes.md` (Markdown with commit links) and `release-notes.txt` (plain text, internal changes left out).
   - `BuildAndPack` depends on it and passes `-p:PackageReleaseNotesFile`, which `src/SoftThorn.MAL.ApiClient.csproj` reads into `PackageReleaseNotes`.
@@ -108,7 +116,7 @@ SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an uno
   - Integration tests: `dotnet test --project tests/SoftThorn.MAL.ApiClient.IntegrationTests/SoftThorn.MAL.ApiClient.IntegrationTests.csproj`
   - Both: `dotnet test --solution SoftThorn.MAL.ApiClient.slnx`. A bare `dotnet test` at the root fails, because there are two `.slnx` files.
   - `global.json` sets `test.runner = Microsoft.Testing.Platform`, so use MTP/xUnit v3 options such as `--filter-trait`, `--coverage` and `--report-xunit-trx`, not VSTest's `--filter`, `--collect` and `--logger`.
-  - The Cake `Test` task uses the same options in Release. User secrets only load in Debug, so Release needs environment variables.
+  - The Cake `Test` task uses the same options in Release. User secrets load in Release too (since 2026-10-17; before, `#if DEBUG` left all 30 integration tests failing in the local Cake build with a null `uriPrefix`).
 - Full pipeline: `./build.ps1`. Regenerate the client: `./build.ps1 --target UpdateOpenApiSpec`
 - Environment: Windows, PowerShell. Python is **not** installed, so don't use it for scripting.
 - **Line endings:** the repository stores every file with **LF**. `core.autocrlf=true` checks files out as CRLF, and git converts them back when you add them.
@@ -195,8 +203,7 @@ The project counts as one of "Your Applications" under MAL's [API License and De
 - Even when run serially, MAL occasionally leaves a single request unanswered (on 2026-10-17, `ForumTests.TopicAsync` in one of three serial full runs; five isolated runs of `ForumTests` passed). `MalRetryHandler`'s per-attempt timeout now retries such GETs after 20s instead of failing after 100s.
 - MAL's spec gives `UsersClient.AnimelistAsync`/`MangalistAsync` no `fields` parameter, so `list_status` can't be requested and only `node` (id, title, main_picture) comes back (as of 2026-10-17).
 - Verified on 2026-10-17: the Cake targets `HtmlReport`, `BuildAndPack` and `UpdateOpenApiSpec`. `Default` was not run, because it pushes the package to `E:\Drop\NuGet`.
-  - Release tests need the secrets as environment variables (`ClientConfiguration__ClientId` and so on). You can export them from `dotnet user-secrets list` in the integration test project.
-- `tmp_build/results/reports/cobertura/Cobertura.xml` actually contains Microsoft's XML coverage format (`dotnet-coverage merge -f xml`), not Cobertura. ReportGenerator reads it fine.
+- `tmp_build/results/reports/cobertura/Cobertura.xml` is first written by `ConvertCoverage` in Microsoft's XML coverage format (`dotnet-coverage merge -f xml`). `CoberturaReport` then overwrites it with ReportGenerator's real Cobertura output, which is what Codecov receives. That file has no branch data (`branches-valid="0"`), because the Microsoft XML format doesn't carry it.
 - Cake process calls go through `context.RunProcess(...)` (`build/Util/BuildContextExtensions.cs`), which throws on a non-zero exit code. Don't call `StartProcess` directly.
   - The only exception is `TestTask`. A test failure sets `context.TestsAreFailing` and the build keeps going, so the coverage reports still get generated.
   - The pushes and the Codecov upload skip when that flag is set, and `BuildLifetime.Teardown` then fails the build. Cake exits with 127 in that case.

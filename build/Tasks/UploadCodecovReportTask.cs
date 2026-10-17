@@ -34,6 +34,7 @@ namespace Build.Tasks
                     // the CLI reads CODECOV_TOKEN from the environment, so the token never shows up in the command line
                     .Append("--fail-on-error")
                     .Append("--disable-search")
+                    .AppendSwitch("--plugin", "noop") // don't look for gcov, xcrun or coverage.py
                     .AppendSwitchQuoted("--file", context.CoberturaResultFile.FullPath)
                     .AppendSwitch("--git-service", "github")
                 );

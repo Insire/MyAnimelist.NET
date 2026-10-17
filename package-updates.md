@@ -71,5 +71,8 @@ No pending updates as of 2026-10-17. Both solutions have no outdated or vulnerab
     - Get a Cobertura file from the unit tests with `--coverage --coverage-output-format cobertura`.
   - The real upload only runs on Azure, so watch the next pipeline build's `UploadCodecovReport` log.
 - **Old tool versions in `tools/`:** after a Cake tool version bump, `tools/` keeps the old versions too, and `tools/codecov-cli/` keeps one folder per CLI version. They're gitignored and can be deleted.
-  - Check the Setup log lines (`nuget.exe (...)`, `dotnet-coverage (...)`) to confirm the new paths are the ones resolved.
+  - Check the Setup log line `dotnet-coverage (...)` to confirm the new path is the one resolved.
+- **Playwright and the CI image:** `azure-pipelines.yml` runs in `mcr.microsoft.com/playwright/dotnet:v<version>-noble`, which has the browsers for exactly that Playwright version.
+  - When `Microsoft.Playwright.Xunit.v3` changes, change the image tag to the same version in the same step. Check that the tag exists first: `https://mcr.microsoft.com/v2/playwright/dotnet/tags/list`.
+  - The image also decides the .NET SDK version on CI, so an SDK bump means waiting for (or switching to) a matching image.
   - `UpdateOpenApiSpecTask` picks NSwag's `net10.0` build explicitly.

@@ -20,7 +20,11 @@ trigger:
 pr: none
 
 pool:
-  vmImage: windows-latest
+  vmImage: ubuntu-latest
+
+# Runs every step in Microsoft's Playwright image: .NET 10 SDK (dotnet/sdk:10.0-noble), pwsh, git and the browsers with their system libraries.
+# The tag must match the Microsoft.Playwright.Xunit.v3 version in Directory.Packages.props, or the tests won't find their browser.
+container: mcr.microsoft.com/playwright/dotnet:v1.63.0-noble
 
 variables:
   - group: SoftThorn.MAL.ApiClient
@@ -33,20 +37,8 @@ variables:
 
 steps:
   - checkout: self
-    fetchDepth: 0 # Nerdbank.GitVersioning and GitVersion need the full history, the release notes need the tags
+    fetchDepth: 0 # Nerdbank.GitVersioning needs the full history, the release notes need the tags
     persistCredentials: true # the Cake TagRelease task pushes the v<version> tag after a successful nuget.org push
-
-  - task: UseDotNet@2
-    displayName: Install .NET 10 SDK
-    inputs:
-      packageType: sdk
-      version: 10.0.x
-
-  # Playwright keeps its browsers in the user profile, so they survive the clean in the Cake build
-  - pwsh: |
-      dotnet build tests/SoftThorn.MAL.ApiClient.IntegrationTests/SoftThorn.MAL.ApiClient.IntegrationTests.csproj --configuration Release
-      ./tests/SoftThorn.MAL.ApiClient.IntegrationTests/bin/Release/net10.0/playwright.ps1 install chromium
-    displayName: Install Playwright browsers
 
   - pwsh: ./build.ps1
     displayName: Cake build

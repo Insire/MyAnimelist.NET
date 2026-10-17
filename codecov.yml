@@ -20,4 +20,5 @@ comment:
   require_changes: no
 
 fixes:
-  - "./a/1/s/::"
+  - "./a/1/s/::" # Windows agents
+  - "/__w/1/s/::" # Linux container jobs

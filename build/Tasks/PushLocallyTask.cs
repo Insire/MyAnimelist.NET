@@ -20,11 +20,11 @@ namespace Build.Tasks
                 var settings = new ProcessSettings()
                     .UseWorkingDirectory(".")
                     .WithArguments(builder => builder
-                    .Append("push")
-                    .AppendSwitchQuoted("-source", Constants.LocalNugetDirectory)
-                    .AppendQuoted(path.FullPath));
+                    .Append("nuget push")
+                    .AppendQuoted(path.FullPath)
+                    .AppendSwitchQuoted("--source", Constants.LocalNugetDirectory));
 
-                context.RunProcess(context.Tools.Resolve("nuget.exe"), settings);
+                context.RunProcess(context.Tools.Resolve(context.DotnetExeName), settings);
             }
 
             base.Run(context);
@@ -41,12 +41,6 @@ namespace Build.Tasks
             if (!context.DirectoryExists(Constants.LocalNugetDirectory))
             {
                 context.Log.Information($"Skipped {nameof(PushLocallyTask)}, since there is no local directory ({Constants.LocalNugetDirectory}) to push nuget packages to.");
-                return false;
-            }
-
-            if (!context.FileExists(context.Tools.Resolve("nuget.exe")))
-            {
-                context.Log.Information($"Skipped {nameof(PushLocallyTask)}, since there is no nuget.exe registered with cake");
                 return false;
             }
 

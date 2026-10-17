@@ -1,7 +1,6 @@
 using Cake.Common;
 using Cake.Common.Diagnostics;
 using Cake.Common.IO;
-using Cake.Common.Tools.GitVersion;
 using Cake.Core;
 using Cake.Frosting;
 using Cake.GitVersioning;
@@ -12,11 +11,11 @@ namespace Build
     {
         public override void Setup(BuildContext context, ISetupContext info)
         {
-            var gitVersion = context.GitVersion();
             var versionOracle = context.GitVersioningGetVersion();
             context.GitVersion = versionOracle;
-            context.Branch = gitVersion.BranchName;
-            context.Commit = gitVersion.Sha;
+            // BuildingRef comes from the CI variables (BUILD_SOURCEBRANCH on Azure), since the checkout there is a detached HEAD
+            context.Branch = versionOracle.BuildingRef?.Replace("refs/heads/", "");
+            context.Commit = versionOracle.GitCommitId;
 
             // Nerdbank.GitVersioning matches the current ref against publicReleaseRefSpec in version.json (main and v<major>.<minor> branches)
             context.IsPublicRelease = versionOracle.PublicRelease;
@@ -32,7 +31,6 @@ namespace Build
                 context.Information("Building a {0}release.", "pre-");
             }
 
-            context.Information($"nuget.exe ({context.Tools.Resolve("nuget.exe")}) {(context.FileExists(context.Tools.Resolve("nuget.exe")) ? "was found" : "is missing")}.");
             context.Information($"{context.DotnetExeName} ({context.Tools.Resolve(context.DotnetExeName)}) {(context.FileExists(context.Tools.Resolve(context.DotnetExeName)) ? "was found" : "is missing")}.");
             context.Information($"dotnet-coverage ({context.Tools.Resolve("dotnet-coverage.dll")}) {(context.FileExists(context.Tools.Resolve("dotnet-coverage.dll")) ? "was found" : "is missing")}.");
 
