@@ -106,6 +106,14 @@
   },
   "schemas": {
     "AnimeForDetails": "An anime, with the fields that only the details endpoint returns.",
+    "AnimeRankingType": "Which anime ranking to return.",
+    "AnimeWatchStatus": "Where an anime is on a user's list: being watched, completed, on hold, dropped or planned.",
+    "ForumTopicsSort": "The order of forum topics.",
+    "MangaRankingType": "Which manga ranking to return.",
+    "MangaReadStatus": "Where a manga is on a user's list: being read, completed, on hold, dropped or planned.",
+    "SeasonalAnimeSort": "The order of seasonal anime, each from the highest value down.",
+    "UserAnimeListSort": "The order of the entries of a user's anime list.",
+    "UserMangaListSort": "The order of the entries of a user's manga list.",
     "AnimeForList": "An anime, as it appears in searches, rankings and lists.",
     "AnimeList": "A page of anime.",
     "AnimeListForRanking": "A page of an anime ranking.",
@@ -253,8 +261,8 @@
     "MangaListStatus.num_times_reread": "How many times the user has read the manga again.",
     "MangaListStatus.reread_value": "How much the user would like to read the manga again, from 0 (not set) to 5.",
     "score": "The user's score, from 1 to 10, or 0 when the user hasn't scored the work.",
-    "start_date": "When the user started the work, as YYYY-MM-DD.",
-    "finish_date": "When the user finished the work, as YYYY-MM-DD.",
+    "start_date": "When the user started the work: YYYY-MM-DD, or only YYYY-MM or YYYY when the user left out the day or month.",
+    "finish_date": "When the user finished the work, in the same form as the start date.",
     "priority": "The priority of the entry: 0 (low), 1 (medium) or 2 (high).",
     "tags": "The user's tags for the entry.",
     "comments": "The user's comments on the entry.",
@@ -319,7 +327,7 @@
     "UserBase.name": "The user name.",
     "UserBase.picture": "The address of the user's profile picture.",
     "User.gender": "The gender the user chose to show on their profile.",
-    "User.birthday": "The birthday the user chose to show on their profile.",
+    "User.birthday": "The birthday the user chose to show on their profile: YYYY-MM-DD, or a partial date when the user left out parts of it.",
     "User.location": "The location the user chose to show on their profile.",
     "User.joined_at": "When the user joined MyAnimeList.",
     "User.anime_statistics": "Totals over the user's anime list.",
@@ -385,5 +393,12 @@
     "ForumTopicPollOption.id": "The option's ID.",
     "ForumTopicPollOption.text": "The option's text.",
     "ForumTopicPollOption.votes": "How many users voted for the option."
+  },
+  "remarks": {
+    "AnimeListStatus.start_date": "A string rather than a date, because users can leave out the day or the month, and MyAnimeList then sends only YYYY-MM or YYYY. A date type would reject those values or fill in a day the user never entered. Parse it yourself if you need a date, for example with DateOnly.TryParseExact for each of the three forms.",
+    "AnimeListStatus.finish_date": "A string rather than a date, for the same reason as the start date: MyAnimeList sends partial dates (YYYY-MM or YYYY) when the user left out the day or the month.",
+    "MangaListStatus.start_date": "A string rather than a date, because users can leave out the day or the month, and MyAnimeList then sends only YYYY-MM or YYYY. A date type would reject those values or fill in a day the user never entered. Parse it yourself if you need a date, for example with DateOnly.TryParseExact for each of the three forms.",
+    "MangaListStatus.finish_date": "A string rather than a date, for the same reason as the start date: MyAnimeList sends partial dates (YYYY-MM or YYYY) when the user left out the day or the month.",
+    "User.birthday": "A string rather than a date, because users can leave parts of their birthday out, and MyAnimeList then sends a partial date. A date type would reject those values or fill in parts the user never entered. Parse it yourself if you need a date."
   }
 }

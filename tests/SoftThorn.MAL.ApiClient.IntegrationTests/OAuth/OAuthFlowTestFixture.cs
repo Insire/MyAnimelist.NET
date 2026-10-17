@@ -19,6 +19,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
         private readonly ServiceCollection _services;
         private readonly ServiceProvider _serviceProvider;
         private readonly MalAuthSettings _malAuthSettings;
+        private readonly ClientConfiguration _clientConfiguration;
         private readonly ILogger<OAuthFlowTestFixture> _logger;
         private readonly TestOutputLoggerProvider _testOutput = new();
         private ExceptionDispatchInfo? _loginFailure;
@@ -49,6 +50,17 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
 
             TestContext.Current.TestOutputHelper?.WriteLine($"Log of the login:{Environment.NewLine}{_loginLog}");
             _loginFailure.Throw();
+        }
+
+        /// <summary>
+        /// A service of its own that never signs in, so its requests send the Client ID instead of a token.
+        /// </summary>
+        public IMalApiService GetSignedOutMalApiService()
+        {
+            var services = new ServiceCollection();
+            services.AddMalApiClient(_clientConfiguration);
+
+            return services.BuildServiceProvider().GetRequiredService<IMalApiService>();
         }
 
         internal AuthTestProgressCollector GetAuthTestProgressCollector()
@@ -91,11 +103,13 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
                 .AddHttpClient(MalApiService.HttpClientName)
                 .AddHttpMessageHandler<HttpLoggingHandler>();
 
-            _services.AddMalApiClient(new ClientConfiguration()
+            _clientConfiguration = new ClientConfiguration()
             {
                 ClientId = clientConfiguration.ClientId!,
                 RedirectUrl = clientConfiguration.RedirectUrl!,
-            });
+            };
+
+            _services.AddMalApiClient(_clientConfiguration);
 
             _serviceProvider = _services.BuildServiceProvider();
             _logger = _serviceProvider.GetRequiredService<ILogger<OAuthFlowTestFixture>>();
@@ -148,8 +162,9 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
             await base.DisposeAsync();
         }
 
-        public async ValueTask Handle(string authUrl)
+        public async ValueTask HandleAsync(string authUrl, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             await Page.GotoAsync(authUrl);
 
             await Page.Locator("#loginUserName").FillAsync(_malAuthSettings.UserName);

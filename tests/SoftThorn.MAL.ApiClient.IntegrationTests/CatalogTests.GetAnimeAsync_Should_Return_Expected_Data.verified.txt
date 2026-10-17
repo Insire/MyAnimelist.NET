@@ -61,124 +61,124 @@
 When Cowboy Bebop first aired in spring of 1998 on TV Tokyo, only episodes 2-3, 7-15, and 18 were broadcast, it was concluded with a recap special known as Yose Atsume Blues. This was due to anime censorship having increased following the big controversies over Evangelion, as a result most of the series was pulled from the air due to violent content. Satellite channel WOWOW picked up the series in the fall of that year and aired it in its entirety uncensored. Cowboy Bebop was not a ratings hit in Japan, but sold over 19,000 DVD units in the initial release run, and 81,000 overall. Protagonist Spike Spiegel won Best Male Character, and Megumi Hayashibara won Best Voice Actor for her role as Faye Valentine in the 1999 and 2000 Anime Grand Prix, respectively.
 
 Cowboy Bebop's biggest influence has been in the United States, where it premiered on Adult Swim in 2001 with many reruns since. The show's heavy Western influence struck a chord with American viewers, where it became a "gateway drug" to anime aimed at adult audiences.,
-  Related_anime: [
+  RelatedAnime: [
     {
       Node: {
         Mean: {Scrubbed},
         Rank: {Scrubbed},
         Popularity: {Scrubbed},
-        Num_list_users: {Scrubbed},
-        Num_scoring_users: {Scrubbed},
+        NumListUsers: {Scrubbed},
+        NumScoringUsers: {Scrubbed},
         Id: 5,
         Title: Cowboy Bebop: Tengoku no Tobira,
-        Main_picture: {
+        MainPicture: {
           Large: https://cdn.myanimelist.net/images/anime/1439/93480l.{image},
           Medium: https://cdn.myanimelist.net/images/anime/1439/93480.{image}
         }
       },
-      Relation_type: side_story,
-      Relation_type_formatted: Side story
+      RelationType: side_story,
+      RelationTypeFormatted: Side story
     },
     {
       Node: {
         Mean: {Scrubbed},
         Rank: {Scrubbed},
         Popularity: {Scrubbed},
-        Num_list_users: {Scrubbed},
-        Num_scoring_users: {Scrubbed},
+        NumListUsers: {Scrubbed},
+        NumScoringUsers: {Scrubbed},
         Id: 4037,
         Title: Cowboy Bebop: Yose Atsume Blues,
-        Main_picture: {
+        MainPicture: {
           Large: https://cdn.myanimelist.net/images/anime/10/54341l.{image},
           Medium: https://cdn.myanimelist.net/images/anime/10/54341.{image}
         }
       },
-      Relation_type: summary,
-      Relation_type_formatted: Summary
+      RelationType: summary,
+      RelationTypeFormatted: Summary
     },
     {
       Node: {
         Mean: {Scrubbed},
         Rank: {Scrubbed},
         Popularity: {Scrubbed},
-        Num_list_users: {Scrubbed},
-        Num_scoring_users: {Scrubbed},
+        NumListUsers: {Scrubbed},
+        NumScoringUsers: {Scrubbed},
         Id: 17205,
         Title: Cowboy Bebop: Ein no Natsuyasumi,
-        Main_picture: {
+        MainPicture: {
           Large: https://cdn.myanimelist.net/images/anime/1565/127387l.{image},
           Medium: https://cdn.myanimelist.net/images/anime/1565/127387.{image}
         }
       },
-      Relation_type: side_story,
-      Relation_type_formatted: Side story
+      RelationType: side_story,
+      RelationTypeFormatted: Side story
     }
   ],
   Recommendations: [
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     }
   ],
   Statistics: {
-    Num_list_users: {Scrubbed},
+    NumListUsers: {Scrubbed},
     Status: {
       Watching: {Scrubbed},
       Completed: {Scrubbed},
-      On_hold: {Scrubbed},
+      OnHold: {Scrubbed},
       Dropped: {Scrubbed},
-      Plan_to_watch: {Scrubbed}
+      PlanToWatch: {Scrubbed}
     }
   },
-  Media_type: tv,
+  MediaType: tv,
   Status: finished_airing,
-  Num_episodes: 26,
-  Start_season: {
+  NumEpisodes: 26,
+  StartSeason: {
     Year: 1998,
     Season: spring
   },
   Broadcast: {
-    Day_of_the_week: saturday,
-    Start_time: 01:00
+    DayOfTheWeek: saturday,
+    StartTime: 01:00
   },
   Source: original,
-  Average_episode_duration: 1440,
+  AverageEpisodeDuration: 1440,
   Rating: r,
   Studios: [
     {
@@ -186,12 +186,12 @@ Cowboy Bebop's biggest influence has been in the United States, where it premier
       Name: Sunrise
     }
   ],
-  Alternative_titles: {
+  AlternativeTitles: {
     En: Cowboy Bebop,
     Ja: カウボーイビバップ
   },
-  Start_date: 1998-04-03,
-  End_date: 1999-04-24,
+  StartDate: 1998-04-03,
+  EndDate: 1999-04-24,
   Synopsis:
 Crime is timeless. By the year 2071, humanity has expanded across the galaxy, filling the surface of other planets with settlements like those on Earth. These new societies are plagued by murder, drug use, and theft, and intergalactic outlaws are hunted by a growing number of tough bounty hunters.
 
@@ -203,8 +203,8 @@ While developing bonds and working to catch a colorful cast of criminals, the Be
   Mean: {Scrubbed},
   Rank: {Scrubbed},
   Popularity: {Scrubbed},
-  Num_list_users: {Scrubbed},
-  Num_scoring_users: {Scrubbed},
+  NumListUsers: {Scrubbed},
+  NumScoringUsers: {Scrubbed},
   Nsfw: white,
   Genres: [
     {
@@ -228,11 +228,11 @@ While developing bonds and working to catch a colorful cast of criminals, the Be
       Name: Space
     }
   ],
-  Created_at: DateTimeOffset_1,
-  Updated_at: DateTimeOffset_2,
+  CreatedAt: DateTimeOffset_1,
+  UpdatedAt: DateTimeOffset_2,
   Id: 1,
   Title: Cowboy Bebop,
-  Main_picture: {
+  MainPicture: {
     Large: https://cdn.myanimelist.net/images/anime/4/19644l.{image},
     Medium: https://cdn.myanimelist.net/images/anime/4/19644.{image}
   }

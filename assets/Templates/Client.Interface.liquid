@@ -1,5 +1,4 @@
-{% comment %}the operations on /anime, /manga and /users/{user_name} have no second path segment, so NSwag names their client "Client"{% endcomment -%}
-{% if Class == "Client" %}{% assign ClientName = "CatalogClient" %}{% else %}{% assign ClientName = Class %}{% endif -%}
+{% assign ClientName = Class -%}
 {% template Client.Interface.Annotations %}
 [System.CodeDom.Compiler.GeneratedCode("NSwag", "{{ ToolchainVersion }}")]
 public partial interface I{{ ClientName }}{% if HasClientBaseInterface %} : {{ ClientBaseInterface }}{% endif %}

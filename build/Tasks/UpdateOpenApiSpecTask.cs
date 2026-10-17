@@ -32,8 +32,12 @@ namespace Build.Tasks
             FixPathParameterNames(context, spec);
             FixForumTopic(context, spec);
             AddUserListFields(context, spec);
+            MakeDatesStrings(context, spec);
             FlattenSingleAllOf(context, spec);
+            SetOperationIds(context, spec);
+            SetParameterVariableNames(context, spec);
             PromoteInlineSchemas(context, spec);
+            AddEnums(context, spec);
             MarkBaseClasses(context, spec);
             RemoveDocumentation(context, spec);
             AddDocumentation(context, spec);
@@ -149,6 +153,199 @@ namespace Build.Tasks
                     ["schema"] = new JsonObject { ["type"] = "string" },
                 });
             }
+        }
+
+        // MAL's spec declares some dates as "format: date" (list status start/finish dates, birthdays), which NSwag turns into
+        // DateTimeOffset read with a culture-dependent DateTimeOffset.Parse. MAL sends partial dates ("2017-10", "2017") there,
+        // which that rejects or rounds to the first of the month, so keep them as the strings MAL sends, like WorkForList.start_date.
+        private static void MakeDatesStrings(BuildContext context, JsonNode spec)
+        {
+            var changed = 0;
+            Visit(spec["components"]);
+
+            context.Information($"Changed {changed} date properties to plain strings");
+
+            void Visit(JsonNode? node)
+            {
+                switch (node)
+                {
+                    case JsonObject jsonObject:
+                        if ((string?)jsonObject["type"] == "string" && (string?)jsonObject["format"] == "date")
+                        {
+                            jsonObject.Remove("format");
+                            changed++;
+                        }
+
+                        foreach (var (_, child) in jsonObject.ToArray())
+                        {
+                            Visit(child);
+                        }
+
+                        break;
+
+                    case JsonArray jsonArray:
+                        foreach (var child in jsonArray)
+                        {
+                            Visit(child);
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        // The operationIds name the generated clients and methods ("Catalog_SearchAnime" becomes ICatalogClient.SearchAnimeAsync,
+        // see operationGenerationMode in the .nswag config). MAL's own ids ("anime_anime_id_my_list_status_put") would give names
+        // like My_list_statusPatchAsync. An operation missing here fails the task, so a new endpoint gets a deliberate name.
+        private static readonly Dictionary<string, string> OperationIds = new()
+        {
+            ["GET /anime"] = "Catalog_SearchAnime",
+            ["GET /anime/{anime_id}"] = "Catalog_GetAnime",
+            ["GET /manga"] = "Catalog_SearchManga",
+            ["GET /manga/{manga_id}"] = "Catalog_GetManga",
+            ["GET /users/{user_name}"] = "Catalog_GetUser",
+            ["PATCH /anime/{anime_id}/my_list_status"] = "Anime_UpdateListStatus",
+            ["DELETE /anime/{anime_id}/my_list_status"] = "Anime_DeleteListStatus",
+            ["GET /anime/ranking"] = "Anime_GetRanking",
+            ["GET /anime/season/{year}/{season}"] = "Anime_GetSeasonal",
+            ["GET /anime/suggestions"] = "Anime_GetSuggestions",
+            ["PATCH /manga/{manga_id}/my_list_status"] = "Manga_UpdateListStatus",
+            ["DELETE /manga/{manga_id}/my_list_status"] = "Manga_DeleteListStatus",
+            ["GET /manga/ranking"] = "Manga_GetRanking",
+            ["GET /forum/boards"] = "Forum_GetBoards",
+            ["GET /forum/topic/{topic_id}"] = "Forum_GetTopic",
+            ["GET /forum/topics"] = "Forum_GetTopics",
+            ["GET /users/{user_name}/animelist"] = "Users_GetAnimeList",
+            ["GET /users/{user_name}/mangalist"] = "Users_GetMangaList",
+        };
+
+        private static void SetOperationIds(BuildContext context, JsonNode spec)
+        {
+            foreach (var (path, pathItem) in spec["paths"]!.AsObject())
+            {
+                foreach (var (method, operation) in pathItem!.AsObject())
+                {
+                    if (operation is not JsonObject operationObject || method == "parameters")
+                    {
+                        continue;
+                    }
+
+                    var key = $"{method.ToUpperInvariant()} {path}";
+                    operationObject["operationId"] = OperationIds.TryGetValue(key, out var operationId)
+                        ? operationId
+                        : throw new InvalidOperationException($"No operationId for '{key}'; add one to {nameof(OperationIds)}");
+                }
+            }
+
+            context.Information($"Set {OperationIds.Count} operationIds");
+        }
+
+        // NSwag names parameter variables after x-originalName when it is set, and otherwise keeps MAL's snake_case
+        // ("anime_id"). The query and path still use "name", so only the C# name changes (animeId).
+        private static void SetParameterVariableNames(BuildContext context, JsonNode spec)
+        {
+            foreach (var (_, pathItem) in spec["paths"]!.AsObject())
+            {
+                // parameters are declared per operation, or for all operations of a path in a path-level "parameters" array
+                foreach (var (key, node) in pathItem!.AsObject())
+                {
+                    var parameters = key == "parameters" ? node as JsonArray : node?["parameters"] as JsonArray;
+                    foreach (var parameter in parameters ?? [])
+                    {
+                        parameter!["x-originalName"] = ToLowerCamelCase((string)parameter["name"]!);
+                    }
+                }
+            }
+
+            context.Information("Set the parameter variable names");
+
+            static string ToLowerCamelCase(string name)
+            {
+                var parts = name.Split('_', StringSplitOptions.RemoveEmptyEntries);
+                return parts[0] + string.Concat(parts.Skip(1).Select(part => char.ToUpperInvariant(part[0]) + part[1..]));
+            }
+        }
+
+        // MAL's spec types the parameters and body fields that take a fixed set of values as plain strings. These named enums
+        // replace them; x-enumNames sets the C# member names and the values are what MAL expects on the wire (checked against
+        // the live API on 2026-10-17: unknown ranking types fail with 400, unknown sorts are ignored).
+        // Response fields stay strings, so a value MAL adds later doesn't make the whole response fail to deserialize.
+        private static readonly (string Name, (string Value, string Member)[] Values, string[] Targets)[] Enums =
+        [
+            ("AnimeRankingType",
+                [("all", "All"), ("airing", "Airing"), ("upcoming", "Upcoming"), ("tv", "Tv"), ("ova", "Ova"), ("movie", "Movie"), ("special", "Special"), ("bypopularity", "ByPopularity"), ("favorite", "Favorite")],
+                ["GET /anime/ranking ranking_type"]),
+            ("MangaRankingType",
+                [("all", "All"), ("manga", "Manga"), ("novels", "Novels"), ("lightnovels", "LightNovels"), ("oneshots", "OneShots"), ("doujin", "Doujin"), ("manhwa", "Manhwa"), ("manhua", "Manhua"), ("bypopularity", "ByPopularity"), ("favorite", "Favorite")],
+                ["GET /manga/ranking ranking_type"]),
+            ("SeasonalAnimeSort",
+                [("anime_score", "Score"), ("anime_num_list_users", "NumListUsers")],
+                ["GET /anime/season/{year}/{season} sort"]),
+            ("ForumTopicsSort",
+                [("recent", "Recent")],
+                ["GET /forum/topics sort"]),
+            ("AnimeWatchStatus",
+                [("watching", "Watching"), ("completed", "Completed"), ("on_hold", "OnHold"), ("dropped", "Dropped"), ("plan_to_watch", "PlanToWatch")],
+                ["GET /users/{user_name}/animelist status", "AnimeListStatusPatch.status"]),
+            ("MangaReadStatus",
+                [("reading", "Reading"), ("completed", "Completed"), ("on_hold", "OnHold"), ("dropped", "Dropped"), ("plan_to_read", "PlanToRead")],
+                ["GET /users/{user_name}/mangalist status", "MangaListStatusPatch.status"]),
+            ("UserAnimeListSort",
+                [("list_score", "ListScore"), ("list_updated_at", "ListUpdatedAt"), ("anime_title", "AnimeTitle"), ("anime_start_date", "AnimeStartDate")],
+                ["GET /users/{user_name}/animelist sort"]),
+            ("UserMangaListSort",
+                [("list_score", "ListScore"), ("list_updated_at", "ListUpdatedAt"), ("manga_title", "MangaTitle"), ("manga_start_date", "MangaStartDate")],
+                ["GET /users/{user_name}/mangalist sort"]),
+        ];
+
+        // runs after PromoteInlineSchemas, so the PATCH bodies are named schemas ("AnimeListStatusPatch.status")
+        private static void AddEnums(BuildContext context, JsonNode spec)
+        {
+            var schemas = spec["components"]!["schemas"]!.AsObject();
+
+            foreach (var (name, values, targets) in Enums)
+            {
+                schemas[name] = new JsonObject
+                {
+                    ["type"] = "string",
+                    ["enum"] = new JsonArray([.. values.Select(value => JsonValue.Create(value.Value))]),
+                    ["x-enumNames"] = new JsonArray([.. values.Select(value => JsonValue.Create(value.Member))]),
+                };
+
+                foreach (var target in targets)
+                {
+                    var reference = new JsonObject { ["$ref"] = $"#/components/schemas/{name}" };
+
+                    if (target.Split(' ') is [var method, var path, var parameterName])
+                    {
+                        var parameter = (spec["paths"]?[path]?[method.ToLowerInvariant()]?["parameters"] as JsonArray)?
+                            .OfType<JsonObject>()
+                            .FirstOrDefault(parameter => (string?)parameter["name"] == parameterName)
+                            ?? throw new InvalidOperationException($"'{target}' for the enum '{name}' isn't in the spec");
+
+                        parameter["schema"] = reference;
+                    }
+                    else
+                    {
+                        var (schemaName, propertyName) = (target.Split('.')[0], target.Split('.')[1]);
+                        var properties = schemas[schemaName]?["properties"] as JsonObject;
+                        if (properties?.ContainsKey(propertyName) != true)
+                        {
+                            throw new InvalidOperationException($"'{target}' for the enum '{name}' isn't in the spec");
+                        }
+
+                        properties[propertyName] = reference;
+                    }
+                }
+
+                context.Information($"Added the enum '{name}' for {string.Join(", ", targets)}");
+            }
+
+            // the season parameter takes the same values as AnimeSeason.season, which PromoteInlineSchemas named Season
+            var seasonParameter = spec["paths"]!["/anime/season/{year}/{season}"]!["get"]!["parameters"]!.AsArray()
+                .OfType<JsonObject>()
+                .Single(parameter => (string?)parameter["name"] == "season");
+            seasonParameter["schema"] = new JsonObject { ["$ref"] = "#/components/schemas/Season" };
         }
 
         // MAL's spec wraps many schemas in an allOf with a single inline object (the forum schemas), or with a $ref plus an
@@ -316,6 +513,8 @@ namespace Build.Tasks
         // RemoveDocumentation dropped MAL's. Operations and parameters are looked up by "METHOD /path" and parameter name,
         // schemas by name, and properties by their path from the schema ("AnimeForList.start_season.year"), trying the
         // longest match first, so "status" can mean one thing in a list status and another one on an anime.
+        private const string RemarksExtension = "x-remarks";
+
         private static void AddDocumentation(BuildContext context, JsonNode spec)
         {
             var documentation = JsonNode.Parse(File.ReadAllText(Constants.OpenApiDocumentationPath))!;
@@ -323,6 +522,9 @@ namespace Build.Tasks
             var parameters = documentation["parameters"]!.AsObject();
             var schemas = documentation["schemas"]!.AsObject();
             var properties = documentation["properties"]!.AsObject();
+            // longer notes for single properties, keyed by their full path from the schema (no fallback to the bare name);
+            // Class.liquid renders them as <remarks>
+            var remarks = documentation["remarks"]!.AsObject();
             var missing = new List<string>();
 
             foreach (var (path, pathItem) in spec["paths"]!.AsObject())
@@ -405,6 +607,11 @@ namespace Build.Tasks
                         propertyObject["description"] = description;
                     }
 
+                    if ((string?)remarks[propertyPath] is { } remark)
+                    {
+                        propertyObject[RemarksExtension] = remark;
+                    }
+
                     var item = propertyObject["items"] as JsonObject;
                     if (item?["properties"] is not null && description is not null)
                     {
@@ -437,7 +644,7 @@ namespace Build.Tasks
         // MAL's API License Agreement (3(a)(i)-(ii)) counts the API documentation as part of the API, which may not be
         // copied, modified or published. Keep only the structure (paths, parameters, schemas, enums) and drop MAL's prose
         // and sample content, so neither the committed spec nor the generated XML docs carry it.
-        private static readonly string[] DocumentationKeys = ["description", "summary", "example", "examples", "x-code-samples", "x-logo"];
+        private static readonly string[] DocumentationKeys = ["description", "summary", "example", "examples", "x-code-samples", "x-logo", RemarksExtension];
 
         private static void RemoveDocumentation(BuildContext context, JsonNode spec)
         {

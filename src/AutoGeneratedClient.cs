@@ -38,16 +38,16 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<AnimeList> AnimeGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<AnimeList> SearchAnimeAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns the details of an anime.
         /// </summary>
-        /// <param name="anime_id">The anime's MyAnimeList ID.</param>
+        /// <param name="animeId">The anime's MyAnimeList ID.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<AnimeForDetails> AnimeGetAsync(int anime_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<AnimeForDetails> GetAnimeAsync(int animeId, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Searches manga by title.
@@ -58,25 +58,25 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<MangaList> MangaGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<MangaList> SearchMangaAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns the details of a manga.
         /// </summary>
-        /// <param name="manga_id">The manga's MyAnimeList ID.</param>
+        /// <param name="mangaId">The manga's MyAnimeList ID.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<MangaForDetails> MangaGetAsync(int manga_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<MangaForDetails> GetMangaAsync(int mangaId, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns a user's profile. MyAnimeList only supports @me, the signed-in user.
         /// </summary>
-        /// <param name="user_name">@me, for the signed-in user.</param>
+        /// <param name="userName">@me, for the signed-in user.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<User> UsersAsync(string user_name, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<User> GetUserAsync(string userName, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -121,7 +121,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<AnimeList> AnimeGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<AnimeList> SearchAnimeAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -210,14 +210,14 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Returns the details of an anime.
         /// </summary>
-        /// <param name="anime_id">The anime's MyAnimeList ID.</param>
+        /// <param name="animeId">The anime's MyAnimeList ID.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<AnimeForDetails> AnimeGetAsync(int anime_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<AnimeForDetails> GetAnimeAsync(int animeId, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (anime_id == null)
-                throw new System.ArgumentNullException("anime_id");
+            if (animeId == null)
+                throw new System.ArgumentNullException("animeId");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -232,7 +232,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "anime/{anime_id}"
                     urlBuilder_.Append("anime/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(anime_id, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(animeId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('?');
                     if (fields != null)
                     {
@@ -301,7 +301,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<MangaList> MangaGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<MangaList> SearchMangaAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -390,14 +390,14 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Returns the details of a manga.
         /// </summary>
-        /// <param name="manga_id">The manga's MyAnimeList ID.</param>
+        /// <param name="mangaId">The manga's MyAnimeList ID.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<MangaForDetails> MangaGetAsync(int manga_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<MangaForDetails> GetMangaAsync(int mangaId, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (manga_id == null)
-                throw new System.ArgumentNullException("manga_id");
+            if (mangaId == null)
+                throw new System.ArgumentNullException("mangaId");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -412,7 +412,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "manga/{manga_id}"
                     urlBuilder_.Append("manga/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(manga_id, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(mangaId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('?');
                     if (fields != null)
                     {
@@ -475,14 +475,14 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Returns a user's profile. MyAnimeList only supports @me, the signed-in user.
         /// </summary>
-        /// <param name="user_name">@me, for the signed-in user.</param>
+        /// <param name="userName">@me, for the signed-in user.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<User> UsersAsync(string user_name, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<User> GetUserAsync(string userName, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (user_name == null)
-                throw new System.ArgumentNullException("user_name");
+            if (userName == null)
+                throw new System.ArgumentNullException("userName");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -497,7 +497,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "users/{user_name}"
                     urlBuilder_.Append("users/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(user_name, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(userName, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('?');
                     if (fields != null)
                     {
@@ -675,25 +675,25 @@ namespace SoftThorn.MAL.ApiClient
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<AnimeListStatus> My_list_statusPatchAsync(int anime_id, AnimeListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<AnimeListStatus> UpdateListStatusAsync(int animeId, AnimeListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Removes an anime from the signed-in user's list. MyAnimeList also answers with success when the anime isn't on the list.
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task My_list_statusDeleteAsync(int anime_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task DeleteListStatusAsync(int animeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns a page of an anime ranking.
         /// </summary>
-        /// <param name="ranking_type">Which ranking to return: all, airing, upcoming, tv, ova, movie, special, bypopularity or favorite.</param>
+        /// <param name="rankingType">Which ranking to return: all, airing, upcoming, tv, ova, movie, special, bypopularity or favorite.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<AnimeListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<AnimeListForRanking> GetRankingAsync(AnimeRankingType rankingType, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns the anime that started airing in a season.
@@ -706,7 +706,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<AnimeList> SeasonAsync(int year, string season, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<AnimeList> GetSeasonalAsync(int year, Season season, SeasonalAnimeSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns anime that MyAnimeList suggests for the signed-in user.
@@ -716,7 +716,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<AnimeList> SuggestionsAsync(int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<AnimeList> GetSuggestionsAsync(int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -757,10 +757,10 @@ namespace SoftThorn.MAL.ApiClient
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<AnimeListStatus> My_list_statusPatchAsync(int anime_id, AnimeListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<AnimeListStatus> UpdateListStatusAsync(int animeId, AnimeListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (anime_id == null)
-                throw new System.ArgumentNullException("anime_id");
+            if (animeId == null)
+                throw new System.ArgumentNullException("animeId");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -779,7 +779,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "anime/{anime_id}/my_list_status"
                     urlBuilder_.Append("anime/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(anime_id, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(animeId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/my_list_status");
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -839,10 +839,10 @@ namespace SoftThorn.MAL.ApiClient
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task My_list_statusDeleteAsync(int anime_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task DeleteListStatusAsync(int animeId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (anime_id == null)
-                throw new System.ArgumentNullException("anime_id");
+            if (animeId == null)
+                throw new System.ArgumentNullException("animeId");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -857,7 +857,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "anime/{anime_id}/my_list_status"
                     urlBuilder_.Append("anime/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(anime_id, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(animeId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/my_list_status");
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -891,7 +891,7 @@ namespace SoftThorn.MAL.ApiClient
                         if (status_ == 404)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("A server side error occurred.", status_, responseText_, headers_, null);
+                            throw new ApiException("MyAnimeList answered with an error status.", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -916,16 +916,16 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Returns a page of an anime ranking.
         /// </summary>
-        /// <param name="ranking_type">Which ranking to return: all, airing, upcoming, tv, ova, movie, special, bypopularity or favorite.</param>
+        /// <param name="rankingType">Which ranking to return: all, airing, upcoming, tv, ova, movie, special, bypopularity or favorite.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<AnimeListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<AnimeListForRanking> GetRankingAsync(AnimeRankingType rankingType, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (ranking_type == null)
-                throw new System.ArgumentNullException("ranking_type");
+            if (rankingType == null)
+                throw new System.ArgumentNullException("rankingType");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -941,7 +941,7 @@ namespace SoftThorn.MAL.ApiClient
                     // Operation Path: "anime/ranking"
                     urlBuilder_.Append("anime/ranking");
                     urlBuilder_.Append('?');
-                    urlBuilder_.Append(System.Uri.EscapeDataString("ranking_type")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(ranking_type, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    urlBuilder_.Append(System.Uri.EscapeDataString("ranking_type")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(rankingType, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     if (limit != null)
                     {
                         urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
@@ -1019,7 +1019,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<AnimeList> SeasonAsync(int year, string season, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<AnimeList> GetSeasonalAsync(int year, Season season, SeasonalAnimeSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (year == null)
                 throw new System.ArgumentNullException("year");
@@ -1122,7 +1122,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<AnimeList> SuggestionsAsync(int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<AnimeList> GetSuggestionsAsync(int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1322,32 +1322,32 @@ namespace SoftThorn.MAL.ApiClient
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<ForumBoards> BoardsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<ForumBoards> GetBoardsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns a page of a forum topic's posts, with the topic's poll if it has one.
         /// </summary>
-        /// <param name="topic_id">The forum topic's ID.</param>
+        /// <param name="topicId">The forum topic's ID.</param>
         /// <param name="limit">How many posts to return.</param>
         /// <param name="offset">How many posts to skip, for paging.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<ForumTopic> TopicAsync(int topic_id, int? limit = null, int? offset = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<ForumTopic> GetTopicAsync(int topicId, int? limit = null, int? offset = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Searches forum topics.
         /// </summary>
-        /// <param name="board_id">Returns only topics of the forum board with this ID.</param>
-        /// <param name="subboard_id">Returns only topics of the forum subboard with this ID.</param>
+        /// <param name="boardId">Returns only topics of the forum board with this ID.</param>
+        /// <param name="subboardId">Returns only topics of the forum subboard with this ID.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="sort">The order of the topics; recent is the only supported value.</param>
         /// <param name="q">The text to search for in the topics.</param>
-        /// <param name="topic_user_name">Returns only topics that this user started.</param>
-        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="topicUserName">Returns only topics that this user started.</param>
+        /// <param name="userName">A user name, or @me for the signed-in user.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<ForumTopics> TopicsAsync(int? board_id = null, int? subboard_id = null, int? limit = null, int? offset = null, string? sort = null, string? q = null, string? topic_user_name = null, string? user_name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<ForumTopics> GetTopicsAsync(int? boardId = null, int? subboardId = null, int? limit = null, int? offset = null, ForumTopicsSort? sort = null, string? q = null, string? topicUserName = null, string? userName = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -1388,7 +1388,7 @@ namespace SoftThorn.MAL.ApiClient
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<ForumBoards> BoardsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<ForumBoards> GetBoardsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1459,15 +1459,15 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Returns a page of a forum topic's posts, with the topic's poll if it has one.
         /// </summary>
-        /// <param name="topic_id">The forum topic's ID.</param>
+        /// <param name="topicId">The forum topic's ID.</param>
         /// <param name="limit">How many posts to return.</param>
         /// <param name="offset">How many posts to skip, for paging.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<ForumTopic> TopicAsync(int topic_id, int? limit = null, int? offset = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<ForumTopic> GetTopicAsync(int topicId, int? limit = null, int? offset = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (topic_id == null)
-                throw new System.ArgumentNullException("topic_id");
+            if (topicId == null)
+                throw new System.ArgumentNullException("topicId");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1482,7 +1482,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "forum/topic/{topic_id}"
                     urlBuilder_.Append("forum/topic/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(topic_id, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(topicId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('?');
                     if (limit != null)
                     {
@@ -1549,17 +1549,17 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Searches forum topics.
         /// </summary>
-        /// <param name="board_id">Returns only topics of the forum board with this ID.</param>
-        /// <param name="subboard_id">Returns only topics of the forum subboard with this ID.</param>
+        /// <param name="boardId">Returns only topics of the forum board with this ID.</param>
+        /// <param name="subboardId">Returns only topics of the forum subboard with this ID.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="sort">The order of the topics; recent is the only supported value.</param>
         /// <param name="q">The text to search for in the topics.</param>
-        /// <param name="topic_user_name">Returns only topics that this user started.</param>
-        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="topicUserName">Returns only topics that this user started.</param>
+        /// <param name="userName">A user name, or @me for the signed-in user.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<ForumTopics> TopicsAsync(int? board_id = null, int? subboard_id = null, int? limit = null, int? offset = null, string? sort = null, string? q = null, string? topic_user_name = null, string? user_name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<ForumTopics> GetTopicsAsync(int? boardId = null, int? subboardId = null, int? limit = null, int? offset = null, ForumTopicsSort? sort = null, string? q = null, string? topicUserName = null, string? userName = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1575,13 +1575,13 @@ namespace SoftThorn.MAL.ApiClient
                     // Operation Path: "forum/topics"
                     urlBuilder_.Append("forum/topics");
                     urlBuilder_.Append('?');
-                    if (board_id != null)
+                    if (boardId != null)
                     {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("board_id")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(board_id, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                        urlBuilder_.Append(System.Uri.EscapeDataString("board_id")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(boardId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
-                    if (subboard_id != null)
+                    if (subboardId != null)
                     {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("subboard_id")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(subboard_id, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                        urlBuilder_.Append(System.Uri.EscapeDataString("subboard_id")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(subboardId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
                     if (limit != null)
                     {
@@ -1599,13 +1599,13 @@ namespace SoftThorn.MAL.ApiClient
                     {
                         urlBuilder_.Append(System.Uri.EscapeDataString("q")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(q, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
-                    if (topic_user_name != null)
+                    if (topicUserName != null)
                     {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("topic_user_name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(topic_user_name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                        urlBuilder_.Append(System.Uri.EscapeDataString("topic_user_name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(topicUserName, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
-                    if (user_name != null)
+                    if (userName != null)
                     {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("user_name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(user_name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                        urlBuilder_.Append(System.Uri.EscapeDataString("user_name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(userName, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
                     urlBuilder_.Length--;
 
@@ -1779,25 +1779,25 @@ namespace SoftThorn.MAL.ApiClient
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<MangaListStatus> My_list_statusPatchAsync(int manga_id, MangaListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<MangaListStatus> UpdateListStatusAsync(int mangaId, MangaListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Removes a manga from the signed-in user's list. MyAnimeList also answers with success when the manga isn't on the list.
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task My_list_statusDeleteAsync(int manga_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task DeleteListStatusAsync(int mangaId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns a page of a manga ranking.
         /// </summary>
-        /// <param name="ranking_type">Which ranking to return: all, manga, novels, oneshots, doujin, manhwa, manhua, bypopularity or favorite.</param>
+        /// <param name="rankingType">Which ranking to return: all, manga, novels, oneshots, doujin, manhwa, manhua, bypopularity or favorite.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<MangaListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<MangaListForRanking> GetRankingAsync(MangaRankingType rankingType, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -1838,10 +1838,10 @@ namespace SoftThorn.MAL.ApiClient
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<MangaListStatus> My_list_statusPatchAsync(int manga_id, MangaListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<MangaListStatus> UpdateListStatusAsync(int mangaId, MangaListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (manga_id == null)
-                throw new System.ArgumentNullException("manga_id");
+            if (mangaId == null)
+                throw new System.ArgumentNullException("mangaId");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1860,7 +1860,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "manga/{manga_id}/my_list_status"
                     urlBuilder_.Append("manga/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(manga_id, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(mangaId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/my_list_status");
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -1920,10 +1920,10 @@ namespace SoftThorn.MAL.ApiClient
         /// </summary>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task My_list_statusDeleteAsync(int manga_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task DeleteListStatusAsync(int mangaId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (manga_id == null)
-                throw new System.ArgumentNullException("manga_id");
+            if (mangaId == null)
+                throw new System.ArgumentNullException("mangaId");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1938,7 +1938,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "manga/{manga_id}/my_list_status"
                     urlBuilder_.Append("manga/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(manga_id, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(mangaId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/my_list_status");
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -1972,7 +1972,7 @@ namespace SoftThorn.MAL.ApiClient
                         if (status_ == 404)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("A server side error occurred.", status_, responseText_, headers_, null);
+                            throw new ApiException("MyAnimeList answered with an error status.", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -1997,16 +1997,16 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Returns a page of a manga ranking.
         /// </summary>
-        /// <param name="ranking_type">Which ranking to return: all, manga, novels, oneshots, doujin, manhwa, manhua, bypopularity or favorite.</param>
+        /// <param name="rankingType">Which ranking to return: all, manga, novels, oneshots, doujin, manhwa, manhua, bypopularity or favorite.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<MangaListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<MangaListForRanking> GetRankingAsync(MangaRankingType rankingType, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (ranking_type == null)
-                throw new System.ArgumentNullException("ranking_type");
+            if (rankingType == null)
+                throw new System.ArgumentNullException("rankingType");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2022,7 +2022,7 @@ namespace SoftThorn.MAL.ApiClient
                     // Operation Path: "manga/ranking"
                     urlBuilder_.Append("manga/ranking");
                     urlBuilder_.Append('?');
-                    urlBuilder_.Append(System.Uri.EscapeDataString("ranking_type")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(ranking_type, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    urlBuilder_.Append(System.Uri.EscapeDataString("ranking_type")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(rankingType, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     if (limit != null)
                     {
                         urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
@@ -2205,7 +2205,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Returns a page of a user's anime list.
         /// </summary>
-        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="userName">A user name, or @me for the signed-in user.</param>
         /// <param name="status">Returns only the entries with this list status: watching, completed, on_hold, dropped or plan_to_watch.</param>
         /// <param name="sort">The order of the entries: list_score, list_updated_at, anime_title or anime_start_date.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
@@ -2213,12 +2213,12 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<UserAnimeList> AnimelistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<UserAnimeList> GetAnimeListAsync(string userName, AnimeWatchStatus? status = null, UserAnimeListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns a page of a user's manga list.
         /// </summary>
-        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="userName">A user name, or @me for the signed-in user.</param>
         /// <param name="status">Returns only the entries with this list status: reading, completed, on_hold, dropped or plan_to_read.</param>
         /// <param name="sort">The order of the entries: list_score, list_updated_at, manga_title or manga_start_date.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
@@ -2226,7 +2226,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<UserMangaList> MangalistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<UserMangaList> GetMangaListAsync(string userName, MangaReadStatus? status = null, UserMangaListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -2265,7 +2265,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Returns a page of a user's anime list.
         /// </summary>
-        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="userName">A user name, or @me for the signed-in user.</param>
         /// <param name="status">Returns only the entries with this list status: watching, completed, on_hold, dropped or plan_to_watch.</param>
         /// <param name="sort">The order of the entries: list_score, list_updated_at, anime_title or anime_start_date.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
@@ -2273,10 +2273,10 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<UserAnimeList> AnimelistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<UserAnimeList> GetAnimeListAsync(string userName, AnimeWatchStatus? status = null, UserAnimeListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (user_name == null)
-                throw new System.ArgumentNullException("user_name");
+            if (userName == null)
+                throw new System.ArgumentNullException("userName");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2291,7 +2291,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "users/{user_name}/animelist"
                     urlBuilder_.Append("users/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(user_name, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(userName, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/animelist");
                     urlBuilder_.Append('?');
                     if (status != null)
@@ -2371,7 +2371,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Returns a page of a user's manga list.
         /// </summary>
-        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="userName">A user name, or @me for the signed-in user.</param>
         /// <param name="status">Returns only the entries with this list status: reading, completed, on_hold, dropped or plan_to_read.</param>
         /// <param name="sort">The order of the entries: list_score, list_updated_at, manga_title or manga_start_date.</param>
         /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
@@ -2379,10 +2379,10 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<UserMangaList> MangalistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<UserMangaList> GetMangaListAsync(string userName, MangaReadStatus? status = null, UserMangaListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (user_name == null)
-                throw new System.ArgumentNullException("user_name");
+            if (userName == null)
+                throw new System.ArgumentNullException("userName");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2397,7 +2397,7 @@ namespace SoftThorn.MAL.ApiClient
                 
                     // Operation Path: "users/{user_name}/mangalist"
                     urlBuilder_.Append("users/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(user_name, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(userName, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/mangalist");
                     urlBuilder_.Append('?');
                     if (status != null)
@@ -2606,13 +2606,13 @@ namespace SoftThorn.MAL.ApiClient
         /// Anime related to this one, for example sequels and prequels.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("related_anime")]
-        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? Related_anime { get; set; } = default!;
+        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? RelatedAnime { get; set; } = default!;
 
         /// <summary>
         /// Manga related to this anime, for example the one it is based on.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("related_manga")]
-        public System.Collections.Generic.ICollection<RelatedMangaEdge>? Related_manga { get; set; } = default!;
+        public System.Collections.Generic.ICollection<RelatedMangaEdge>? RelatedManga { get; set; } = default!;
 
         /// <summary>
         /// Anime that users recommend to fans of this one.
@@ -2639,7 +2639,7 @@ namespace SoftThorn.MAL.ApiClient
         /// The kind of anime, for example tv, movie, ova, ona, special or music.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("media_type")]
-        public string? Media_type { get; set; } = default!;
+        public string? MediaType { get; set; } = default!;
 
         /// <summary>
         /// Whether the anime is airing: finished_airing, currently_airing or not_yet_aired.
@@ -2651,19 +2651,19 @@ namespace SoftThorn.MAL.ApiClient
         /// The signed-in user's list entry for the anime. Only present when the anime is on their list.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("my_list_status")]
-        public AnimeListStatus? My_list_status { get; set; } = default!;
+        public AnimeListStatus? MyListStatus { get; set; } = default!;
 
         /// <summary>
         /// The number of episodes, or 0 when it isn't known yet.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_episodes")]
-        public int? Num_episodes { get; set; } = default!;
+        public int? NumEpisodes { get; set; } = default!;
 
         /// <summary>
         /// The season in which the anime started airing.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("start_season")]
-        public AnimeSeason? Start_season { get; set; } = default!;
+        public AnimeSeason? StartSeason { get; set; } = default!;
 
         /// <summary>
         /// When new episodes are broadcast in Japan.
@@ -2681,7 +2681,7 @@ namespace SoftThorn.MAL.ApiClient
         /// The average length of an episode in seconds.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("average_episode_duration")]
-        public int? Average_episode_duration { get; set; } = default!;
+        public int? AverageEpisodeDuration { get; set; } = default!;
 
         /// <summary>
         /// The age rating: g, pg, pg_13, r, r+ or rx.
@@ -2720,27 +2720,31 @@ namespace SoftThorn.MAL.ApiClient
         /// How many episodes the user has watched.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_episodes_watched")]
-        public int? Num_episodes_watched { get; set; } = default!;
+        public int? NumEpisodesWatched { get; set; } = default!;
 
         /// <summary>
         /// Whether the user is watching the anime again.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("is_rewatching")]
-        public bool? Is_rewatching { get; set; } = default!;
+        public bool? IsRewatching { get; set; } = default!;
 
         /// <summary>
-        /// When the user started the work, as YYYY-MM-DD.
+        /// When the user started the work: YYYY-MM-DD, or only YYYY-MM or YYYY when the user left out the day or month.
         /// </summary>
+        /// <remarks>
+        /// A string rather than a date, because users can leave out the day or the month, and MyAnimeList then sends only YYYY-MM or YYYY. A date type would reject those values or fill in a day the user never entered. Parse it yourself if you need a date, for example with DateOnly.TryParseExact for each of the three forms.
+        /// </remarks>
         [System.Text.Json.Serialization.JsonPropertyName("start_date")]
-        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
-        public System.DateTimeOffset? Start_date { get; set; } = default!;
+        public string? StartDate { get; set; } = default!;
 
         /// <summary>
-        /// When the user finished the work, as YYYY-MM-DD.
+        /// When the user finished the work, in the same form as the start date.
         /// </summary>
+        /// <remarks>
+        /// A string rather than a date, for the same reason as the start date: MyAnimeList sends partial dates (YYYY-MM or YYYY) when the user left out the day or the month.
+        /// </remarks>
         [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
-        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
-        public System.DateTimeOffset? Finish_date { get; set; } = default!;
+        public string? FinishDate { get; set; } = default!;
 
         /// <summary>
         /// The priority of the entry: 0 (low), 1 (medium) or 2 (high).
@@ -2752,13 +2756,13 @@ namespace SoftThorn.MAL.ApiClient
         /// How many times the user has watched the anime again.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
-        public int? Num_times_rewatched { get; set; } = default!;
+        public int? NumTimesRewatched { get; set; } = default!;
 
         /// <summary>
         /// How much the user would like to watch the anime again, from 0 (not set) to 5.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("rewatch_value")]
-        public int? Rewatch_value { get; set; } = default!;
+        public int? RewatchValue { get; set; } = default!;
 
         /// <summary>
         /// The user's tags for the entry.
@@ -2776,7 +2780,7 @@ namespace SoftThorn.MAL.ApiClient
         /// When the entry was last changed.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
-        public System.DateTimeOffset? Updated_at { get; set; } = default!;
+        public System.DateTimeOffset? UpdatedAt { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -2809,7 +2813,7 @@ namespace SoftThorn.MAL.ApiClient
         /// How many users recommended it.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_recommendations")]
-        public int? Num_recommendations { get; set; } = default!;
+        public int? NumRecommendations { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -2870,7 +2874,7 @@ namespace SoftThorn.MAL.ApiClient
         /// How many users have the anime on their list.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_list_users")]
-        public int? Num_list_users { get; set; } = default!;
+        public int? NumListUsers { get; set; } = default!;
 
         /// <summary>
         /// How many users have the anime on their list, by list status.
@@ -3275,13 +3279,13 @@ namespace SoftThorn.MAL.ApiClient
         /// When the post was written.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("created_at")]
-        public System.DateTimeOffset? Created_at { get; set; } = default!;
+        public System.DateTimeOffset? CreatedAt { get; set; } = default!;
 
         /// <summary>
         /// The post's author.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("created_by")]
-        public ForumTopicPostCreatedBy? Created_by { get; set; } = default!;
+        public ForumTopicPostCreatedBy? CreatedBy { get; set; } = default!;
 
         /// <summary>
         /// The post's text, with BBCode markup.
@@ -3332,7 +3336,7 @@ namespace SoftThorn.MAL.ApiClient
         /// The address of the author's forum avatar. The JSON name keeps MyAnimeList's spelling.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("forum_avator")]
-        public string? Forum_avator { get; set; } = default!;
+        public string? ForumAvator { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3437,37 +3441,37 @@ namespace SoftThorn.MAL.ApiClient
         /// When the topic was started.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("created_at")]
-        public System.DateTimeOffset? Created_at { get; set; } = default!;
+        public System.DateTimeOffset? CreatedAt { get; set; } = default!;
 
         /// <summary>
         /// The user who started the topic.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("created_by")]
-        public ForumTopicsCreatedBy? Created_by { get; set; } = default!;
+        public ForumTopicsCreatedBy? CreatedBy { get; set; } = default!;
 
         /// <summary>
         /// How many posts the topic has.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("number_of_posts")]
-        public int? Number_of_posts { get; set; } = default!;
+        public int? NumberOfPosts { get; set; } = default!;
 
         /// <summary>
         /// When the latest post was written.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("last_post_created_at")]
-        public System.DateTimeOffset? Last_post_created_at { get; set; } = default!;
+        public System.DateTimeOffset? LastPostCreatedAt { get; set; } = default!;
 
         /// <summary>
         /// The user who wrote the latest post.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("last_post_created_by")]
-        public ForumTopicsCreatedBy? Last_post_created_by { get; set; } = default!;
+        public ForumTopicsCreatedBy? LastPostCreatedBy { get; set; } = default!;
 
         /// <summary>
         /// Whether the topic is closed for new posts.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("is_locked")]
-        public bool? Is_locked { get; set; } = default!;
+        public bool? IsLocked { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3572,13 +3576,13 @@ namespace SoftThorn.MAL.ApiClient
         /// Anime related to this manga, for example adaptations.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("related_anime")]
-        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? Related_anime { get; set; } = default!;
+        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? RelatedAnime { get; set; } = default!;
 
         /// <summary>
         /// Manga related to this one, for example sequels and spin-offs.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("related_manga")]
-        public System.Collections.Generic.ICollection<RelatedMangaEdge>? Related_manga { get; set; } = default!;
+        public System.Collections.Generic.ICollection<RelatedMangaEdge>? RelatedManga { get; set; } = default!;
 
         /// <summary>
         /// Manga that users recommend to fans of this one.
@@ -3605,7 +3609,7 @@ namespace SoftThorn.MAL.ApiClient
         /// The kind of manga, for example manga, light_novel, novel, one_shot, manhwa or manhua.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("media_type")]
-        public string? Media_type { get; set; } = default!;
+        public string? MediaType { get; set; } = default!;
 
         /// <summary>
         /// Whether the manga is being published: finished, currently_publishing or not_yet_published.
@@ -3617,19 +3621,19 @@ namespace SoftThorn.MAL.ApiClient
         /// The signed-in user's list entry for the manga. Only present when the manga is on their list.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("my_list_status")]
-        public MangaListStatus? My_list_status { get; set; } = default!;
+        public MangaListStatus? MyListStatus { get; set; } = default!;
 
         /// <summary>
         /// The number of volumes, or 0 when it isn't known yet.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_volumes")]
-        public int? Num_volumes { get; set; } = default!;
+        public int? NumVolumes { get; set; } = default!;
 
         /// <summary>
         /// The number of chapters, or 0 when it isn't known yet.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_chapters")]
-        public int? Num_chapters { get; set; } = default!;
+        public int? NumChapters { get; set; } = default!;
 
         /// <summary>
         /// The authors and artists, each with their role. Request their names with authors{first_name,last_name}.
@@ -3662,33 +3666,37 @@ namespace SoftThorn.MAL.ApiClient
         /// How many volumes the user has read.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_volumes_read")]
-        public int? Num_volumes_read { get; set; } = default!;
+        public int? NumVolumesRead { get; set; } = default!;
 
         /// <summary>
         /// How many chapters the user has read.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_chapters_read")]
-        public int? Num_chapters_read { get; set; } = default!;
+        public int? NumChaptersRead { get; set; } = default!;
 
         /// <summary>
         /// Whether the user is reading the manga again.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("is_rereading")]
-        public bool? Is_rereading { get; set; } = default!;
+        public bool? IsRereading { get; set; } = default!;
 
         /// <summary>
-        /// When the user started the work, as YYYY-MM-DD.
+        /// When the user started the work: YYYY-MM-DD, or only YYYY-MM or YYYY when the user left out the day or month.
         /// </summary>
+        /// <remarks>
+        /// A string rather than a date, because users can leave out the day or the month, and MyAnimeList then sends only YYYY-MM or YYYY. A date type would reject those values or fill in a day the user never entered. Parse it yourself if you need a date, for example with DateOnly.TryParseExact for each of the three forms.
+        /// </remarks>
         [System.Text.Json.Serialization.JsonPropertyName("start_date")]
-        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
-        public System.DateTimeOffset? Start_date { get; set; } = default!;
+        public string? StartDate { get; set; } = default!;
 
         /// <summary>
-        /// When the user finished the work, as YYYY-MM-DD.
+        /// When the user finished the work, in the same form as the start date.
         /// </summary>
+        /// <remarks>
+        /// A string rather than a date, for the same reason as the start date: MyAnimeList sends partial dates (YYYY-MM or YYYY) when the user left out the day or the month.
+        /// </remarks>
         [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
-        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
-        public System.DateTimeOffset? Finish_date { get; set; } = default!;
+        public string? FinishDate { get; set; } = default!;
 
         /// <summary>
         /// The priority of the entry: 0 (low), 1 (medium) or 2 (high).
@@ -3700,13 +3708,13 @@ namespace SoftThorn.MAL.ApiClient
         /// How many times the user has read the manga again.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_times_reread")]
-        public int? Num_times_reread { get; set; } = default!;
+        public int? NumTimesReread { get; set; } = default!;
 
         /// <summary>
         /// How much the user would like to read the manga again, from 0 (not set) to 5.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("reread_value")]
-        public int? Reread_value { get; set; } = default!;
+        public int? RereadValue { get; set; } = default!;
 
         /// <summary>
         /// The user's tags for the entry.
@@ -3724,7 +3732,7 @@ namespace SoftThorn.MAL.ApiClient
         /// When the entry was last changed.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
-        public System.DateTimeOffset? Updated_at { get; set; } = default!;
+        public System.DateTimeOffset? UpdatedAt { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3790,7 +3798,7 @@ namespace SoftThorn.MAL.ApiClient
         /// How many users recommended it.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_recommendations")]
-        public int? Num_recommendations { get; set; } = default!;
+        public int? NumRecommendations { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3823,13 +3831,13 @@ namespace SoftThorn.MAL.ApiClient
         /// The person's first name.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("first_name")]
-        public string? First_name { get; set; } = default!;
+        public string? FirstName { get; set; } = default!;
 
         /// <summary>
         /// The person's last name.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("last_name")]
-        public string? Last_name { get; set; } = default!;
+        public string? LastName { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3928,7 +3936,7 @@ namespace SoftThorn.MAL.ApiClient
         /// The place in the ranking's previous version, when MyAnimeList sends it.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("previous_rank")]
-        public int? Previous_rank { get; set; } = default!;
+        public int? PreviousRank { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3961,13 +3969,13 @@ namespace SoftThorn.MAL.ApiClient
         /// How the works are related, for example sequel, prequel, side_story, spin_off or other.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("relation_type")]
-        public string? Relation_type { get; set; } = default!;
+        public string? RelationType { get; set; } = default!;
 
         /// <summary>
         /// The relation as English text, for example Sequel.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("relation_type_formatted")]
-        public string? Relation_type_formatted { get; set; } = default!;
+        public string? RelationTypeFormatted { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -4000,13 +4008,13 @@ namespace SoftThorn.MAL.ApiClient
         /// How the works are related, for example sequel, prequel, side_story, spin_off or other.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("relation_type")]
-        public string? Relation_type { get; set; } = default!;
+        public string? RelationType { get; set; } = default!;
 
         /// <summary>
         /// The relation as English text, for example Sequel.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("relation_type_formatted")]
-        public string? Relation_type_formatted { get; set; } = default!;
+        public string? RelationTypeFormatted { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -4036,11 +4044,13 @@ namespace SoftThorn.MAL.ApiClient
         public string? Gender { get; set; } = default!;
 
         /// <summary>
-        /// The birthday the user chose to show on their profile.
+        /// The birthday the user chose to show on their profile: YYYY-MM-DD, or a partial date when the user left out parts of it.
         /// </summary>
+        /// <remarks>
+        /// A string rather than a date, because users can leave parts of their birthday out, and MyAnimeList then sends a partial date. A date type would reject those values or fill in parts the user never entered. Parse it yourself if you need a date.
+        /// </remarks>
         [System.Text.Json.Serialization.JsonPropertyName("birthday")]
-        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
-        public System.DateTimeOffset? Birthday { get; set; } = default!;
+        public string? Birthday { get; set; } = default!;
 
         /// <summary>
         /// The location the user chose to show on their profile.
@@ -4052,25 +4062,25 @@ namespace SoftThorn.MAL.ApiClient
         /// When the user joined MyAnimeList.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("joined_at")]
-        public System.DateTimeOffset? Joined_at { get; set; } = default!;
+        public System.DateTimeOffset? JoinedAt { get; set; } = default!;
 
         /// <summary>
         /// Totals over the user's anime list.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("anime_statistics")]
-        public UserAnimeStatistics? Anime_statistics { get; set; } = default!;
+        public UserAnimeStatistics? AnimeStatistics { get; set; } = default!;
 
         /// <summary>
         /// The user's time zone, for example Europe/Berlin.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("time_zone")]
-        public string? Time_zone { get; set; } = default!;
+        public string? TimeZone { get; set; } = default!;
 
         /// <summary>
         /// Whether the user supports MyAnimeList with a paid subscription.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("is_supporter")]
-        public bool? Is_supporter { get; set; } = default!;
+        public bool? IsSupporter { get; set; } = default!;
 
     }
 
@@ -4091,7 +4101,7 @@ namespace SoftThorn.MAL.ApiClient
         /// The user's list entry for the anime. Only present when the request's fields include list_status.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("list_status")]
-        public AnimeListStatus? List_status { get; set; } = default!;
+        public AnimeListStatus? ListStatus { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -4163,7 +4173,7 @@ namespace SoftThorn.MAL.ApiClient
         /// The user's list entry for the manga. Only present when the request's fields include list_status.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("list_status")]
-        public MangaListStatus? List_status { get; set; } = default!;
+        public MangaListStatus? ListStatus { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -4202,7 +4212,7 @@ namespace SoftThorn.MAL.ApiClient
         /// The main picture, usually the cover or key visual.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("main_picture")]
-        public Picture? Main_picture { get; set; } = default!;
+        public Picture? MainPicture { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -4229,19 +4239,19 @@ namespace SoftThorn.MAL.ApiClient
         /// The titles in other languages and other names of the work.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("alternative_titles")]
-        public AlternativeTitles? Alternative_titles { get; set; } = default!;
+        public AlternativeTitles? AlternativeTitles { get; set; } = default!;
 
         /// <summary>
         /// When the work started airing or publishing: YYYY-MM-DD, or only YYYY-MM or YYYY when the exact date isn't known.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("start_date")]
-        public string? Start_date { get; set; } = default!;
+        public string? StartDate { get; set; } = default!;
 
         /// <summary>
         /// When the work finished airing or publishing, in the same form as the start date.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("end_date")]
-        public string? End_date { get; set; } = default!;
+        public string? EndDate { get; set; } = default!;
 
         /// <summary>
         /// A summary of the story.
@@ -4271,13 +4281,13 @@ namespace SoftThorn.MAL.ApiClient
         /// How many users have the work on their list.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_list_users")]
-        public int? Num_list_users { get; set; } = default!;
+        public int? NumListUsers { get; set; } = default!;
 
         /// <summary>
         /// How many users scored the work.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_scoring_users")]
-        public int? Num_scoring_users { get; set; } = default!;
+        public int? NumScoringUsers { get; set; } = default!;
 
         /// <summary>
         /// Whether the work is safe for work: white (safe), gray (maybe not) or black (not safe).
@@ -4295,13 +4305,13 @@ namespace SoftThorn.MAL.ApiClient
         /// When the work was added to MyAnimeList.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("created_at")]
-        public System.DateTimeOffset? Created_at { get; set; } = default!;
+        public System.DateTimeOffset? CreatedAt { get; set; } = default!;
 
         /// <summary>
         /// When the work's entry on MyAnimeList was last changed.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
-        public System.DateTimeOffset? Updated_at { get; set; } = default!;
+        public System.DateTimeOffset? UpdatedAt { get; set; } = default!;
 
     }
 
@@ -4508,13 +4518,13 @@ namespace SoftThorn.MAL.ApiClient
         /// The day of the week in lowercase English, for example monday, or other.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("day_of_the_week")]
-        public string? Day_of_the_week { get; set; } = default!;
+        public string? DayOfTheWeek { get; set; } = default!;
 
         /// <summary>
         /// The time of day in Japan Standard Time, as HH:mm.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("start_time")]
-        public string? Start_time { get; set; } = default!;
+        public string? StartTime { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -4540,24 +4550,28 @@ namespace SoftThorn.MAL.ApiClient
         /// <summary>
         /// Sent as <c>winter</c>.
         /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"winter")]
         [System.Runtime.Serialization.EnumMember(Value = @"winter")]
         Winter = 0,
 
         /// <summary>
         /// Sent as <c>spring</c>.
         /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"spring")]
         [System.Runtime.Serialization.EnumMember(Value = @"spring")]
         Spring = 1,
 
         /// <summary>
         /// Sent as <c>summer</c>.
         /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"summer")]
         [System.Runtime.Serialization.EnumMember(Value = @"summer")]
         Summer = 2,
 
         /// <summary>
         /// Sent as <c>fall</c>.
         /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"fall")]
         [System.Runtime.Serialization.EnumMember(Value = @"fall")]
         Fall = 3,
 
@@ -4586,7 +4600,7 @@ namespace SoftThorn.MAL.ApiClient
         /// How many users have put the anime on hold.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("on_hold")]
-        public int? On_hold { get; set; } = default!;
+        public int? OnHold { get; set; } = default!;
 
         /// <summary>
         /// How many users have dropped the anime.
@@ -4598,7 +4612,7 @@ namespace SoftThorn.MAL.ApiClient
         /// How many users plan to watch the anime.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("plan_to_watch")]
-        public int? Plan_to_watch { get; set; } = default!;
+        public int? PlanToWatch { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -4625,91 +4639,91 @@ namespace SoftThorn.MAL.ApiClient
         /// How many anime the user is watching.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_items_watching")]
-        public int? Num_items_watching { get; set; } = default!;
+        public int? NumItemsWatching { get; set; } = default!;
 
         /// <summary>
         /// How many anime the user has completed.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_items_completed")]
-        public int? Num_items_completed { get; set; } = default!;
+        public int? NumItemsCompleted { get; set; } = default!;
 
         /// <summary>
         /// How many anime the user has put on hold.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_items_on_hold")]
-        public int? Num_items_on_hold { get; set; } = default!;
+        public int? NumItemsOnHold { get; set; } = default!;
 
         /// <summary>
         /// How many anime the user has dropped.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_items_dropped")]
-        public int? Num_items_dropped { get; set; } = default!;
+        public int? NumItemsDropped { get; set; } = default!;
 
         /// <summary>
         /// How many anime the user plans to watch.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_items_plan_to_watch")]
-        public int? Num_items_plan_to_watch { get; set; } = default!;
+        public int? NumItemsPlanToWatch { get; set; } = default!;
 
         /// <summary>
         /// How many anime are on the user's list.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_items")]
-        public int? Num_items { get; set; } = default!;
+        public int? NumItems { get; set; } = default!;
 
         /// <summary>
         /// The days the user spent watching anime, over the whole list.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_days_watched")]
-        public float? Num_days_watched { get; set; } = default!;
+        public float? NumDaysWatched { get; set; } = default!;
 
         /// <summary>
         /// The days the user spent on the anime they are watching.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_days_watching")]
-        public float? Num_days_watching { get; set; } = default!;
+        public float? NumDaysWatching { get; set; } = default!;
 
         /// <summary>
         /// The days the user spent on completed anime.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_days_completed")]
-        public float? Num_days_completed { get; set; } = default!;
+        public float? NumDaysCompleted { get; set; } = default!;
 
         /// <summary>
         /// The days the user spent on anime they put on hold.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_days_on_hold")]
-        public float? Num_days_on_hold { get; set; } = default!;
+        public float? NumDaysOnHold { get; set; } = default!;
 
         /// <summary>
         /// The days the user spent on anime they dropped.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_days_dropped")]
-        public float? Num_days_dropped { get; set; } = default!;
+        public float? NumDaysDropped { get; set; } = default!;
 
         /// <summary>
         /// The days the user spent watching anime in total.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_days")]
-        public float? Num_days { get; set; } = default!;
+        public float? NumDays { get; set; } = default!;
 
         /// <summary>
         /// How many episodes the user has watched.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_episodes")]
-        public int? Num_episodes { get; set; } = default!;
+        public int? NumEpisodes { get; set; } = default!;
 
         /// <summary>
         /// How many times the user has watched anime again.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
-        public int? Num_times_rewatched { get; set; } = default!;
+        public int? NumTimesRewatched { get; set; } = default!;
 
         /// <summary>
         /// The mean of the scores the user gave.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("mean_score")]
-        public float? Mean_score { get; set; } = default!;
+        public float? MeanScore { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -4736,13 +4750,14 @@ namespace SoftThorn.MAL.ApiClient
         /// The new list status: watching, completed, on_hold, dropped or plan_to_watch.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("status")]
-        public string? Status { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<AnimeWatchStatus>))]
+        public AnimeWatchStatus? Status { get; set; } = default!;
 
         /// <summary>
         /// Whether the user is watching the anime again.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("is_rewatching")]
-        public bool? Is_rewatching { get; set; } = default!;
+        public bool? IsRewatching { get; set; } = default!;
 
         /// <summary>
         /// The new score, from 1 to 10, or 0 to remove the score.
@@ -4754,7 +4769,7 @@ namespace SoftThorn.MAL.ApiClient
         /// How many episodes the user has watched.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_watched_episodes")]
-        public int? Num_watched_episodes { get; set; } = default!;
+        public int? NumWatchedEpisodes { get; set; } = default!;
 
         /// <summary>
         /// The new priority: 0 (low), 1 (medium) or 2 (high).
@@ -4766,13 +4781,13 @@ namespace SoftThorn.MAL.ApiClient
         /// How many times the user has watched the anime again.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
-        public int? Num_times_rewatched { get; set; } = default!;
+        public int? NumTimesRewatched { get; set; } = default!;
 
         /// <summary>
         /// How much the user would like to watch the anime again, from 0 (not set) to 5.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("rewatch_value")]
-        public int? Rewatch_value { get; set; } = default!;
+        public int? RewatchValue { get; set; } = default!;
 
         /// <summary>
         /// The new tags of the entry, separated by commas. They replace the existing ones.
@@ -4811,13 +4826,14 @@ namespace SoftThorn.MAL.ApiClient
         /// The new list status: reading, completed, on_hold, dropped or plan_to_read.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("status")]
-        public string? Status { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<MangaReadStatus>))]
+        public MangaReadStatus? Status { get; set; } = default!;
 
         /// <summary>
         /// Whether the user is reading the manga again.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("is_rereading")]
-        public bool? Is_rereading { get; set; } = default!;
+        public bool? IsRereading { get; set; } = default!;
 
         /// <summary>
         /// The new score, from 1 to 10, or 0 to remove the score.
@@ -4829,13 +4845,13 @@ namespace SoftThorn.MAL.ApiClient
         /// How many volumes the user has read.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_volumes_read")]
-        public int? Num_volumes_read { get; set; } = default!;
+        public int? NumVolumesRead { get; set; } = default!;
 
         /// <summary>
         /// How many chapters the user has read.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_chapters_read")]
-        public int? Num_chapters_read { get; set; } = default!;
+        public int? NumChaptersRead { get; set; } = default!;
 
         /// <summary>
         /// The new priority: 0 (low), 1 (medium) or 2 (high).
@@ -4847,13 +4863,13 @@ namespace SoftThorn.MAL.ApiClient
         /// How many times the user has read the manga again.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_times_reread")]
-        public int? Num_times_reread { get; set; } = default!;
+        public int? NumTimesReread { get; set; } = default!;
 
         /// <summary>
         /// How much the user would like to read the manga again, from 0 (not set) to 5.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("reread_value")]
-        public int? Reread_value { get; set; } = default!;
+        public int? RereadValue { get; set; } = default!;
 
         /// <summary>
         /// The new tags of the entry, separated by commas. They replace the existing ones.
@@ -4881,24 +4897,356 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// Which anime ranking to return.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    internal class DateFormatConverter : System.Text.Json.Serialization.JsonConverter<System.DateTimeOffset>
+    public enum AnimeRankingType
     {
-        public override System.DateTimeOffset Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
-        {
-            var dateTime = reader.GetString();
-            if (dateTime == null)
-            {
-                throw new System.Text.Json.JsonException("Unexpected JsonTokenType.Null");
-            }
 
-            return System.DateTimeOffset.Parse(dateTime);
-        }
+        /// <summary>
+        /// Sent as <c>all</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"all")]
+        [System.Runtime.Serialization.EnumMember(Value = @"all")]
+        All = 0,
 
-        public override void Write(System.Text.Json.Utf8JsonWriter writer, System.DateTimeOffset value, System.Text.Json.JsonSerializerOptions options)
-        {
-            writer.WriteStringValue(value.ToString("yyyy-MM-dd"));
-        }
+        /// <summary>
+        /// Sent as <c>airing</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"airing")]
+        [System.Runtime.Serialization.EnumMember(Value = @"airing")]
+        Airing = 1,
+
+        /// <summary>
+        /// Sent as <c>upcoming</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"upcoming")]
+        [System.Runtime.Serialization.EnumMember(Value = @"upcoming")]
+        Upcoming = 2,
+
+        /// <summary>
+        /// Sent as <c>tv</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"tv")]
+        [System.Runtime.Serialization.EnumMember(Value = @"tv")]
+        Tv = 3,
+
+        /// <summary>
+        /// Sent as <c>ova</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"ova")]
+        [System.Runtime.Serialization.EnumMember(Value = @"ova")]
+        Ova = 4,
+
+        /// <summary>
+        /// Sent as <c>movie</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"movie")]
+        [System.Runtime.Serialization.EnumMember(Value = @"movie")]
+        Movie = 5,
+
+        /// <summary>
+        /// Sent as <c>special</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"special")]
+        [System.Runtime.Serialization.EnumMember(Value = @"special")]
+        Special = 6,
+
+        /// <summary>
+        /// Sent as <c>bypopularity</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"bypopularity")]
+        [System.Runtime.Serialization.EnumMember(Value = @"bypopularity")]
+        ByPopularity = 7,
+
+        /// <summary>
+        /// Sent as <c>favorite</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"favorite")]
+        [System.Runtime.Serialization.EnumMember(Value = @"favorite")]
+        Favorite = 8,
+
+    }
+
+    /// <summary>
+    /// Which manga ranking to return.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum MangaRankingType
+    {
+
+        /// <summary>
+        /// Sent as <c>all</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"all")]
+        [System.Runtime.Serialization.EnumMember(Value = @"all")]
+        All = 0,
+
+        /// <summary>
+        /// Sent as <c>manga</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"manga")]
+        [System.Runtime.Serialization.EnumMember(Value = @"manga")]
+        Manga = 1,
+
+        /// <summary>
+        /// Sent as <c>novels</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"novels")]
+        [System.Runtime.Serialization.EnumMember(Value = @"novels")]
+        Novels = 2,
+
+        /// <summary>
+        /// Sent as <c>lightnovels</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"lightnovels")]
+        [System.Runtime.Serialization.EnumMember(Value = @"lightnovels")]
+        LightNovels = 3,
+
+        /// <summary>
+        /// Sent as <c>oneshots</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"oneshots")]
+        [System.Runtime.Serialization.EnumMember(Value = @"oneshots")]
+        OneShots = 4,
+
+        /// <summary>
+        /// Sent as <c>doujin</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"doujin")]
+        [System.Runtime.Serialization.EnumMember(Value = @"doujin")]
+        Doujin = 5,
+
+        /// <summary>
+        /// Sent as <c>manhwa</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"manhwa")]
+        [System.Runtime.Serialization.EnumMember(Value = @"manhwa")]
+        Manhwa = 6,
+
+        /// <summary>
+        /// Sent as <c>manhua</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"manhua")]
+        [System.Runtime.Serialization.EnumMember(Value = @"manhua")]
+        Manhua = 7,
+
+        /// <summary>
+        /// Sent as <c>bypopularity</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"bypopularity")]
+        [System.Runtime.Serialization.EnumMember(Value = @"bypopularity")]
+        ByPopularity = 8,
+
+        /// <summary>
+        /// Sent as <c>favorite</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"favorite")]
+        [System.Runtime.Serialization.EnumMember(Value = @"favorite")]
+        Favorite = 9,
+
+    }
+
+    /// <summary>
+    /// The order of seasonal anime, each from the highest value down.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum SeasonalAnimeSort
+    {
+
+        /// <summary>
+        /// Sent as <c>anime_score</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"anime_score")]
+        [System.Runtime.Serialization.EnumMember(Value = @"anime_score")]
+        Score = 0,
+
+        /// <summary>
+        /// Sent as <c>anime_num_list_users</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"anime_num_list_users")]
+        [System.Runtime.Serialization.EnumMember(Value = @"anime_num_list_users")]
+        NumListUsers = 1,
+
+    }
+
+    /// <summary>
+    /// The order of forum topics.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum ForumTopicsSort
+    {
+
+        /// <summary>
+        /// Sent as <c>recent</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"recent")]
+        [System.Runtime.Serialization.EnumMember(Value = @"recent")]
+        Recent = 0,
+
+    }
+
+    /// <summary>
+    /// Where an anime is on a user's list: being watched, completed, on hold, dropped or planned.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum AnimeWatchStatus
+    {
+
+        /// <summary>
+        /// Sent as <c>watching</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"watching")]
+        [System.Runtime.Serialization.EnumMember(Value = @"watching")]
+        Watching = 0,
+
+        /// <summary>
+        /// Sent as <c>completed</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"completed")]
+        [System.Runtime.Serialization.EnumMember(Value = @"completed")]
+        Completed = 1,
+
+        /// <summary>
+        /// Sent as <c>on_hold</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"on_hold")]
+        [System.Runtime.Serialization.EnumMember(Value = @"on_hold")]
+        OnHold = 2,
+
+        /// <summary>
+        /// Sent as <c>dropped</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"dropped")]
+        [System.Runtime.Serialization.EnumMember(Value = @"dropped")]
+        Dropped = 3,
+
+        /// <summary>
+        /// Sent as <c>plan_to_watch</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"plan_to_watch")]
+        [System.Runtime.Serialization.EnumMember(Value = @"plan_to_watch")]
+        PlanToWatch = 4,
+
+    }
+
+    /// <summary>
+    /// Where a manga is on a user's list: being read, completed, on hold, dropped or planned.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum MangaReadStatus
+    {
+
+        /// <summary>
+        /// Sent as <c>reading</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"reading")]
+        [System.Runtime.Serialization.EnumMember(Value = @"reading")]
+        Reading = 0,
+
+        /// <summary>
+        /// Sent as <c>completed</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"completed")]
+        [System.Runtime.Serialization.EnumMember(Value = @"completed")]
+        Completed = 1,
+
+        /// <summary>
+        /// Sent as <c>on_hold</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"on_hold")]
+        [System.Runtime.Serialization.EnumMember(Value = @"on_hold")]
+        OnHold = 2,
+
+        /// <summary>
+        /// Sent as <c>dropped</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"dropped")]
+        [System.Runtime.Serialization.EnumMember(Value = @"dropped")]
+        Dropped = 3,
+
+        /// <summary>
+        /// Sent as <c>plan_to_read</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"plan_to_read")]
+        [System.Runtime.Serialization.EnumMember(Value = @"plan_to_read")]
+        PlanToRead = 4,
+
+    }
+
+    /// <summary>
+    /// The order of the entries of a user's anime list.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum UserAnimeListSort
+    {
+
+        /// <summary>
+        /// Sent as <c>list_score</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"list_score")]
+        [System.Runtime.Serialization.EnumMember(Value = @"list_score")]
+        ListScore = 0,
+
+        /// <summary>
+        /// Sent as <c>list_updated_at</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"list_updated_at")]
+        [System.Runtime.Serialization.EnumMember(Value = @"list_updated_at")]
+        ListUpdatedAt = 1,
+
+        /// <summary>
+        /// Sent as <c>anime_title</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"anime_title")]
+        [System.Runtime.Serialization.EnumMember(Value = @"anime_title")]
+        AnimeTitle = 2,
+
+        /// <summary>
+        /// Sent as <c>anime_start_date</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"anime_start_date")]
+        [System.Runtime.Serialization.EnumMember(Value = @"anime_start_date")]
+        AnimeStartDate = 3,
+
+    }
+
+    /// <summary>
+    /// The order of the entries of a user's manga list.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum UserMangaListSort
+    {
+
+        /// <summary>
+        /// Sent as <c>list_score</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"list_score")]
+        [System.Runtime.Serialization.EnumMember(Value = @"list_score")]
+        ListScore = 0,
+
+        /// <summary>
+        /// Sent as <c>list_updated_at</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"list_updated_at")]
+        [System.Runtime.Serialization.EnumMember(Value = @"list_updated_at")]
+        ListUpdatedAt = 1,
+
+        /// <summary>
+        /// Sent as <c>manga_title</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"manga_title")]
+        [System.Runtime.Serialization.EnumMember(Value = @"manga_title")]
+        MangaTitle = 2,
+
+        /// <summary>
+        /// Sent as <c>manga_start_date</c>.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonStringEnumMemberName(@"manga_start_date")]
+        [System.Runtime.Serialization.EnumMember(Value = @"manga_start_date")]
+        MangaStartDate = 3,
+
     }
 
 

@@ -30,12 +30,28 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="services">The collection to add the services to.</param>
         /// <param name="clientConfiguration">The Client ID and redirect URL registered with MyAnimeList.</param>
         /// <returns><paramref name="services"/>, so calls can be chained.</returns>
+        /// <exception cref="ArgumentException">
+        /// <see cref="ClientConfiguration.ClientId"/> is empty, or <see cref="ClientConfiguration.RedirectUrl"/> isn't an absolute
+        /// <c>http</c> or <c>https</c> URL ending with <c>/</c>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">The method was already called for <paramref name="services"/>.</exception>
         public static IServiceCollection AddMalApiClient(this IServiceCollection services, ClientConfiguration clientConfiguration)
         {
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(clientConfiguration);
+            Validate(clientConfiguration);
+
+            // a second call would add every message handler again, so each request would be retried up to 16 times
+            if (services.Any(descriptor => descriptor.ServiceType == typeof(TokenClient)))
+            {
+                throw new InvalidOperationException($"{nameof(AddMalApiClient)} was already called for this service collection.");
+            }
+
             services.TryAddSingleton<IAuthCache, AuthCache>();
             services.TryAddSingleton<IBrowserLoginHandler, BrowserLoginHandler>();
             services.TryAddSingleton(TimeProvider.System);
-            services.TryAddSingleton<TokenClient>();
+            services.AddSingleton<TokenClient>();
+            services.AddSingleton<LoginClient>();
             // IHttpClientFactory rebuilds handler chains every few minutes and sets InnerHandler on each handler,
             // which throws for a handler that was already used, so handlers must be transient
             services.AddTransient<MalRetryHandler>();
@@ -56,11 +72,30 @@ namespace SoftThorn.MAL.ApiClient
                 .AddHttpMessageHandler<MalRetryHandler>()
                 .AddTypedClient<IMalApiService>((httpClient, provider) => new MalApiService(
                     httpClient,
-                    provider.GetRequiredService<ClientConfiguration>(),
-                    provider.GetRequiredService<IBrowserLoginHandler>(),
-                    provider.GetRequiredService<TokenClient>()));
+                    provider.GetRequiredService<LoginClient>()));
 
             return services;
+        }
+
+        // the login only shows these mistakes once it runs, as an HttpListener error or MAL's "invalid_client" page
+        private static void Validate(ClientConfiguration clientConfiguration)
+        {
+            if (string.IsNullOrWhiteSpace(clientConfiguration.ClientId))
+            {
+                throw new ArgumentException($"{nameof(ClientConfiguration.ClientId)} is empty.", nameof(clientConfiguration));
+            }
+
+            if (!Uri.TryCreate(clientConfiguration.RedirectUrl, UriKind.Absolute, out var redirectUrl)
+                || (redirectUrl.Scheme != Uri.UriSchemeHttp && redirectUrl.Scheme != Uri.UriSchemeHttps))
+            {
+                throw new ArgumentException($"{nameof(ClientConfiguration.RedirectUrl)} '{clientConfiguration.RedirectUrl}' isn't an absolute http or https URL.", nameof(clientConfiguration));
+            }
+
+            // HttpListener only accepts prefixes that end with a slash
+            if (!clientConfiguration.RedirectUrl.EndsWith('/'))
+            {
+                throw new ArgumentException($"{nameof(ClientConfiguration.RedirectUrl)} '{clientConfiguration.RedirectUrl}' has to end with '/'.", nameof(clientConfiguration));
+            }
         }
 
         // MAL's API License Agreement (3(a)(x)) forbids concealing the identity of an application, so every request names the library

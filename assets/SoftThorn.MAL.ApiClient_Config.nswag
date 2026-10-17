@@ -43,7 +43,7 @@
       "serializeTypeInformation": false,
       "queryNullValue": "",
       "className": "{controller}Client",
-      "operationGenerationMode": "MultipleClientsFromPathSegments",
+      "operationGenerationMode": "MultipleClientsFromOperationId",
       "includedOperationIds": [],
       "excludedOperationIds": [],
       "additionalNamespaceUsages": [],
@@ -76,7 +76,7 @@
       "classStyle": "Poco",
       "jsonLibrary": "SystemTextJson",
       "jsonPolymorphicSerializationStyle": "NJsonSchema",
-      "jsonLibraryVersion": 8.0,
+      "jsonLibraryVersion": 9.0,
       "generateDefaultValues": true,
       "generateDataAnnotations": true,
       "excludedTypeNames": [

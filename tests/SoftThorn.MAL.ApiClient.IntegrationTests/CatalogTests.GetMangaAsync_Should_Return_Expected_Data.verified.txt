@@ -45,65 +45,65 @@
 Monster won the Grand Prize at the third Tezuka Osamu Cultural Prize in 1999, as well as the 46th Shogakukan Manga Award in the General category in 2000.
 
 The series was published in English by VIZ Media under its VIZ Signature imprint from February 21, 2006, to December 16, 2008, and again in 2-in-1 omnibuses under the subtitle The Perfect Edition. The manga was also published in Brazilian Portuguese by Panini Comics from June 2012 to April 2015; in Polish by Hanami from March 28, 2014, to February 1, 2017; in Spain by Planeta Cómic from June 16, 2009, to September 21, 2010; in Argentina by Editorial Ivrea and LARP Editores; and in Turkey by Marmara Çizgi.,
-  Related_manga: [
+  RelatedManga: [
     {
       Node: {
         Mean: {Scrubbed},
         Rank: {Scrubbed},
         Popularity: {Scrubbed},
-        Num_list_users: {Scrubbed},
-        Num_scoring_users: {Scrubbed},
+        NumListUsers: {Scrubbed},
+        NumScoringUsers: {Scrubbed},
         Id: 10968,
         Title: Mou Hitotsu no Monster: The Investigative Report,
-        Main_picture: {
+        MainPicture: {
           Large: https://cdn.myanimelist.net/images/manga/3/14776l.{image},
           Medium: https://cdn.myanimelist.net/images/manga/3/14776.{image}
         }
       },
-      Relation_type: side_story,
-      Relation_type_formatted: Side story
+      RelationType: side_story,
+      RelationTypeFormatted: Side story
     }
   ],
   Recommendations: [
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     },
     {
       Node: {Scrubbed},
-      Num_recommendations: {Scrubbed}
+      NumRecommendations: {Scrubbed}
     }
   ],
   Serialization: [
@@ -114,26 +114,26 @@ The series was published in English by VIZ Media under its VIZ Signature imprint
       }
     }
   ],
-  Media_type: manga,
+  MediaType: manga,
   Status: finished,
-  Num_volumes: 18,
-  Num_chapters: 162,
+  NumVolumes: 18,
+  NumChapters: 162,
   Authors: [
     {
       Node: {
         Id: 1867,
-        First_name: Naoki,
-        Last_name: Urasawa
+        FirstName: Naoki,
+        LastName: Urasawa
       },
       Role: Story & Art
     }
   ],
-  Alternative_titles: {
+  AlternativeTitles: {
     En: Monster,
     Ja: MONSTER
   },
-  Start_date: 1994-12-05,
-  End_date: 2001-12-20,
+  StartDate: 1994-12-05,
+  EndDate: 2001-12-20,
   Synopsis:
 Kenzou Tenma, a renowned Japanese neurosurgeon working in post-war Germany, faces a difficult choice: to operate on Johan Liebert, an orphan boy on the verge of death, or on the mayor of Düsseldorf. In the end, Tenma decides to gamble his reputation by saving Johan, effectively leaving the mayor for dead.
 
@@ -145,8 +145,8 @@ Nine years later, Tenma is the head of the surgical department and close to beco
   Mean: {Scrubbed},
   Rank: {Scrubbed},
   Popularity: {Scrubbed},
-  Num_list_users: {Scrubbed},
-  Num_scoring_users: {Scrubbed},
+  NumListUsers: {Scrubbed},
+  NumScoringUsers: {Scrubbed},
   Nsfw: white,
   Genres: [
     {
@@ -174,11 +174,11 @@ Nine years later, Tenma is the head of the surgical department and close to beco
       Name: Seinen
     }
   ],
-  Created_at: DateTimeOffset_1,
-  Updated_at: DateTimeOffset_2,
+  CreatedAt: DateTimeOffset_1,
+  UpdatedAt: DateTimeOffset_2,
   Id: 1,
   Title: Monster,
-  Main_picture: {
+  MainPicture: {
     Large: https://cdn.myanimelist.net/images/manga/3/258224l.{image},
     Medium: https://cdn.myanimelist.net/images/manga/3/258224.{image}
   }

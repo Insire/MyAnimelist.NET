@@ -12,7 +12,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
             var sut = fixture.GetMalApiService();
 
             // Act
-            var response = await sut.Catalog.AnimeGetAsync("one", limit: 2, offset: 1, fields:
+            var response = await sut.Catalog.SearchAnimeAsync("one", limit: 2, offset: 1, fields:
                 "title", cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
@@ -25,13 +25,13 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
         }
 
         [Fact]
-        public async Task RankingAsync_Should_Work_And_Return_Many_Animes()
+        public async Task GetRankingAsync_Should_Work_And_Return_Many_Animes()
         {
             // Arrange
             var sut = fixture.GetMalApiService();
 
             // Act
-            var response = await sut.Anime.RankingAsync(ranking_type: "all", limit: 2, offset: 1, fields:
+            var response = await sut.Anime.GetRankingAsync(rankingType: AnimeRankingType.All, limit: 2, offset: 1, fields:
                 "title", cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert

@@ -20,9 +20,9 @@ namespace SoftThorn.MAL.ApiClient
 
         public ILoginClient Login { get; }
 
-        public MalApiService(HttpClient httpClient, ClientConfiguration clientConfiguration, IBrowserLoginHandler loginHandler, TokenClient tokenClient)
+        public MalApiService(HttpClient httpClient, ILoginClient loginClient)
         {
-            Login = new LoginClient(clientConfiguration, loginHandler, tokenClient);
+            Login = loginClient;
             Catalog = new CatalogClient(httpClient);
             Anime = new AnimeClient(httpClient);
             Forum = new ForumClient(httpClient);

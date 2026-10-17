@@ -14,6 +14,9 @@ namespace SoftThorn.MAL.ApiClient.Authentication
         private readonly string _clientId;
         private readonly string _redirectUri;
 
+        // a singleton, so concurrent logins wait for each other instead of failing to listen on the same redirect URL
+        private readonly SemaphoreSlim _loginLock = new(1, 1);
+
         public LoginClient(ClientConfiguration clientConfiguration, IBrowserLoginHandler loginHandler, TokenClient tokenClient)
         {
             _loginHandler = loginHandler;
@@ -25,12 +28,29 @@ namespace SoftThorn.MAL.ApiClient.Authentication
         /// <inheritdoc/>
         public async Task<bool> StartOAuthFlowAsync(IProgress<AuthProgress>? progressReporter = null, CancellationToken cancellationToken = default)
         {
-            var response = await _tokenClient.GetValidTokenAsync(cancellationToken);
-            if (response is not null)
+            await _loginLock.WaitAsync(cancellationToken);
+            try
             {
-                return true;
-            }
+                // also covers a login that finished while this call was waiting
+                var response = await _tokenClient.GetValidTokenAsync(cancellationToken);
+                if (response is not null)
+                {
+                    return true;
+                }
 
+                return await LoginAsync(progressReporter, cancellationToken);
+            }
+            finally
+            {
+                _loginLock.Release();
+            }
+        }
+
+        /// <inheritdoc/>
+        public Task SignOutAsync(CancellationToken cancellationToken = default) => _tokenClient.ClearAsync(cancellationToken);
+
+        private async Task<bool> LoginAsync(IProgress<AuthProgress>? progressReporter, CancellationToken cancellationToken)
+        {
             var codeVerifier = GenerateCodeVerifier(progressReporter);
             var state = Guid.NewGuid().ToString("N");
 
@@ -42,7 +62,7 @@ namespace SoftThorn.MAL.ApiClient.Authentication
             // the login handler (e.g. browser automation) may only complete once the redirect was answered,
             // so wait for the redirect and the handler concurrently and surface handler failures instead of hanging
             var contextTask = httpListener.GetContextAsync().WaitAsync(cancellationToken);
-            var loginTask = OpenBrowser(codeVerifier, state, progressReporter).AsTask();
+            var loginTask = OpenBrowser(codeVerifier, state, progressReporter, cancellationToken).AsTask();
 
             progressReporter?.Report(new AuthProgress("Waiting for authentication in browser...", 0.5));
 
@@ -81,18 +101,18 @@ namespace SoftThorn.MAL.ApiClient.Authentication
             return isValid ? query["code"] : null;
         }
 
-        private ValueTask OpenBrowser(string codeVerifier, string state, IProgress<AuthProgress>? progressReporter = null)
+        private ValueTask OpenBrowser(string codeVerifier, string state, IProgress<AuthProgress>? progressReporter, CancellationToken cancellationToken)
         {
             progressReporter?.Report(new AuthProgress("Redirecting to MyAnimeList...", 0.3));
 
             var authUrl = TokenClient.BaseUri + "authorize?response_type=code" +
-                             $"&client_id={_clientId}" +
+                             $"&client_id={Uri.EscapeDataString(_clientId)}" +
                              $"&code_challenge={codeVerifier}" +
                              $"&code_challenge_method=plain" +
                              $"&redirect_uri={Uri.EscapeDataString(_redirectUri)}" +
                              $"&state={state}";
 
-            return _loginHandler.Handle(authUrl);
+            return _loginHandler.HandleAsync(authUrl, cancellationToken);
         }
 
         private static string GenerateCodeVerifier(IProgress<AuthProgress>? progressReporter = null)

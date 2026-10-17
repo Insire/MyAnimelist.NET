@@ -15,10 +15,21 @@ namespace SoftThorn.MAL.ApiClient.Authentication
         /// <remarks>
         /// Opens MyAnimeList's login page through the registered <see cref="IBrowserLoginHandler"/> and waits until MyAnimeList
         /// redirects to <see cref="ClientConfiguration.RedirectUrl"/>. The wait has no time limit of its own; use <paramref name="cancellationToken"/> to give up.
+        /// A call made while another login is running waits for it, and then returns without a second login if the first one succeeded.
         /// </remarks>
         /// <param name="progressReporter">Receives the steps of the login, for example to show them in a UI.</param>
         /// <param name="cancellationToken">Cancels the login, including the wait for the redirect.</param>
         /// <returns><see langword="true"/> when a valid token is available afterwards.</returns>
         Task<bool> StartOAuthFlowAsync(IProgress<AuthProgress>? progressReporter = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Signs the user out by removing the tokens from the <see cref="IAuthCache"/>.
+        /// </summary>
+        /// <remarks>
+        /// MyAnimeList has no endpoint to revoke tokens, so they stay valid on its side until they expire.
+        /// Requests made afterwards only reach the endpoints that don't need a signed-in user.
+        /// </remarks>
+        /// <param name="cancellationToken">Cancels the removal.</param>
+        Task SignOutAsync(CancellationToken cancellationToken = default);
     }
 }

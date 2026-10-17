@@ -10,7 +10,7 @@
         "tags": [
           "anime"
         ],
-        "operationId": "anime_get",
+        "operationId": "Catalog_SearchAnime",
         "parameters": [
           {
             "name": "q",
@@ -19,6 +19,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "q",
             "description": "The text to search for in the titles."
           },
           {
@@ -28,6 +29,7 @@
               "type": "integer",
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
@@ -37,6 +39,7 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
@@ -45,6 +48,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -81,7 +85,7 @@
         "tags": [
           "anime"
         ],
-        "operationId": "anime_anime_id_get",
+        "operationId": "Catalog_GetAnime",
         "parameters": [
           {
             "name": "anime_id",
@@ -90,6 +94,7 @@
             "schema": {
               "type": "integer"
             },
+            "x-originalName": "animeId",
             "description": "The anime's MyAnimeList ID."
           },
           {
@@ -98,6 +103,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -137,14 +143,15 @@
           "required": true,
           "schema": {
             "type": "integer"
-          }
+          },
+          "x-originalName": "animeId"
         }
       ],
       "patch": {
         "tags": [
           "user animelist"
         ],
-        "operationId": "anime_anime_id_my_list_status_put",
+        "operationId": "Anime_UpdateListStatus",
         "requestBody": {
           "content": {
             "application/x-www-form-urlencoded": {
@@ -180,7 +187,7 @@
         "tags": [
           "user animelist"
         ],
-        "operationId": "anime_anime_id_my_list_status_delete",
+        "operationId": "Anime_DeleteListStatus",
         "security": [
           {
             "main_auth": [
@@ -210,15 +217,16 @@
         "tags": [
           "anime"
         ],
-        "operationId": "anime_ranking_get",
+        "operationId": "Anime_GetRanking",
         "parameters": [
           {
             "name": "ranking_type",
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/AnimeRankingType"
             },
+            "x-originalName": "rankingType",
             "description": "Which ranking to return: all, airing, upcoming, tv, ova, movie, special, bypopularity or favorite."
           },
           {
@@ -228,6 +236,7 @@
               "type": "integer",
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
@@ -237,6 +246,7 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
@@ -245,6 +255,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -281,7 +292,7 @@
         "tags": [
           "anime"
         ],
-        "operationId": "anime_season_year_season_get",
+        "operationId": "Anime_GetSeasonal",
         "parameters": [
           {
             "name": "year",
@@ -290,6 +301,7 @@
             "schema": {
               "type": "integer"
             },
+            "x-originalName": "year",
             "description": "The year of the season."
           },
           {
@@ -297,16 +309,18 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/Season"
             },
+            "x-originalName": "season",
             "description": "The season: winter (January to March), spring, summer or fall."
           },
           {
             "name": "sort",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SeasonalAnimeSort"
             },
+            "x-originalName": "sort",
             "description": "The order of the anime: anime_score or anime_num_list_users, each from the highest value down."
           },
           {
@@ -316,6 +330,7 @@
               "type": "integer",
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
@@ -325,6 +340,7 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
@@ -333,6 +349,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -369,7 +386,7 @@
         "tags": [
           "anime"
         ],
-        "operationId": "anime_suggestions_get",
+        "operationId": "Anime_GetSuggestions",
         "parameters": [
           {
             "name": "limit",
@@ -378,6 +395,7 @@
               "type": "integer",
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
@@ -387,6 +405,7 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
@@ -395,6 +414,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -426,7 +446,7 @@
         "tags": [
           "forum"
         ],
-        "operationId": "forum_boards_get",
+        "operationId": "Forum_GetBoards",
         "security": [
           {
             "main_auth": [
@@ -460,7 +480,7 @@
         "tags": [
           "forum"
         ],
-        "operationId": "forum_topic_get",
+        "operationId": "Forum_GetTopic",
         "parameters": [
           {
             "name": "topic_id",
@@ -469,6 +489,7 @@
             "schema": {
               "type": "integer"
             },
+            "x-originalName": "topicId",
             "description": "The forum topic's ID."
           },
           {
@@ -479,6 +500,7 @@
               "maximum": 100,
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many posts to return."
           },
           {
@@ -488,6 +510,7 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many posts to skip, for paging."
           }
         ],
@@ -524,7 +547,7 @@
         "tags": [
           "forum"
         ],
-        "operationId": "forum_topics_get",
+        "operationId": "Forum_GetTopics",
         "parameters": [
           {
             "name": "board_id",
@@ -532,6 +555,7 @@
             "schema": {
               "type": "integer"
             },
+            "x-originalName": "boardId",
             "description": "Returns only topics of the forum board with this ID."
           },
           {
@@ -540,6 +564,7 @@
             "schema": {
               "type": "integer"
             },
+            "x-originalName": "subboardId",
             "description": "Returns only topics of the forum subboard with this ID."
           },
           {
@@ -550,6 +575,7 @@
               "maximum": 100,
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
@@ -559,15 +585,16 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "sort",
             "in": "query",
             "schema": {
-              "type": "string",
-              "default": "recent"
+              "$ref": "#/components/schemas/ForumTopicsSort"
             },
+            "x-originalName": "sort",
             "description": "The order of the topics; recent is the only supported value."
           },
           {
@@ -576,6 +603,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "q",
             "description": "The text to search for in the topics."
           },
           {
@@ -584,6 +612,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "topicUserName",
             "description": "Returns only topics that this user started."
           },
           {
@@ -592,6 +621,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "userName",
             "description": "A user name, or @me for the signed-in user."
           }
         ],
@@ -628,7 +658,7 @@
         "tags": [
           "manga"
         ],
-        "operationId": "manga_get",
+        "operationId": "Catalog_SearchManga",
         "parameters": [
           {
             "name": "q",
@@ -637,6 +667,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "q",
             "description": "The text to search for in the titles."
           },
           {
@@ -646,6 +677,7 @@
               "type": "integer",
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
@@ -655,6 +687,7 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
@@ -663,6 +696,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -699,7 +733,7 @@
         "tags": [
           "manga"
         ],
-        "operationId": "manga_manga_id_get",
+        "operationId": "Catalog_GetManga",
         "parameters": [
           {
             "name": "manga_id",
@@ -708,6 +742,7 @@
             "schema": {
               "type": "integer"
             },
+            "x-originalName": "mangaId",
             "description": "The manga's MyAnimeList ID."
           },
           {
@@ -716,6 +751,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -755,14 +791,15 @@
           "required": true,
           "schema": {
             "type": "integer"
-          }
+          },
+          "x-originalName": "mangaId"
         }
       ],
       "patch": {
         "tags": [
           "user mangalist"
         ],
-        "operationId": "manga_manga_id_my_list_status_put",
+        "operationId": "Manga_UpdateListStatus",
         "requestBody": {
           "content": {
             "application/x-www-form-urlencoded": {
@@ -798,7 +835,7 @@
         "tags": [
           "user mangalist"
         ],
-        "operationId": "manga_manga_id_my_list_status_delete",
+        "operationId": "Manga_DeleteListStatus",
         "security": [
           {
             "main_auth": [
@@ -828,15 +865,16 @@
         "tags": [
           "manga"
         ],
-        "operationId": "manga_ranking_get",
+        "operationId": "Manga_GetRanking",
         "parameters": [
           {
             "name": "ranking_type",
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/MangaRankingType"
             },
+            "x-originalName": "rankingType",
             "description": "Which ranking to return: all, manga, novels, oneshots, doujin, manhwa, manhua, bypopularity or favorite."
           },
           {
@@ -846,6 +884,7 @@
               "type": "integer",
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
@@ -855,6 +894,7 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
@@ -863,6 +903,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -899,7 +940,7 @@
         "tags": [
           "user"
         ],
-        "operationId": "users_user_id_get",
+        "operationId": "Catalog_GetUser",
         "parameters": [
           {
             "name": "user_name",
@@ -908,6 +949,7 @@
               "type": "string"
             },
             "required": true,
+            "x-originalName": "userName",
             "description": "@me, for the signed-in user."
           },
           {
@@ -916,6 +958,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -947,7 +990,7 @@
         "tags": [
           "user animelist"
         ],
-        "operationId": "users_user_id_animelist_get",
+        "operationId": "Users_GetAnimeList",
         "parameters": [
           {
             "name": "user_name",
@@ -956,22 +999,25 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "userName",
             "description": "A user name, or @me for the signed-in user."
           },
           {
             "name": "status",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/AnimeWatchStatus"
             },
+            "x-originalName": "status",
             "description": "Returns only the entries with this list status: watching, completed, on_hold, dropped or plan_to_watch."
           },
           {
             "name": "sort",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/UserAnimeListSort"
             },
+            "x-originalName": "sort",
             "description": "The order of the entries: list_score, list_updated_at, anime_title or anime_start_date."
           },
           {
@@ -981,6 +1027,7 @@
               "type": "integer",
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
@@ -990,6 +1037,7 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
@@ -998,6 +1046,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -1034,7 +1083,7 @@
         "tags": [
           "user mangalist"
         ],
-        "operationId": "users_user_id_mangalist_get",
+        "operationId": "Users_GetMangaList",
         "parameters": [
           {
             "name": "user_name",
@@ -1043,22 +1092,25 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "userName",
             "description": "A user name, or @me for the signed-in user."
           },
           {
             "name": "status",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/MangaReadStatus"
             },
+            "x-originalName": "status",
             "description": "Returns only the entries with this list status: reading, completed, on_hold, dropped or plan_to_read."
           },
           {
             "name": "sort",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/UserMangaListSort"
             },
+            "x-originalName": "sort",
             "description": "The order of the entries: list_score, list_updated_at, manga_title or manga_start_date."
           },
           {
@@ -1068,6 +1120,7 @@
               "type": "integer",
               "default": 100
             },
+            "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
@@ -1077,6 +1130,7 @@
               "type": "integer",
               "default": 0
             },
+            "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
@@ -1085,6 +1139,7 @@
             "schema": {
               "type": "string"
             },
+            "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
@@ -1325,15 +1380,15 @@
           },
           "start_date": {
             "type": "string",
-            "format": "date",
             "nullable": true,
-            "description": "When the user started the work, as YYYY-MM-DD."
+            "description": "When the user started the work: YYYY-MM-DD, or only YYYY-MM or YYYY when the user left out the day or month.",
+            "x-remarks": "A string rather than a date, because users can leave out the day or the month, and MyAnimeList then sends only YYYY-MM or YYYY. A date type would reject those values or fill in a day the user never entered. Parse it yourself if you need a date, for example with DateOnly.TryParseExact for each of the three forms."
           },
           "finish_date": {
             "type": "string",
-            "format": "date",
             "nullable": true,
-            "description": "When the user finished the work, as YYYY-MM-DD."
+            "description": "When the user finished the work, in the same form as the start date.",
+            "x-remarks": "A string rather than a date, for the same reason as the start date: MyAnimeList sends partial dates (YYYY-MM or YYYY) when the user left out the day or the month."
           },
           "priority": {
             "type": "integer",
@@ -1972,15 +2027,15 @@
           },
           "start_date": {
             "type": "string",
-            "format": "date",
             "nullable": true,
-            "description": "When the user started the work, as YYYY-MM-DD."
+            "description": "When the user started the work: YYYY-MM-DD, or only YYYY-MM or YYYY when the user left out the day or month.",
+            "x-remarks": "A string rather than a date, because users can leave out the day or the month, and MyAnimeList then sends only YYYY-MM or YYYY. A date type would reject those values or fill in a day the user never entered. Parse it yourself if you need a date, for example with DateOnly.TryParseExact for each of the three forms."
           },
           "finish_date": {
             "type": "string",
-            "format": "date",
             "nullable": true,
-            "description": "When the user finished the work, as YYYY-MM-DD."
+            "description": "When the user finished the work, in the same form as the start date.",
+            "x-remarks": "A string rather than a date, for the same reason as the start date: MyAnimeList sends partial dates (YYYY-MM or YYYY) when the user left out the day or the month."
           },
           "priority": {
             "type": "integer",
@@ -2174,9 +2229,9 @@
               },
               "birthday": {
                 "type": "string",
-                "format": "date",
                 "nullable": true,
-                "description": "The birthday the user chose to show on their profile."
+                "description": "The birthday the user chose to show on their profile: YYYY-MM-DD, or a partial date when the user left out parts of it.",
+                "x-remarks": "A string rather than a date, because users can leave parts of their birthday out, and MyAnimeList then sends a partial date. A date type would reject those values or fill in parts the user never entered. Parse it yourself if you need a date."
               },
               "location": {
                 "type": "string",
@@ -2641,7 +2696,7 @@
         "type": "object",
         "properties": {
           "status": {
-            "type": "string",
+            "$ref": "#/components/schemas/AnimeWatchStatus",
             "description": "The new list status: watching, completed, on_hold, dropped or plan_to_watch."
           },
           "is_rewatching": {
@@ -2683,7 +2738,7 @@
         "type": "object",
         "properties": {
           "status": {
-            "type": "string",
+            "$ref": "#/components/schemas/MangaReadStatus",
             "description": "The new list status: reading, completed, on_hold, dropped or plan_to_read."
           },
           "is_rereading": {
@@ -2724,6 +2779,150 @@
           }
         },
         "description": "The fields of a manga list entry to change. Fields that aren't set are left as they are."
+      },
+      "AnimeRankingType": {
+        "type": "string",
+        "enum": [
+          "all",
+          "airing",
+          "upcoming",
+          "tv",
+          "ova",
+          "movie",
+          "special",
+          "bypopularity",
+          "favorite"
+        ],
+        "x-enumNames": [
+          "All",
+          "Airing",
+          "Upcoming",
+          "Tv",
+          "Ova",
+          "Movie",
+          "Special",
+          "ByPopularity",
+          "Favorite"
+        ],
+        "description": "Which anime ranking to return."
+      },
+      "MangaRankingType": {
+        "type": "string",
+        "enum": [
+          "all",
+          "manga",
+          "novels",
+          "lightnovels",
+          "oneshots",
+          "doujin",
+          "manhwa",
+          "manhua",
+          "bypopularity",
+          "favorite"
+        ],
+        "x-enumNames": [
+          "All",
+          "Manga",
+          "Novels",
+          "LightNovels",
+          "OneShots",
+          "Doujin",
+          "Manhwa",
+          "Manhua",
+          "ByPopularity",
+          "Favorite"
+        ],
+        "description": "Which manga ranking to return."
+      },
+      "SeasonalAnimeSort": {
+        "type": "string",
+        "enum": [
+          "anime_score",
+          "anime_num_list_users"
+        ],
+        "x-enumNames": [
+          "Score",
+          "NumListUsers"
+        ],
+        "description": "The order of seasonal anime, each from the highest value down."
+      },
+      "ForumTopicsSort": {
+        "type": "string",
+        "enum": [
+          "recent"
+        ],
+        "x-enumNames": [
+          "Recent"
+        ],
+        "description": "The order of forum topics."
+      },
+      "AnimeWatchStatus": {
+        "type": "string",
+        "enum": [
+          "watching",
+          "completed",
+          "on_hold",
+          "dropped",
+          "plan_to_watch"
+        ],
+        "x-enumNames": [
+          "Watching",
+          "Completed",
+          "OnHold",
+          "Dropped",
+          "PlanToWatch"
+        ],
+        "description": "Where an anime is on a user's list: being watched, completed, on hold, dropped or planned."
+      },
+      "MangaReadStatus": {
+        "type": "string",
+        "enum": [
+          "reading",
+          "completed",
+          "on_hold",
+          "dropped",
+          "plan_to_read"
+        ],
+        "x-enumNames": [
+          "Reading",
+          "Completed",
+          "OnHold",
+          "Dropped",
+          "PlanToRead"
+        ],
+        "description": "Where a manga is on a user's list: being read, completed, on hold, dropped or planned."
+      },
+      "UserAnimeListSort": {
+        "type": "string",
+        "enum": [
+          "list_score",
+          "list_updated_at",
+          "anime_title",
+          "anime_start_date"
+        ],
+        "x-enumNames": [
+          "ListScore",
+          "ListUpdatedAt",
+          "AnimeTitle",
+          "AnimeStartDate"
+        ],
+        "description": "The order of the entries of a user's anime list."
+      },
+      "UserMangaListSort": {
+        "type": "string",
+        "enum": [
+          "list_score",
+          "list_updated_at",
+          "manga_title",
+          "manga_start_date"
+        ],
+        "x-enumNames": [
+          "ListScore",
+          "ListUpdatedAt",
+          "MangaTitle",
+          "MangaStartDate"
+        ],
+        "description": "The order of the entries of a user's manga list."
       }
     }
   }

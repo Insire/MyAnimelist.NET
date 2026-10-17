@@ -29,7 +29,7 @@ dotnet add package SoftThorn.MAL.ApiClient
 - **Rate-limit friendly:** requests rejected with `429 Too Many Requests` or `503 Service Unavailable` are retried up to 3 times with jittered exponential backoff, honoring `Retry-After`. Reads and deletes that get no answer within 20 seconds are retried the same way.
 - **Identifies itself** with a `User-Agent` header naming the library
 - **OAuth2 login** with PKCE: a browser window opens, the user signs in, and the library catches the redirect on a local `HttpListener`
-- **Automatic authorization:** once signed in, every request gets the `Bearer` token
+- **Automatic authorization:** once signed in, every request gets the `Bearer` token. Before that, requests send the Client ID (`X-MAL-CLIENT-ID`), which is enough for public data such as searches, details and rankings
 - **Replaceable pieces:** swap in your own token storage (`IAuthCache`) or your own way of opening the login page (`IBrowserLoginHandler`)
 - **Progress reporting** during login through `IProgress<AuthProgress>`, so you can show progress in a UI
 
@@ -64,7 +64,7 @@ var mal = provider.GetRequiredService<IMalApiService>();
 ```
 
 > [!NOTE]
-> `HttpListener` uses `RedirectUrl` as its listening prefix, so the URL must end with `/`.
+> `HttpListener` uses `RedirectUrl` as its listening prefix, so the URL must end with `/`. `AddMalApiClient` checks this and throws an `ArgumentException` for an empty Client ID or a redirect URL that isn't an absolute `http`/`https` URL ending with `/`.
 
 ### 3. Sign in
 
@@ -74,13 +74,15 @@ var progress = new Progress<AuthProgress>(p => Console.WriteLine($"{p.Progress:P
 var signedIn = await mal.Login.StartOAuthFlowAsync(progress);
 ```
 
-By default the login page opens in the user's default browser. After the user approves access, the token is stored in the `IAuthCache`. Expired access tokens are refreshed automatically with the refresh token before the next request. If a valid token is already cached, or an expired one can be refreshed, `StartOAuthFlowAsync` returns `true` without opening the browser. It returns `false` if the user denies access or the token exchange fails.
+By default the login page opens in the user's default browser. After the user approves access, the token is stored in the `IAuthCache`. Expired access tokens are refreshed automatically with the refresh token before the next request. If a valid token is already cached, or an expired one can be refreshed, `StartOAuthFlowAsync` returns `true` without opening the browser. It returns `false` if the user denies access or the token exchange fails. If MyAnimeList rejects the refresh token, the tokens are removed and the user has to sign in again. `SignOutAsync` removes the tokens on request.
+
+Signing in is only needed for the user's own data (their lists, list updates, suggestions, `@me`). Public data works without it.
 
 ### 4. Call the API
 
 ```csharp
 // Search for anime
-var results = await mal.Catalog.AnimeGetAsync("frieren", limit: 5, fields: "title,mean");
+var results = await mal.Catalog.SearchAnimeAsync("frieren", limit: 5, fields: "title,mean");
 
 foreach (var entry in results.Data ?? [])
 {
@@ -88,10 +90,13 @@ foreach (var entry in results.Data ?? [])
 }
 
 // Top-ranked anime
-var ranking = await mal.Anime.RankingAsync(ranking_type: "all", limit: 10);
+var ranking = await mal.Anime.GetRankingAsync(AnimeRankingType.All, limit: 10);
 
 // A user's anime list, with each entry's list status (score, episodes watched, ...)
-var list = await mal.Users.AnimelistAsync("@me", status: "watching", fields: "list_status");
+var list = await mal.Users.GetAnimeListAsync("@me", status: AnimeWatchStatus.Watching, fields: MalFields.UserAnimeList);
+
+// Add an anime to the signed-in user's list, or change its entry; only the fields you set are sent
+await mal.Anime.UpdateListStatusAsync(52991, new AnimeListStatusPatch { Status = AnimeWatchStatus.Completed, Score = 10 });
 ```
 
 ## API overview
@@ -100,14 +105,16 @@ var list = await mal.Users.AnimelistAsync("@me", status: "watching", fields: "li
 
 | Property | Client | What it covers |
 | --- | --- | --- |
-| `Login` | `ILoginClient` | OAuth2 sign-in (`StartOAuthFlowAsync`) |
-| `Catalog` | `ICatalogClient` | Anime search and details (`AnimeGetAsync`), manga search and details (`MangaGetAsync`), user profile (`UsersAsync`) |
-| `Anime` | `IAnimeClient` | Anime ranking, seasonal anime, suggestions, and updating your anime list status |
-| `Manga` | `IMangaClient` | Manga ranking and updating your manga list status |
-| `Forum` | `IForumClient` | Forum boards, topics, and topic details |
-| `Users` | `IUsersClient` | A user's anime list and manga list |
+| `Login` | `ILoginClient` | OAuth2 sign-in (`StartOAuthFlowAsync`) and sign-out (`SignOutAsync`) |
+| `Catalog` | `ICatalogClient` | Anime and manga search (`SearchAnimeAsync`, `SearchMangaAsync`) and details (`GetAnimeAsync`, `GetMangaAsync`), user profiles (`GetUserAsync`) |
+| `Anime` | `IAnimeClient` | Anime ranking (`GetRankingAsync`), seasonal anime (`GetSeasonalAsync`), suggestions (`GetSuggestionsAsync`), and the signed-in user's anime list entries (`UpdateListStatusAsync`, `DeleteListStatusAsync`) |
+| `Manga` | `IMangaClient` | Manga ranking (`GetRankingAsync`) and the signed-in user's manga list entries (`UpdateListStatusAsync`, `DeleteListStatusAsync`) |
+| `Forum` | `IForumClient` | Forum boards (`GetBoardsAsync`), topic search (`GetTopicsAsync`) and a topic's posts (`GetTopicAsync`) |
+| `Users` | `IUsersClient` | A user's anime list and manga list (`GetAnimeListAsync`, `GetMangaListAsync`) |
 
-Most methods take an optional `fields` parameter, a comma-separated list of the fields you want returned (for example `"title,mean,genres"`). See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the available fields and values.
+Most methods take an optional `fields` parameter, a comma-separated list of the fields you want returned (for example `"title,mean,genres"`). Without it, MyAnimeList only returns each entry's id, title and picture. `MalFields` has values that request every field the models map, such as `MalFields.Anime` and `MalFields.AnimeDetails`. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the available fields and values.
+
+Parameters and request fields that take a fixed set of values are enums (`AnimeRankingType`, `Season`, `AnimeWatchStatus`, ...). In responses, those fields stay strings (`"watching"`), so a value MyAnimeList adds later doesn't break deserialization. Dates the user enters (list start and finish dates, birthdays) are strings too, because MyAnimeList sends partial dates such as `2017-10` or `2017` there.
 
 When a request fails, the client throws an `ApiException`.
 
@@ -125,8 +132,9 @@ using SoftThorn.MAL.ApiClient.Authentication;
 
 public sealed class FileAuthCache : IAuthCache
 {
-    public Task<AuthResponse?> Get(CancellationToken cancellationToken = default) { /* load */ }
+    public Task<AuthResponse?> GetAsync(CancellationToken cancellationToken = default) { /* load */ }
     public Task SaveAsync(AuthResponse authResponse, CancellationToken cancellationToken = default) { /* save */ }
+    public Task ClearAsync(CancellationToken cancellationToken = default) { /* delete */ }
 }
 
 services.AddSingleton<IAuthCache, FileAuthCache>();
@@ -135,7 +143,7 @@ services.AddMalApiClient(config);
 
 ### Open the login page differently
 
-Implement `IBrowserLoginHandler` to show the login page in an embedded web view, or to automate it. The test project does this with Playwright.
+Implement `IBrowserLoginHandler` to show the login page in an embedded web view, or to automate it. Its `HandleAsync` gets the cancellation token of `StartOAuthFlowAsync`, so a web view can close when the login is cancelled. The test project does this with Playwright.
 
 ```csharp
 using SoftThorn.MAL.ApiClient;
@@ -167,7 +175,7 @@ You are also responsible for what your users do with your app (4(d)).
 - **Desktop and console apps only.** The login waits for the redirect on a local `HttpListener`, so it doesn't fit server-side web apps, where the redirect goes to your web server instead.
 - **Public clients only.** The library sends a Client ID but no client secret.
 - **PKCE uses `code_challenge_method=plain`**, because that is the only method MyAnimeList supports.
-- **No retry on `401 Unauthorized`.** Tokens are refreshed shortly before they expire. If MyAnimeList revokes a token earlier, requests fail until the user signs in again.
+- **No retry on `401 Unauthorized`.** Tokens are refreshed shortly before they expire. If MyAnimeList revokes an access token earlier, requests that need a signed-in user fail until the user signs in again. A rejected refresh token removes the tokens, so `StartOAuthFlowAsync` opens the login page again.
 - **Not Native AOT or trimming compatible.** The clients use reflection-based `System.Text.Json`, which is off by default in Native AOT apps, so requests would fail at runtime there. Adding support would need source-generated JSON metadata for every model, so it isn't planned for now.
 - **Brief XML documentation.** MyAnimeList's agreement doesn't allow copying its API documentation, so the generated clients and models carry short descriptions written for this library. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the details of each endpoint and field.
 - **Sealed implementations.** Only interfaces are public: `IMalApiService` and the client interfaces it returns. To test code that uses the API, mock `IMalApiService` or the client interfaces.

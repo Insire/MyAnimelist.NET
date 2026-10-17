@@ -44,10 +44,17 @@
         mean: number,
         media_type: string,
         my_list_status: {
+          comments: string,
           is_rewatching: bool,
           num_episodes_watched: int,
+          num_times_rewatched: int,
+          priority: int,
+          rewatch_value: int,
           score: int,
           status: string,
+          tags: [
+            string
+          ],
           updated_at: date
         },
         nsfw: string,

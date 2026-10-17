@@ -16,7 +16,7 @@
     num_items_watching: int,
     num_times_rewatched: int
   },
-  birthday: date,
+  birthday: string,
   id: int,
   is_supporter: bool,
   joined_at: date,

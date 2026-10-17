@@ -49,11 +49,18 @@
         mean: number,
         media_type: string,
         my_list_status: {
+          comments: string,
           is_rereading: bool,
           num_chapters_read: int,
+          num_times_reread: int,
           num_volumes_read: int,
+          priority: int,
+          reread_value: int,
           score: int,
           status: string,
+          tags: [
+            string
+          ],
           updated_at: date
         },
         nsfw: string,

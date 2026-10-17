@@ -10,7 +10,7 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         [Fact]
         public void Encode_Should_Write_Numbers_Booleans_And_Strings_As_Form_Values()
         {
-            var body = new AnimeListStatusPatch { Status = "watching", Score = 7, Is_rewatching = false, Tags = "a,b" };
+            var body = new AnimeListStatusPatch { Status = AnimeWatchStatus.Watching, Score = 7, IsRewatching = false, Tags = "a,b" };
 
             var fields = MalFormUrlEncoder.Encode(body, Options);
 
@@ -30,7 +30,8 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         [Fact]
         public async Task Encode_Should_Produce_Url_Encoded_Content()
         {
-            var body = new AnimeListStatusPatch { Status = "plan_to_watch", Comments = "a & b" };
+            // the enum member is sent as MAL's value (JsonStringEnumMemberName), not as its C# name
+            var body = new AnimeListStatusPatch { Status = AnimeWatchStatus.PlanToWatch, Comments = "a & b" };
 
             using var content = new FormUrlEncodedContent(MalFormUrlEncoder.Encode(body, Options));
 

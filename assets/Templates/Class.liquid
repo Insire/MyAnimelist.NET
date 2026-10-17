@@ -59,6 +59,11 @@
     /// {{ property.Description | csharpdocs }}
     /// </summary>
 {%-   endif -%}
+{%-   if property.ExtensionData["x-remarks"] -%}
+    /// <remarks>
+    /// {{ property.ExtensionData["x-remarks"] | csharpdocs }}
+    /// </remarks>
+{%-   endif -%}
 {%- if UseSystemTextJson -%}
     [System.Text.Json.Serialization.JsonPropertyName("{{ property.Name }}")]
 {%-   if property.IsStringEnumArray -%}
@@ -107,7 +112,10 @@
     [System.Obsolete{% if property.HasDeprecatedMessage %}({{ property.DeprecatedMessage | literal }}){% endif %}]
 {%-   endif -%}
     {%- template Class.Property.Annotations %}
-    public {% if UseRequiredKeyword and property.IsRequired %}required {% endif %}{{ property.Type }} {{ property.PropertyName }}{% if RenderInpc == false and RenderPrism == false %} { get; {% if property.HasSetter and RenderRecord == false %}{{ WriteAccessor }}; {% elsif RenderRecord and GenerateNativeRecords %}init; {% endif %}}{% if property.HasDefaultValue and RenderRecord == false and UseRequiredKeyword == false %} = {{ property.DefaultValue }};{% elsif GenerateNullableReferenceTypes and RenderRecord == false and UseRequiredKeyword == false %} = default!;{% endif %}
+{%-   comment -%} NJsonSchema keeps MAL's underscores (Num_watched_episodes); the JSON name stays in JsonPropertyName {%- endcomment -%}
+{%-   assign propertyNameParts = property.PropertyName | split: "_" -%}
+{%-   capture propertyName -%}{%- for propertyNamePart in propertyNameParts -%}{{ propertyNamePart | capitalize }}{%- endfor -%}{%- endcapture -%}
+    public {% if UseRequiredKeyword and property.IsRequired %}required {% endif %}{{ property.Type }} {{ propertyName }}{% if RenderInpc == false and RenderPrism == false %} { get; {% if property.HasSetter and RenderRecord == false %}{{ WriteAccessor }}; {% elsif RenderRecord and GenerateNativeRecords %}init; {% endif %}}{% if property.HasDefaultValue and RenderRecord == false and UseRequiredKeyword == false %} = {{ property.DefaultValue }};{% elsif GenerateNullableReferenceTypes and RenderRecord == false and UseRequiredKeyword == false %} = default!;{% endif %}
 {%- else -%}
     {
         get { return {{ property.FieldName }}; }

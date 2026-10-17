@@ -17,7 +17,7 @@
         /// </summary>
         /// <param name="cancellationToken">Cancels the read.</param>
         /// <returns>The tokens last passed to <see cref="SaveAsync"/>, or <see langword="null"/> when there are none.</returns>
-        Task<AuthResponse?> Get(CancellationToken cancellationToken = default);
+        Task<AuthResponse?> GetAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Stores new tokens, replacing the ones stored before.
@@ -28,5 +28,14 @@
         /// <param name="authResponse">The tokens to store.</param>
         /// <param name="cancellationToken">Cancels the write.</param>
         Task SaveAsync(AuthResponse authResponse, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Removes the stored tokens, so <see cref="GetAsync"/> returns <see langword="null"/> afterwards.
+        /// </summary>
+        /// <remarks>
+        /// Called by <see cref="ILoginClient.SignOutAsync"/>, and when MyAnimeList rejects the refresh token.
+        /// </remarks>
+        /// <param name="cancellationToken">Cancels the removal.</param>
+        Task ClearAsync(CancellationToken cancellationToken = default);
     }
 }

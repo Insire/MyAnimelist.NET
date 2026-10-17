@@ -19,6 +19,9 @@
         /// so the returned task may complete before or after the user has signed in. A faulted task ends the login with its exception.
         /// </remarks>
         /// <param name="authUrl">The address of MyAnimeList's authorization page for this login.</param>
-        ValueTask Handle(string authUrl);
+        /// <param name="cancellationToken">
+        /// Cancelled when the caller of <see cref="ILoginClient.StartOAuthFlowAsync"/> gives up on the login, for example to close an embedded web view.
+        /// </param>
+        ValueTask HandleAsync(string authUrl, CancellationToken cancellationToken = default);
     }
 }

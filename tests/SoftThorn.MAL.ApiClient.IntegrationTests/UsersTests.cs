@@ -7,32 +7,32 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
     public sealed class UsersTests(OAuthFlowTestFixture fixture)
     {
         [Fact]
-        public async Task AnimelistAsync_Me_Should_Return_Expected_Structure()
+        public async Task GetAnimeListAsync_Me_Should_Return_Expected_Structure()
         {
             // Arrange
             var sut = fixture.GetMalApiService();
             await TestAccount.EnsureSeededAsync(sut, TestContext.Current.CancellationToken);
 
             // Act
-            var response = await sut.Users.AnimelistAsync("@me", sort: "anime_title", limit: 5, fields: Fields.UserAnimeList, cancellationToken: TestContext.Current.CancellationToken);
+            var response = await sut.Users.GetAnimeListAsync("@me", sort: UserAnimeListSort.AnimeTitle, limit: 5, fields: MalFields.UserAnimeList, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedAnimeId && entry.List_status?.Status != null);
+            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedAnimeId && entry.ListStatus?.Status != null);
             await Verify(ModelShape.Of(response));
         }
 
         [Fact]
-        public async Task MangalistAsync_Me_Should_Return_Expected_Structure()
+        public async Task GetMangaListAsync_Me_Should_Return_Expected_Structure()
         {
             // Arrange
             var sut = fixture.GetMalApiService();
             await TestAccount.EnsureSeededAsync(sut, TestContext.Current.CancellationToken);
 
             // Act
-            var response = await sut.Users.MangalistAsync("@me", sort: "manga_title", limit: 5, fields: Fields.UserMangaList, cancellationToken: TestContext.Current.CancellationToken);
+            var response = await sut.Users.GetMangaListAsync("@me", sort: UserMangaListSort.MangaTitle, limit: 5, fields: MalFields.UserMangaList, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedMangaId && entry.List_status?.Status != null);
+            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedMangaId && entry.ListStatus?.Status != null);
             await Verify(ModelShape.Of(response));
         }
     }

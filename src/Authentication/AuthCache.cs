@@ -18,12 +18,22 @@
             return Task.CompletedTask;
         }
 
-        public Task<AuthResponse?> Get(CancellationToken cancellationToken = default)
+        public Task<AuthResponse?> GetAsync(CancellationToken cancellationToken = default)
         {
             lock (_lock)
             {
                 return Task.FromResult(_token);
             }
+        }
+
+        public Task ClearAsync(CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                _token = null;
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

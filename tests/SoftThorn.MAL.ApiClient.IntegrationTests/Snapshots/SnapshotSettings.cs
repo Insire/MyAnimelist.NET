@@ -11,8 +11,8 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.Snapshots
             nameof(WorkForList.Mean),
             nameof(WorkForList.Rank),
             nameof(WorkForList.Popularity),
-            nameof(WorkForList.Num_list_users),
-            nameof(WorkForList.Num_scoring_users),
+            nameof(WorkForList.NumListUsers),
+            nameof(WorkForList.NumScoringUsers),
         ];
 
         // every member of these types keeps changing (statistics.status counters, the recommended works and their counts)
