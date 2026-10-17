@@ -6,11 +6,19 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
+		<!-- two solution files sit in the repo root; tell Verify which one to use -->
+		<SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*Undefined*'">$(MSBuildThisFileDirectory)..\..\</SolutionDir>
+		<SolutionName Condition="'$(SolutionName)' == '' or '$(SolutionName)' == '*Undefined*'">SoftThorn.MAL.ApiClient</SolutionName>
+		<!-- Verify's Open Source Maintenance Fee: this project is open source and generates no revenue. Renew before it expires (max 12 months ahead). -->
+		<Verify_SponsorshipExemption>OpenSource</Verify_SponsorshipExemption>
+		<Verify_SponsorshipExemptionUntil>2027-10</Verify_SponsorshipExemptionUntil>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
 		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+		<PackageReference Include="PublicApiGenerator" />
+		<PackageReference Include="Verify.XunitV3" />
 		<PackageReference Include="xunit.v3.mtp-v2" />
 		<PackageReference Include="xunit.runner.visualstudio">
 			<PrivateAssets>all</PrivateAssets>

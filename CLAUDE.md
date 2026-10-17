@@ -87,6 +87,7 @@ SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an uno
 - `tests/` holds two xUnit v3 projects on Microsoft.Testing.Platform. Each has its own `Traits.cs` (`TestCategory`).
   - `SoftThorn.MAL.ApiClient.UnitTests`: **no network access allowed.**
     - `TokenClientTests` uses a stub HTTP handler and a fixed `TimeProvider`. `MalRetryHandlerTests` does the same and also checks the User-Agent on both registered clients and that the message handlers are transient. `MalFormUrlEncoderTests` covers the form encoding.
+    - `PublicApiTests` (added 2026-10-17) snapshots the library's public API with PublicApiGenerator and Verify (`PublicApiTests.PublicApi_Should_Not_Change_Unnoticed.verified.txt`). Assembly attributes are left out (version and copyright year only exist in a Cake build), and so is `GeneratedCodeAttribute` (it carries NSwag's version). A diff in that file is a public API change: check it against the API rules above and the breaking-change rules in [Commit messages](#commit-messages) before accepting it. The project has the same `SolutionDir`/`SolutionName` and Verify sponsorship settings as the integration tests.
     - New tests that don't call MAL go here.
   - `SoftThorn.MAL.ApiClient.IntegrationTests`: **live tests against the real MAL API**, using Verify and Playwright.
     - `OAuth/OAuthFlowTestFixture` is an assembly fixture and a Playwright `PageTest`. It implements `IBrowserLoginHandler` to fill in the MAL login form automatically.
@@ -215,7 +216,7 @@ Format ([conventional commits](https://www.conventionalcommits.org)):
 
 - Open source (MIT) and free. The owner doesn't plan to generate revenue from it (stated 2026-10-16). This matters for dependency licensing and fee models such as Verify's Open Source Maintenance Fee.
 - Verify 33+ runs a build-time SponsorCheck.
-  - The integration test csproj claims `Verify_SponsorshipExemption=OpenSource` until `Verify_SponsorshipExemptionUntil=2027-10`, approved by the owner on 2026-10-17.
+  - Both test csprojs claim `Verify_SponsorshipExemption=OpenSource` until `Verify_SponsorshipExemptionUntil=2027-10`, approved by the owner on 2026-10-17 (the unit tests since 2026-10-17, for `PublicApiTests`).
   - After that month the build fails with SC021.
   - Renewing means bumping it by at most 12 months, and only while the project is still open source with no revenue. Confirm with the owner before changing what is claimed.
 

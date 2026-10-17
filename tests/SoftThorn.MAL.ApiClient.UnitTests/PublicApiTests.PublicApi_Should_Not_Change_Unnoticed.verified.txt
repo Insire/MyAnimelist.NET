@@ -1,0 +1,876 @@
+﻿namespace SoftThorn.MAL.ApiClient
+{
+    public sealed class AlternativeTitles
+    {
+        public AlternativeTitles() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("en")]
+        public string? En { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("ja")]
+        public string? Ja { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("synonyms")]
+        public System.Collections.Generic.ICollection<string>? Synonyms { get; set; }
+    }
+    public sealed class AnimeForDetails : SoftThorn.MAL.ApiClient.AnimeForList
+    {
+        public AnimeForDetails() { }
+        [System.Text.Json.Serialization.JsonPropertyName("background")]
+        public string? Background { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("pictures")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.Picture>? Pictures { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("recommendations")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.AnimeRecommendationAggregationEdgeBase>? Recommendations { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("related_anime")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.RelatedAnimeEdge>? Related_anime { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("related_manga")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.RelatedMangaEdge>? Related_manga { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("statistics")]
+        public SoftThorn.MAL.ApiClient.AnimeStatistics? Statistics { get; set; }
+    }
+    public class AnimeForList : SoftThorn.MAL.ApiClient.WorkForList
+    {
+        public AnimeForList() { }
+        [System.Text.Json.Serialization.JsonPropertyName("average_episode_duration")]
+        public int? Average_episode_duration { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("broadcast")]
+        public SoftThorn.MAL.ApiClient.Broadcast? Broadcast { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("media_type")]
+        public string? Media_type { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("my_list_status")]
+        public SoftThorn.MAL.ApiClient.AnimeListStatus? My_list_status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_episodes")]
+        public int? Num_episodes { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("rating")]
+        public string? Rating { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("source")]
+        public string? Source { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("start_season")]
+        public SoftThorn.MAL.ApiClient.AnimeSeason? Start_season { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("studios")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.AnimeStudio>? Studios { get; set; }
+    }
+    public sealed class AnimeList
+    {
+        public AnimeList() { }
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        public System.Collections.Generic.List<SoftThorn.MAL.ApiClient.AnimeListEdge>? Data { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("paging")]
+        public SoftThorn.MAL.ApiClient.Paging Paging { get; set; }
+    }
+    public sealed class AnimeListEdge
+    {
+        public AnimeListEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.AnimeForList? Node { get; set; }
+    }
+    public sealed class AnimeListForRanking
+    {
+        public AnimeListForRanking() { }
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        public System.Collections.Generic.List<SoftThorn.MAL.ApiClient.AnimeRankingEdge>? Data { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("paging")]
+        public SoftThorn.MAL.ApiClient.Paging Paging { get; set; }
+    }
+    public sealed class AnimeListStatus
+    {
+        public AnimeListStatus() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("comments")]
+        public string? Comments { get; set; }
+        [System.Text.Json.Serialization.JsonConverter(typeof(SoftThorn.MAL.ApiClient.DateFormatConverter?))]
+        [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
+        public System.DateTimeOffset? Finish_date { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("is_rewatching")]
+        public bool? Is_rewatching { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_episodes_watched")]
+        public int? Num_episodes_watched { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
+        public int? Num_times_rewatched { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("priority")]
+        public int? Priority { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("rewatch_value")]
+        public int? Rewatch_value { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("score")]
+        public int? Score { get; set; }
+        [System.Text.Json.Serialization.JsonConverter(typeof(SoftThorn.MAL.ApiClient.DateFormatConverter?))]
+        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
+        public System.DateTimeOffset? Start_date { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("tags")]
+        public System.Collections.Generic.ICollection<string>? Tags { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
+        public System.DateTimeOffset? Updated_at { get; set; }
+    }
+    public sealed class AnimeListStatusPatch
+    {
+        public AnimeListStatusPatch() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("comments")]
+        public string? Comments { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("is_rewatching")]
+        public bool? Is_rewatching { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
+        public int? Num_times_rewatched { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_watched_episodes")]
+        public int? Num_watched_episodes { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("priority")]
+        public int? Priority { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("rewatch_value")]
+        public int? Rewatch_value { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("score")]
+        public int? Score { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("tags")]
+        public string? Tags { get; set; }
+    }
+    public sealed class AnimeRankingEdge
+    {
+        public AnimeRankingEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.AnimeForList? Node { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("ranking")]
+        public SoftThorn.MAL.ApiClient.RankingInfo? Ranking { get; set; }
+    }
+    public sealed class AnimeRecommendationAggregationEdgeBase
+    {
+        public AnimeRecommendationAggregationEdgeBase() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.AnimeForList? Node { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_recommendations")]
+        public int? Num_recommendations { get; set; }
+    }
+    public sealed class AnimeSeason
+    {
+        public AnimeSeason() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<SoftThorn.MAL.ApiClient.Season>))]
+        [System.Text.Json.Serialization.JsonPropertyName("season")]
+        public SoftThorn.MAL.ApiClient.Season? Season { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("year")]
+        public int? Year { get; set; }
+    }
+    public sealed class AnimeStatistics
+    {
+        public AnimeStatistics() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_list_users")]
+        public int? Num_list_users { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public SoftThorn.MAL.ApiClient.AnimeStatusStatistics? Status { get; set; }
+    }
+    public sealed class AnimeStatusStatistics
+    {
+        public AnimeStatusStatistics() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("completed")]
+        public int? Completed { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("dropped")]
+        public int? Dropped { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("on_hold")]
+        public int? On_hold { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("plan_to_watch")]
+        public int? Plan_to_watch { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("watching")]
+        public int? Watching { get; set; }
+    }
+    public sealed class AnimeStudio
+    {
+        public AnimeStudio() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; }
+    }
+    public sealed class ApiException : System.Exception
+    {
+        public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; }
+        public string? Response { get; }
+        public int StatusCode { get; }
+        public override string ToString() { }
+    }
+    public sealed class Broadcast
+    {
+        public Broadcast() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("day_of_the_week")]
+        public string? Day_of_the_week { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("start_time")]
+        public string? Start_time { get; set; }
+    }
+    public sealed class ForumBoard
+    {
+        public ForumBoard() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("description")]
+        public string? Description { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("subboards")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.ForumSubboard>? Subboards { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string? Title { get; set; }
+    }
+    public sealed class ForumBoards
+    {
+        public ForumBoards() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("categories")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.ForumCategory>? Categories { get; set; }
+    }
+    public sealed class ForumCategory
+    {
+        public ForumCategory() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("boards")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.ForumBoard>? Boards { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string? Title { get; set; }
+    }
+    public sealed class ForumSubboard
+    {
+        public ForumSubboard() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string? Title { get; set; }
+    }
+    public sealed class ForumTopic
+    {
+        public ForumTopic() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        public SoftThorn.MAL.ApiClient.ForumTopicData? Data { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("paging")]
+        public SoftThorn.MAL.ApiClient.ForumTopicPaging? Paging { get; set; }
+    }
+    public sealed class ForumTopicData
+    {
+        public ForumTopicData() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("poll")]
+        public SoftThorn.MAL.ApiClient.ForumTopicPoll? Poll { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("posts")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.ForumTopicPost>? Posts { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string? Title { get; set; }
+    }
+    public sealed class ForumTopicPaging
+    {
+        public ForumTopicPaging() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("next")]
+        public string? Next { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("previous")]
+        public string? Previous { get; set; }
+    }
+    public sealed class ForumTopicPoll
+    {
+        public ForumTopicPoll() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("closed")]
+        public bool? Closed { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("options")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.ForumTopicPollOption>? Options { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("question")]
+        public string? Question { get; set; }
+    }
+    public sealed class ForumTopicPollOption
+    {
+        public ForumTopicPollOption() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("text")]
+        public string? Text { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("votes")]
+        public int? Votes { get; set; }
+    }
+    public sealed class ForumTopicPost
+    {
+        public ForumTopicPost() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("body")]
+        public string? Body { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("created_at")]
+        public System.DateTimeOffset? Created_at { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("created_by")]
+        public SoftThorn.MAL.ApiClient.ForumTopicPostCreatedBy? Created_by { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("number")]
+        public int? Number { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("signature")]
+        public string? Signature { get; set; }
+    }
+    public sealed class ForumTopicPostCreatedBy
+    {
+        public ForumTopicPostCreatedBy() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("forum_avator")]
+        public string? Forum_avator { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; }
+    }
+    public sealed class ForumTopics
+    {
+        public ForumTopics() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.ForumTopicsData>? Data { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("paging")]
+        public SoftThorn.MAL.ApiClient.ForumTopicPaging? Paging { get; set; }
+    }
+    public sealed class ForumTopicsCreatedBy
+    {
+        public ForumTopicsCreatedBy() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; }
+    }
+    public sealed class ForumTopicsData
+    {
+        public ForumTopicsData() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("created_at")]
+        public System.DateTimeOffset? Created_at { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("created_by")]
+        public SoftThorn.MAL.ApiClient.ForumTopicsCreatedBy? Created_by { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("is_locked")]
+        public bool? Is_locked { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("last_post_created_at")]
+        public System.DateTimeOffset? Last_post_created_at { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("last_post_created_by")]
+        public SoftThorn.MAL.ApiClient.ForumTopicsCreatedBy? Last_post_created_by { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("number_of_posts")]
+        public int? Number_of_posts { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string? Title { get; set; }
+    }
+    public sealed class Genre
+    {
+        public Genre() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; }
+    }
+    public interface IAnimeClient
+    {
+        System.Threading.Tasks.Task My_list_statusDeleteAsync(int anime_id, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.AnimeListStatus> My_list_statusPatchAsync(int anime_id, SoftThorn.MAL.ApiClient.AnimeListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.AnimeListForRanking> RankingAsync(string ranking_type, int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.AnimeList> SeasonAsync(int year, string season, string? sort = null, int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.AnimeList> SuggestionsAsync(int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+    }
+    public interface ICatalogClient
+    {
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.AnimeForDetails> AnimeGetAsync(int anime_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.AnimeList> AnimeGetAsync(string? q = null, int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.MangaForDetails> MangaGetAsync(int manga_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.MangaList> MangaGetAsync(string? q = null, int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.User> UsersAsync(string user_name, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+    }
+    public interface IForumClient
+    {
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.ForumBoards> BoardsAsync(System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.ForumTopic> TopicAsync(int topic_id, int? limit = default, int? offset = default, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.ForumTopics> TopicsAsync(int? board_id = default, int? subboard_id = default, int? limit = default, int? offset = default, string? sort = null, string? q = null, string? topic_user_name = null, string? user_name = null, System.Threading.CancellationToken cancellationToken = default);
+    }
+    public interface IMalApiService
+    {
+        SoftThorn.MAL.ApiClient.IAnimeClient Anime { get; }
+        SoftThorn.MAL.ApiClient.ICatalogClient Catalog { get; }
+        SoftThorn.MAL.ApiClient.IForumClient Forum { get; }
+        SoftThorn.MAL.ApiClient.Authentication.ILoginClient Login { get; }
+        SoftThorn.MAL.ApiClient.IMangaClient Manga { get; }
+        SoftThorn.MAL.ApiClient.IUsersClient Users { get; }
+    }
+    public interface IMangaClient
+    {
+        System.Threading.Tasks.Task My_list_statusDeleteAsync(int manga_id, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.MangaListStatus> My_list_statusPatchAsync(int manga_id, SoftThorn.MAL.ApiClient.MangaListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.MangaListForRanking> RankingAsync(string ranking_type, int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+    }
+    public interface IUsersClient
+    {
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.UserAnimeList> AnimelistAsync(string user_name, string? status = null, string? sort = null, int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.UserMangaList> MangalistAsync(string user_name, string? status = null, string? sort = null, int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+    }
+    public sealed class Magazine
+    {
+        public Magazine() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; }
+    }
+    public sealed class MangaForDetails : SoftThorn.MAL.ApiClient.MangaForList
+    {
+        public MangaForDetails() { }
+        [System.Text.Json.Serialization.JsonPropertyName("background")]
+        public string? Background { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("pictures")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.Picture>? Pictures { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("recommendations")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.MangaRecommendationAggregationEdgeBase>? Recommendations { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("related_anime")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.RelatedAnimeEdge>? Related_anime { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("related_manga")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.RelatedMangaEdge>? Related_manga { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("serialization")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.MangaMagazineRelationEdge>? Serialization { get; set; }
+    }
+    public class MangaForList : SoftThorn.MAL.ApiClient.WorkForList
+    {
+        public MangaForList() { }
+        [System.Text.Json.Serialization.JsonPropertyName("authors")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.PersonRoleEdge>? Authors { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("media_type")]
+        public string? Media_type { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("my_list_status")]
+        public SoftThorn.MAL.ApiClient.MangaListStatus? My_list_status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_chapters")]
+        public int? Num_chapters { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_volumes")]
+        public int? Num_volumes { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; }
+    }
+    public sealed class MangaList
+    {
+        public MangaList() { }
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        public System.Collections.Generic.List<SoftThorn.MAL.ApiClient.MangaListEdge>? Data { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("paging")]
+        public SoftThorn.MAL.ApiClient.Paging Paging { get; set; }
+    }
+    public sealed class MangaListEdge
+    {
+        public MangaListEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.MangaForList? Node { get; set; }
+    }
+    public sealed class MangaListForRanking
+    {
+        public MangaListForRanking() { }
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        public System.Collections.Generic.List<SoftThorn.MAL.ApiClient.MangaRankingEdge>? Data { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("paging")]
+        public SoftThorn.MAL.ApiClient.Paging Paging { get; set; }
+    }
+    public sealed class MangaListStatus
+    {
+        public MangaListStatus() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("comments")]
+        public string? Comments { get; set; }
+        [System.Text.Json.Serialization.JsonConverter(typeof(SoftThorn.MAL.ApiClient.DateFormatConverter?))]
+        [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
+        public System.DateTimeOffset? Finish_date { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("is_rereading")]
+        public bool? Is_rereading { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_chapters_read")]
+        public int? Num_chapters_read { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_times_reread")]
+        public int? Num_times_reread { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_volumes_read")]
+        public int? Num_volumes_read { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("priority")]
+        public int? Priority { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("reread_value")]
+        public int? Reread_value { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("score")]
+        public int? Score { get; set; }
+        [System.Text.Json.Serialization.JsonConverter(typeof(SoftThorn.MAL.ApiClient.DateFormatConverter?))]
+        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
+        public System.DateTimeOffset? Start_date { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("tags")]
+        public System.Collections.Generic.ICollection<string>? Tags { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
+        public System.DateTimeOffset? Updated_at { get; set; }
+    }
+    public sealed class MangaListStatusPatch
+    {
+        public MangaListStatusPatch() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("comments")]
+        public string? Comments { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("is_rereading")]
+        public bool? Is_rereading { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_chapters_read")]
+        public int? Num_chapters_read { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_times_reread")]
+        public int? Num_times_reread { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_volumes_read")]
+        public int? Num_volumes_read { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("priority")]
+        public int? Priority { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("reread_value")]
+        public int? Reread_value { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("score")]
+        public int? Score { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("tags")]
+        public string? Tags { get; set; }
+    }
+    public sealed class MangaMagazineRelationEdge
+    {
+        public MangaMagazineRelationEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.Magazine? Node { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("role")]
+        public string? Role { get; set; }
+    }
+    public sealed class MangaRankingEdge
+    {
+        public MangaRankingEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.MangaForList? Node { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("ranking")]
+        public SoftThorn.MAL.ApiClient.RankingInfo? Ranking { get; set; }
+    }
+    public sealed class MangaRecommendationAggregationEdgeBase
+    {
+        public MangaRecommendationAggregationEdgeBase() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.MangaForList? Node { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_recommendations")]
+        public int? Num_recommendations { get; set; }
+    }
+    public sealed class Paging
+    {
+        public Paging() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("next")]
+        public string? Next { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("previous")]
+        public string? Previous { get; set; }
+    }
+    public sealed class PersonBase
+    {
+        public PersonBase() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("first_name")]
+        public string? First_name { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("last_name")]
+        public string? Last_name { get; set; }
+    }
+    public sealed class PersonRoleEdge
+    {
+        public PersonRoleEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.PersonBase? Node { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("role")]
+        public string? Role { get; set; }
+    }
+    public sealed class Picture
+    {
+        public Picture() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("large")]
+        public System.Uri? Large { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("medium")]
+        public System.Uri? Medium { get; set; }
+    }
+    public sealed class RankingInfo
+    {
+        public RankingInfo() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("previous_rank")]
+        public int? Previous_rank { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("rank")]
+        public int? Rank { get; set; }
+    }
+    public static class RegistrationExtensions
+    {
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMalApiClient(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, SoftThorn.MAL.ApiClient.Authentication.ClientConfiguration clientConfiguration) { }
+    }
+    public sealed class RelatedAnimeEdge
+    {
+        public RelatedAnimeEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.AnimeForList? Node { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("relation_type")]
+        public string? Relation_type { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("relation_type_formatted")]
+        public string? Relation_type_formatted { get; set; }
+    }
+    public sealed class RelatedMangaEdge
+    {
+        public RelatedMangaEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.MangaForList? Node { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("relation_type")]
+        public string? Relation_type { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("relation_type_formatted")]
+        public string? Relation_type_formatted { get; set; }
+    }
+    public enum Season
+    {
+        [System.Runtime.Serialization.EnumMember(Value="winter")]
+        Winter = 0,
+        [System.Runtime.Serialization.EnumMember(Value="spring")]
+        Spring = 1,
+        [System.Runtime.Serialization.EnumMember(Value="summer")]
+        Summer = 2,
+        [System.Runtime.Serialization.EnumMember(Value="fall")]
+        Fall = 3,
+    }
+    public sealed class User : SoftThorn.MAL.ApiClient.UserBase
+    {
+        public User() { }
+        [System.Text.Json.Serialization.JsonPropertyName("anime_statistics")]
+        public SoftThorn.MAL.ApiClient.UserAnimeStatistics? Anime_statistics { get; set; }
+        [System.Text.Json.Serialization.JsonConverter(typeof(SoftThorn.MAL.ApiClient.DateFormatConverter?))]
+        [System.Text.Json.Serialization.JsonPropertyName("birthday")]
+        public System.DateTimeOffset? Birthday { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("gender")]
+        public string? Gender { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("is_supporter")]
+        public bool? Is_supporter { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("joined_at")]
+        public System.DateTimeOffset? Joined_at { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("location")]
+        public string? Location { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("time_zone")]
+        public string? Time_zone { get; set; }
+    }
+    public sealed class UserAnimeList
+    {
+        public UserAnimeList() { }
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        public System.Collections.Generic.List<SoftThorn.MAL.ApiClient.UserAnimeListEdge>? Data { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("paging")]
+        public SoftThorn.MAL.ApiClient.Paging Paging { get; set; }
+    }
+    public sealed class UserAnimeListEdge
+    {
+        public UserAnimeListEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("list_status")]
+        public SoftThorn.MAL.ApiClient.AnimeListStatus? List_status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.AnimeForList? Node { get; set; }
+    }
+    public sealed class UserAnimeStatistics
+    {
+        public UserAnimeStatistics() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("mean_score")]
+        public float? Mean_score { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_days")]
+        public float? Num_days { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_completed")]
+        public float? Num_days_completed { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_dropped")]
+        public float? Num_days_dropped { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_on_hold")]
+        public float? Num_days_on_hold { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_watched")]
+        public float? Num_days_watched { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_watching")]
+        public float? Num_days_watching { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_episodes")]
+        public int? Num_episodes { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_items")]
+        public int? Num_items { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_completed")]
+        public int? Num_items_completed { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_dropped")]
+        public int? Num_items_dropped { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_on_hold")]
+        public int? Num_items_on_hold { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_plan_to_watch")]
+        public int? Num_items_plan_to_watch { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_watching")]
+        public int? Num_items_watching { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
+        public int? Num_times_rewatched { get; set; }
+    }
+    public class UserBase
+    {
+        public UserBase() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("picture")]
+        public System.Uri? Picture { get; set; }
+    }
+    public sealed class UserMangaList
+    {
+        public UserMangaList() { }
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        public System.Collections.Generic.List<SoftThorn.MAL.ApiClient.UserMangaListEdge>? Data { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("paging")]
+        public SoftThorn.MAL.ApiClient.Paging Paging { get; set; }
+    }
+    public sealed class UserMangaListEdge
+    {
+        public UserMangaListEdge() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("list_status")]
+        public SoftThorn.MAL.ApiClient.MangaListStatus? List_status { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public SoftThorn.MAL.ApiClient.MangaForList? Node { get; set; }
+    }
+    public class WorkBase
+    {
+        public WorkBase() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("main_picture")]
+        public SoftThorn.MAL.ApiClient.Picture? Main_picture { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string? Title { get; set; }
+    }
+    public class WorkForList : SoftThorn.MAL.ApiClient.WorkBase
+    {
+        public WorkForList() { }
+        [System.Text.Json.Serialization.JsonPropertyName("alternative_titles")]
+        public SoftThorn.MAL.ApiClient.AlternativeTitles? Alternative_titles { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("created_at")]
+        public System.DateTimeOffset? Created_at { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("end_date")]
+        public string? End_date { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("genres")]
+        public System.Collections.Generic.ICollection<SoftThorn.MAL.ApiClient.Genre>? Genres { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("mean")]
+        public float? Mean { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("nsfw")]
+        public string? Nsfw { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_list_users")]
+        public int? Num_list_users { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("num_scoring_users")]
+        public int? Num_scoring_users { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("popularity")]
+        public int? Popularity { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("rank")]
+        public int? Rank { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
+        public string? Start_date { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("synopsis")]
+        public string? Synopsis { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
+        public System.DateTimeOffset? Updated_at { get; set; }
+    }
+}
+namespace SoftThorn.MAL.ApiClient.Authentication
+{
+    public readonly struct AuthProgress : System.IEquatable<SoftThorn.MAL.ApiClient.Authentication.AuthProgress>
+    {
+        public AuthProgress(string Message, double Progress) { }
+        public string Message { get; init; }
+        public double Progress { get; init; }
+    }
+    public readonly struct AuthResponse : System.IEquatable<SoftThorn.MAL.ApiClient.Authentication.AuthResponse>
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("access_token")]
+        public required string AccessToken { get; init; }
+        [System.Text.Json.Serialization.JsonPropertyName("expires_at")]
+        public System.DateTimeOffset? ExpiresAt { get; init; }
+        [System.Text.Json.Serialization.JsonPropertyName("expires_in")]
+        public required int ExpiresIn { get; init; }
+        [System.Text.Json.Serialization.JsonPropertyName("refresh_token")]
+        public required string RefreshToken { get; init; }
+        [System.Text.Json.Serialization.JsonPropertyName("token_type")]
+        public required string TokenType { get; init; }
+    }
+    public sealed class ClientConfiguration : System.IEquatable<SoftThorn.MAL.ApiClient.Authentication.ClientConfiguration>
+    {
+        public ClientConfiguration() { }
+        public required string ClientId { get; init; }
+        public required string RedirectUrl { get; init; }
+    }
+    public interface IAuthCache
+    {
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.Authentication.AuthResponse?> Get(System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task SaveAsync(SoftThorn.MAL.ApiClient.Authentication.AuthResponse authResponse, System.Threading.CancellationToken cancellationToken = default);
+    }
+    public interface IBrowserLoginHandler
+    {
+        System.Threading.Tasks.ValueTask Handle(string authUrl);
+    }
+    public interface ILoginClient
+    {
+        System.Threading.Tasks.Task<bool> StartOAuthFlowAsync(System.IProgress<SoftThorn.MAL.ApiClient.Authentication.AuthProgress>? progressReporter = null, System.Threading.CancellationToken cancellationToken = default);
+    }
+}
