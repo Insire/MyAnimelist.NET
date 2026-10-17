@@ -1,5 +1,6 @@
 using Build.Util;
 using Cake.Common;
+using Cake.Common.IO;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
@@ -38,7 +39,8 @@ namespace Build.Tasks
             File.WriteAllText(Constants.OpenApiSpecPath, json);
 
             var dotnetExe = context.Tools.Resolve(context.DotnetExeName);
-            var nswagExe = context.Tools.Resolve("dotnet-nswag.dll");
+            // NSwag.ConsoleCore ships one build per framework; the .nswag config requires the net10.0 one (runtime Net100)
+            var nswagExe = context.GetFiles("./tools/.store/nswag.consolecore/**/tools/net10.0/any/dotnet-nswag.dll").Single();
 
             var settings = new ProcessSettings()
                 .UseWorkingDirectory(".")
@@ -48,7 +50,11 @@ namespace Build.Tasks
                     .AppendQuoted(Constants.NswagConfigFilePath)
                 );
 
-            context.StartProcess(dotnetExe.FullPath, settings);
+            var exitCode = context.StartProcess(dotnetExe.FullPath, settings);
+            if (exitCode != 0)
+            {
+                throw new CakeException($"NSwag failed with exit code {exitCode}.");
+            }
         }
     }
 }

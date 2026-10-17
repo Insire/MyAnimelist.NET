@@ -78,7 +78,10 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
 - `RedirectUrl` must end with `/` because it is used as the `HttpListener` prefix.
 - The package is not published on NuGet yet (confirmed by the user).
 - There's no 401 retry: if MAL revokes a token before `ExpiresAt`, requests fail until the next login.
-- The full Cake pipeline (`./build.ps1`) hasn't been run end to end since the MTP switch. The `dotnet test` options were verified by hand.
+- Verified on 2026-10-17: the Cake targets `HtmlReport`, `BuildAndPack` and `UpdateOpenApiSpec`. `Default` was not run, because it pushes the package to `E:\Drop\NuGet`.
+  - Release tests need the secrets as environment variables (`ClientConfiguration__ClientId` and so on). You can export them from `dotnet user-secrets list` in the integration test project.
+- `tmp_build/results/reports/cobertura/Cobertura.xml` actually contains Microsoft's XML coverage format (`dotnet-coverage merge -f xml`), not Cobertura. ReportGenerator reads it fine.
+- `context.StartProcess` exit codes are mostly ignored by the Cake tasks, so a failing tool can still show "Succeeded". `UpdateOpenApiSpecTask` now throws on a non-zero NSwag exit code; the other tasks don't yet.
 
 Resolved on 2026-10-16:
 
@@ -93,3 +96,9 @@ Resolved on 2026-10-16:
 - `dotnet test` works through MTP via `global.json`
 - refresh tokens are used, through `TokenClient`
 - the Verify warning about two solution files is fixed
+
+Resolved on 2026-10-17:
+
+- all NuGet packages and tools are updated (see `package-updates.md`)
+- the Cake `Test` task now depends on `NuGetRestore`. Before, the clean deleted `obj/` and `dotnet test --no-restore` silently found no test projects.
+- `UpdateOpenApiSpecTask` now uses NSwag's net10.0 build. Before, it resolved the net9.0 one, which rejects the `Net100` config.

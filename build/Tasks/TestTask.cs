@@ -8,6 +8,7 @@ namespace Build.Tasks
 {
     [TaskName("Test")]
     [IsDependentOn(typeof(CleanSolutionTask))]
+    [IsDependentOn(typeof(NuGetRestoreTask))] // the clean removes obj/, and "dotnet test --no-restore" finds no test projects without it
     public sealed class TestTask : FrostingTask<BuildContext>
     {
         public override void Run(BuildContext context)
