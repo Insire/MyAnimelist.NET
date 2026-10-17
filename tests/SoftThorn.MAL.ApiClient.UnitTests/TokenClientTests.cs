@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Caching.Memory;
 using SoftThorn.MAL.ApiClient.Authentication;
 using System.Net;
 using System.Text;
@@ -11,7 +10,7 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         private static readonly DateTimeOffset Now = new(2026, 10, 16, 12, 0, 0, TimeSpan.Zero);
 
         private readonly StubTokenEndpoint _endpoint = new();
-        private readonly AuthCache _authCache = new(new MemoryCache(new MemoryCacheOptions()));
+        private readonly AuthCache _authCache = new();
         private readonly TokenClient _sut;
 
         public TokenClientTests()

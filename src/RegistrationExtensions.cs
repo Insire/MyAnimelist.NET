@@ -6,10 +6,30 @@ using System.Reflection;
 
 namespace SoftThorn.MAL.ApiClient
 {
+    /// <summary>
+    /// Registers the MyAnimeList API client with an <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class RegistrationExtensions
     {
-        public const string API_URI = "https://api.myanimelist.net/v2/";
+        internal const string API_URI = "https://api.myanimelist.net/v2/";
 
+        /// <summary>
+        /// Registers <see cref="IMalApiService"/> and the services it needs.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// <see cref="IAuthCache"/>, <see cref="IBrowserLoginHandler"/> and <see cref="TimeProvider"/> are only registered
+        /// when the collection has no registration for them yet, so register your own implementations before calling this.
+        /// By default tokens are kept in memory and the login page opens in the default browser.
+        /// </para>
+        /// <para>
+        /// The <see cref="HttpClient"/>s are created through <see cref="IHttpClientFactory"/>. They identify the library in the
+        /// <c>User-Agent</c> header, don't follow redirects, and retry requests that MyAnimeList rate-limited or didn't answer.
+        /// </para>
+        /// </remarks>
+        /// <param name="services">The collection to add the services to.</param>
+        /// <param name="clientConfiguration">The Client ID and redirect URL registered with MyAnimeList.</param>
+        /// <returns><paramref name="services"/>, so calls can be chained.</returns>
         public static IServiceCollection AddMalApiClient(this IServiceCollection services, ClientConfiguration clientConfiguration)
         {
             services.TryAddSingleton<IAuthCache, AuthCache>();
@@ -23,19 +43,22 @@ namespace SoftThorn.MAL.ApiClient
                 .ConfigurePrimaryHttpMessageHandler(DisableRedirects)
                 .AddHttpMessageHandler<MalRetryHandler>();
             services.AddTransient<MalLoginHandler>();
-            services.AddSingleton<MalApiService>();
             services.AddSingleton(clientConfiguration);
 
-            services.AddHttpClient<MalApiService>(client =>
+            // a factory instead of AddHttpClient<IMalApiService, MalApiService>, because typed clients need a public type and constructor
+            services.AddHttpClient(MalApiService.HttpClientName, client =>
                 {
                     client.BaseAddress = new Uri(API_URI);
                     AddUserAgent(client);
                 })
                 .ConfigurePrimaryHttpMessageHandler(DisableRedirects)
                 .AddHttpMessageHandler<MalLoginHandler>()
-                .AddHttpMessageHandler<MalRetryHandler>();
-
-            services.AddMemoryCache();
+                .AddHttpMessageHandler<MalRetryHandler>()
+                .AddTypedClient<IMalApiService>((httpClient, provider) => new MalApiService(
+                    httpClient,
+                    provider.GetRequiredService<ClientConfiguration>(),
+                    provider.GetRequiredService<IBrowserLoginHandler>(),
+                    provider.GetRequiredService<TokenClient>()));
 
             return services;
         }

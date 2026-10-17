@@ -20,7 +20,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
             try
             {
                 // Act: add with every field
-                var added = await sut.Anime.My_list_statusPatchAsync(TestAccount.TargetAnimeId, new Body
+                var added = await sut.Anime.My_list_statusPatchAsync(TestAccount.TargetAnimeId, new AnimeListStatusPatch
                 {
                     Status = "watching",
                     Score = 7,
@@ -43,7 +43,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Assert.Equal(Comments, added.Comments);
 
                 // Act: update only the score, the rest has to stay
-                var updated = await sut.Anime.My_list_statusPatchAsync(TestAccount.TargetAnimeId, new Body { Score = 9 }, cancellationToken);
+                var updated = await sut.Anime.My_list_statusPatchAsync(TestAccount.TargetAnimeId, new AnimeListStatusPatch { Score = 9 }, cancellationToken);
 
                 // Assert
                 Assert.Equal(9, updated.Score);
@@ -108,7 +108,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
             try
             {
                 // Act: add with every field
-                var added = await sut.Manga.My_list_statusPatchAsync(TestAccount.TargetMangaId, new Body2
+                var added = await sut.Manga.My_list_statusPatchAsync(TestAccount.TargetMangaId, new MangaListStatusPatch
                 {
                     Status = "reading",
                     Score = 7,
@@ -133,7 +133,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Assert.Equal(Comments, added.Comments);
 
                 // Act: update only the score, the rest has to stay
-                var updated = await sut.Manga.My_list_statusPatchAsync(TestAccount.TargetMangaId, new Body2 { Score = 9 }, cancellationToken);
+                var updated = await sut.Manga.My_list_statusPatchAsync(TestAccount.TargetMangaId, new MangaListStatusPatch { Score = 9 }, cancellationToken);
 
                 // Assert
                 Assert.Equal(9, updated.Score);

@@ -17,10 +17,10 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
 
         private const string SeedComments = "Seeded by the SoftThorn.MAL.ApiClient integration tests";
 
-        public static async Task EnsureSeededAsync(MalApiService sut, CancellationToken cancellationToken)
+        public static async Task EnsureSeededAsync(IMalApiService sut, CancellationToken cancellationToken)
         {
             // priority, tags and comments make MAL return every my_list_status field the snapshots cover
-            await sut.Anime.My_list_statusPatchAsync(SeedAnimeId, new Body
+            await sut.Anime.My_list_statusPatchAsync(SeedAnimeId, new AnimeListStatusPatch
             {
                 Status = "completed",
                 Score = 8,
@@ -29,7 +29,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Comments = SeedComments,
             }, cancellationToken);
 
-            await sut.Manga.My_list_statusPatchAsync(SeedMangaId, new Body2
+            await sut.Manga.My_list_statusPatchAsync(SeedMangaId, new MangaListStatusPatch
             {
                 Status = "reading",
                 Score = 8,
@@ -40,7 +40,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
             }, cancellationToken);
         }
 
-        public static async Task RemoveAnimeAsync(MalApiService sut, int animeId, CancellationToken cancellationToken)
+        public static async Task RemoveAnimeAsync(IMalApiService sut, int animeId, CancellationToken cancellationToken)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
             }
         }
 
-        public static async Task RemoveMangaAsync(MalApiService sut, int mangaId, CancellationToken cancellationToken)
+        public static async Task RemoveMangaAsync(IMalApiService sut, int mangaId, CancellationToken cancellationToken)
         {
             try
             {

@@ -14,7 +14,7 @@
       "configurationClass": null,
       "generateClientClasses": true,
       "suppressClientClassesOutput": false,
-      "generateClientInterfaces": false,
+      "generateClientInterfaces": true,
       "suppressClientInterfacesOutput": false,
       "clientBaseInterface": null,
       "injectHttpClient": true,
@@ -31,7 +31,7 @@
       "generateSyncMethods": false,
       "generatePrepareRequestAndProcessResponseAsAsyncMethods": false,
       "exposeJsonSerializerSettings": false,
-      "clientClassAccessModifier": "public",
+      "clientClassAccessModifier": "internal",
       "typeAccessModifier": "public",
       "generateContractsOutput": false,
       "contractsNamespace": null,
@@ -85,7 +85,8 @@
         "MangaList",
         "MangaListForRanking",
         "UserAnimeList",
-        "UserMangaList"
+        "UserMangaList",
+        "List"
       ],
       "excludedParameterNames": [],
       "handleReferences": true,

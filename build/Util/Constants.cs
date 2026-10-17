@@ -33,6 +33,7 @@ namespace Build.Util
         public const string LocalNugetDirectory = @"E:\Drop\NuGet";
 
         public const string OpenApiSpecPath = "./assets/SoftThorn.MAL.ApiClient_OpenApiSpec.json";
+        public const string OpenApiDocumentationPath = "./assets/SoftThorn.MAL.ApiClient_Documentation.json";
         public const string NswagConfigFilePath = "./assets/SoftThorn.MAL.ApiClient_Config.nswag";
         public const string ProjectPath = "./src//SoftThorn.MAL.ApiClient.csproj";
 

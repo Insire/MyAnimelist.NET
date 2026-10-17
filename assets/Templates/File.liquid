@@ -145,23 +145,35 @@ namespace {{ Namespace }}
 {%-     endif %}
 {%-     if GenerateExceptionClasses %}
 {%-         for exceptionClassName in ExceptionClassNames %}
+    /// <summary>
+    /// Thrown when MyAnimeList answers a request with an error status, or when its response can't be read.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "{{ ToolchainVersion }}")]
-    public partial class {{ exceptionClassName }} : System.Exception
+    public sealed partial class {{ exceptionClassName }} : System.Exception
     {
+        /// <summary>
+        /// The HTTP status code of MyAnimeList's response, for example 404 when the requested entry doesn't exist.
+        /// </summary>
         public int StatusCode { get; private set; }
 
+        /// <summary>
+        /// The body of MyAnimeList's response, when it could be read.
+        /// </summary>
 {%-             if GenerateNullableReferenceTypes -%}
         public string? Response { get; private set; }
 {%-              else -%}
         public string Response { get; private set; }
 {%-              endif -%}
 
+        /// <summary>
+        /// The headers of MyAnimeList's response.
+        /// </summary>
         public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
 
 {%-              if GenerateNullableReferenceTypes -%}
-        public {{ exceptionClassName }}(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException)
+        internal {{ exceptionClassName }}(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException)
 {%-              else -%}
-        public {{ exceptionClassName }}(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException)
+        internal {{ exceptionClassName }}(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException)
 {%-              endif -%}
             : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + ((response == null) ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)), innerException)
         {
@@ -170,25 +182,10 @@ namespace {{ Namespace }}
             Headers = headers;
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return string.Format("HTTP Response: \n\n{0}\n\n{1}", Response, base.ToString());
-        }
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "{{ ToolchainVersion }}")]
-    public partial class {{ exceptionClassName }}<TResult> : {{ exceptionClassName }}
-    {
-        public TResult Result { get; private set; }
-
-{%-              if GenerateNullableReferenceTypes -%}
-        public {{ exceptionClassName }}(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception? innerException)
-{%-              else -%}
-        public {{ exceptionClassName }}(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception innerException)
-{%-              endif -%}
-            : base(message, statusCode, response, headers, innerException)
-        {
-            Result = result;
         }
     }
 

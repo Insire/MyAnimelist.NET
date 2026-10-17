@@ -4,7 +4,8 @@ using System.Text;
 
 namespace SoftThorn.MAL.ApiClient.Authentication
 {
-    public sealed class LoginClient
+    // the implementation behind ILoginClient
+    internal sealed class LoginClient : ILoginClient
     {
         private const string ResponseString = "<html><head><title>Auth Success</title></head><body><h1>Authentication successful!</h1><p>You can close this browser tab/window and return to the application.</p><script>window.close();</script></body></html>";
         private const string FailedResponseString = "<html><head><title>Auth Failed</title></head><body><h1>Authentication failed.</h1><p>You can close this browser tab/window and return to the application.</p></body></html>";
@@ -21,10 +22,7 @@ namespace SoftThorn.MAL.ApiClient.Authentication
             _redirectUri = clientConfiguration.RedirectUrl;
         }
 
-        /// <summary>
-        /// Signs the user in, unless a valid token is already cached or an expired one can be refreshed.
-        /// </summary>
-        /// <returns><see langword="true"/> when a valid token is available afterwards.</returns>
+        /// <inheritdoc/>
         public async Task<bool> StartOAuthFlowAsync(IProgress<AuthProgress>? progressReporter = null, CancellationToken cancellationToken = default)
         {
             var response = await _tokenClient.GetValidTokenAsync(cancellationToken);

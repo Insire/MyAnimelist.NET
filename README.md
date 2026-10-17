@@ -60,7 +60,7 @@ services.AddMalApiClient(new ClientConfiguration
 });
 
 var provider = services.BuildServiceProvider();
-var mal = provider.GetRequiredService<MalApiService>();
+var mal = provider.GetRequiredService<IMalApiService>();
 ```
 
 > [!NOTE]
@@ -74,7 +74,7 @@ var progress = new Progress<AuthProgress>(p => Console.WriteLine($"{p.Progress:P
 var signedIn = await mal.Login.StartOAuthFlowAsync(progress);
 ```
 
-The default `BrowserLoginHandler` opens the login page in the user's default browser. After the user approves access, the token is stored in the `IAuthCache`. Expired access tokens are refreshed automatically with the refresh token before the next request. If a valid token is already cached, or an expired one can be refreshed, `StartOAuthFlowAsync` returns `true` without opening the browser. It returns `false` if the user denies access or the token exchange fails.
+By default the login page opens in the user's default browser. After the user approves access, the token is stored in the `IAuthCache`. Expired access tokens are refreshed automatically with the refresh token before the next request. If a valid token is already cached, or an expired one can be refreshed, `StartOAuthFlowAsync` returns `true` without opening the browser. It returns `false` if the user denies access or the token exchange fails.
 
 ### 4. Call the API
 
@@ -96,16 +96,16 @@ var list = await mal.Users.AnimelistAsync("@me", status: "watching", fields: "li
 
 ## API overview
 
-`MalApiService` (namespace `SoftThorn.MAL.ApiClient`) groups the endpoints into these clients. The sign-in types (`LoginClient`, `ClientConfiguration`, `IAuthCache`, `AuthResponse`, `IBrowserLoginHandler`, `AuthProgress`) are in `SoftThorn.MAL.ApiClient.Authentication`.
+`IMalApiService` (namespace `SoftThorn.MAL.ApiClient`) groups the endpoints into these clients. The sign-in types (`ILoginClient`, `ClientConfiguration`, `IAuthCache`, `AuthResponse`, `IBrowserLoginHandler`, `AuthProgress`) are in `SoftThorn.MAL.ApiClient.Authentication`.
 
 | Property | Client | What it covers |
 | --- | --- | --- |
-| `Login` | `LoginClient` | OAuth2 sign-in (`StartOAuthFlowAsync`) |
-| `Catalog` | `Client` | Anime search and details (`AnimeGetAsync`), manga search and details (`MangaGetAsync`), user profile (`UsersAsync`) |
-| `Anime` | `AnimeClient` | Anime ranking, seasonal anime, suggestions, and updating your anime list status |
-| `Manga` | `MangaClient` | Manga ranking and updating your manga list status |
-| `Forum` | `ForumClient` | Forum boards, topics, and topic details |
-| `Users` | `UsersClient` | A user's anime list and manga list |
+| `Login` | `ILoginClient` | OAuth2 sign-in (`StartOAuthFlowAsync`) |
+| `Catalog` | `ICatalogClient` | Anime search and details (`AnimeGetAsync`), manga search and details (`MangaGetAsync`), user profile (`UsersAsync`) |
+| `Anime` | `IAnimeClient` | Anime ranking, seasonal anime, suggestions, and updating your anime list status |
+| `Manga` | `IMangaClient` | Manga ranking and updating your manga list status |
+| `Forum` | `IForumClient` | Forum boards, topics, and topic details |
+| `Users` | `IUsersClient` | A user's anime list and manga list |
 
 Most methods take an optional `fields` parameter, a comma-separated list of the fields you want returned (for example `"title,mean,genres"`). See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the available fields and values.
 
@@ -117,7 +117,7 @@ When a request fails, the client throws an `ApiException`.
 
 ### Store tokens somewhere else
 
-The default `AuthCache` keeps tokens in memory, so they are gone when the app restarts. To keep users signed in, implement `IAuthCache`, for example with a file or the OS credential store. Store the whole `AuthResponse`, including `ExpiresAt`; without it the library can't tell when to refresh the token. Store only the tokens: MyAnimeList's agreement doesn't allow storing users' personal information or their passwords (see [below](#using-the-myanimelist-api-responsibly)).
+By default tokens are kept in memory, so they are gone when the app restarts. To keep users signed in, implement `IAuthCache`, for example with a file or the OS credential store. Store the whole `AuthResponse`, including `ExpiresAt`; without it the library can't tell when to refresh the token. Store only the tokens: MyAnimeList's agreement doesn't allow storing users' personal information or their passwords (see [below](#using-the-myanimelist-api-responsibly)).
 
 ```csharp
 using SoftThorn.MAL.ApiClient;
@@ -169,7 +169,8 @@ You are also responsible for what your users do with your app (4(d)).
 - **PKCE uses `code_challenge_method=plain`**, because that is the only method MyAnimeList supports.
 - **No retry on `401 Unauthorized`.** Tokens are refreshed shortly before they expire. If MyAnimeList revokes a token earlier, requests fail until the user signs in again.
 - **Not Native AOT or trimming compatible.** The clients use reflection-based `System.Text.Json`, which is off by default in Native AOT apps, so requests would fail at runtime there. Adding support would need source-generated JSON metadata for every model, so it isn't planned for now.
-- **No XML documentation on the generated clients.** MyAnimeList's agreement doesn't allow copying its API documentation, so the descriptions are stripped from the spec. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for what each endpoint and field means.
+- **Brief XML documentation.** MyAnimeList's agreement doesn't allow copying its API documentation, so the generated clients and models carry short descriptions written for this library. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the details of each endpoint and field.
+- **Sealed implementations.** Only interfaces are public: `IMalApiService` and the client interfaces it returns. To test code that uses the API, mock `IMalApiService` or the client interfaces.
 
 ## Repository layout
 
@@ -177,7 +178,7 @@ You are also responsible for what your users do with your app (4(d)).
 SoftThorn.MAL.ApiClient.slnx   The library and its tests (Build.slnx holds the Cake build)
 src/            The library (SoftThorn.MAL.ApiClient.csproj)
   Authentication/            OAuth flow, token cache, and MalLoginHandler, which adds the Bearer token
-  MalApiService.cs           The entry point that groups the API clients
+  IMalApiService.cs          The entry point that groups the API clients
   RegistrationExtensions.cs  AddMalApiClient, the User-Agent and the HttpClient setup
   MalRetryHandler.cs         Retries 429 and 503 responses with jittered backoff
   AutoGeneratedClient.cs     API clients generated by NSwag (do not edit by hand)

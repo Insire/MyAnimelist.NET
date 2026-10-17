@@ -27,14 +27,14 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
         /// <summary>
         /// The service, logged in. Skips the test when the login failed, since <see cref="OAuthFlowTests"/> reports that.
         /// </summary>
-        public MalApiService GetMalApiService()
+        public IMalApiService GetMalApiService()
         {
             if (_loginFailure is { } failure)
             {
                 Assert.Skip($"The login failed ({failure.SourceException.Message}); {nameof(OAuthFlowTests)} reports it with the login's log.");
             }
 
-            return _serviceProvider.GetRequiredService<MalApiService>();
+            return _serviceProvider.GetRequiredService<IMalApiService>();
         }
 
         /// <summary>
@@ -87,7 +87,8 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
                 .AddSingleton<AuthTestProgressCollector>()
                 .AddSingleton<IBrowserLoginHandler>(this)
                 .AddTransient<HttpLoggingHandler>()
-                .AddHttpClient<MalApiService>(client => client.BaseAddress = new Uri(RegistrationExtensions.API_URI))
+                // registered before AddMalApiClient, so it is the outermost handler and logs before the token is added
+                .AddHttpClient(MalApiService.HttpClientName)
                 .AddHttpMessageHandler<HttpLoggingHandler>();
 
             _services.AddMalApiClient(new ClientConfiguration()

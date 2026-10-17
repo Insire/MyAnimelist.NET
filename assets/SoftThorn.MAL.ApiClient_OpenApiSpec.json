@@ -18,7 +18,8 @@
             "required": false,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The text to search for in the titles."
           },
           {
             "name": "limit",
@@ -26,7 +27,8 @@
             "schema": {
               "type": "integer",
               "default": 100
-            }
+            },
+            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
             "name": "offset",
@@ -34,14 +36,16 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -68,7 +72,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Searches anime by title."
       }
     },
     "/anime/{anime_id}": {
@@ -84,14 +89,16 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "The anime's MyAnimeList ID."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -118,7 +125,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns the details of an anime."
       }
     },
     "/anime/{anime_id}/my_list_status": {
@@ -141,36 +149,7 @@
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "status": {
-                    "type": "string"
-                  },
-                  "is_rewatching": {
-                    "type": "boolean"
-                  },
-                  "score": {
-                    "type": "integer"
-                  },
-                  "num_watched_episodes": {
-                    "type": "integer"
-                  },
-                  "priority": {
-                    "type": "integer"
-                  },
-                  "num_times_rewatched": {
-                    "type": "integer"
-                  },
-                  "rewatch_value": {
-                    "type": "integer"
-                  },
-                  "tags": {
-                    "type": "string"
-                  },
-                  "comments": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/components/schemas/AnimeListStatusPatch"
               }
             }
           }
@@ -194,7 +173,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Adds an anime to the signed-in user's list, or changes its list entry. Only the fields that are set in the body are changed."
       },
       "delete": {
         "tags": [
@@ -221,7 +201,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Removes an anime from the signed-in user's list. MyAnimeList also answers with success when the anime isn't on the list."
       }
     },
     "/anime/ranking": {
@@ -237,7 +218,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Which ranking to return: all, airing, upcoming, tv, ova, movie, special, bypopularity or favorite."
           },
           {
             "name": "limit",
@@ -245,7 +227,8 @@
             "schema": {
               "type": "integer",
               "default": 100
-            }
+            },
+            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
             "name": "offset",
@@ -253,14 +236,16 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -287,7 +272,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns a page of an anime ranking."
       }
     },
     "/anime/season/{year}/{season}": {
@@ -303,7 +289,8 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "The year of the season."
           },
           {
             "name": "season",
@@ -311,14 +298,16 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The season: winter (January to March), spring, summer or fall."
           },
           {
             "name": "sort",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The order of the anime: anime_score or anime_num_list_users, each from the highest value down."
           },
           {
             "name": "limit",
@@ -326,7 +315,8 @@
             "schema": {
               "type": "integer",
               "default": 100
-            }
+            },
+            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
             "name": "offset",
@@ -334,14 +324,16 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -368,7 +360,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns the anime that started airing in a season."
       }
     },
     "/anime/suggestions": {
@@ -384,7 +377,8 @@
             "schema": {
               "type": "integer",
               "default": 100
-            }
+            },
+            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
             "name": "offset",
@@ -392,14 +386,16 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -421,7 +417,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns anime that MyAnimeList suggests for the signed-in user."
       }
     },
     "/forum/boards": {
@@ -454,7 +451,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns the forum's categories with their boards."
       }
     },
     "/forum/topic/{topic_id}": {
@@ -470,7 +468,8 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "The forum topic's ID."
           },
           {
             "name": "limit",
@@ -479,7 +478,8 @@
               "type": "integer",
               "maximum": 100,
               "default": 100
-            }
+            },
+            "description": "How many posts to return."
           },
           {
             "name": "offset",
@@ -487,7 +487,8 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many posts to skip, for paging."
           }
         ],
         "security": [
@@ -514,7 +515,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns a page of a forum topic's posts, with the topic's poll if it has one."
       }
     },
     "/forum/topics": {
@@ -529,14 +531,16 @@
             "in": "query",
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "Returns only topics of the forum board with this ID."
           },
           {
             "name": "subboard_id",
             "in": "query",
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "Returns only topics of the forum subboard with this ID."
           },
           {
             "name": "limit",
@@ -545,7 +549,8 @@
               "type": "integer",
               "maximum": 100,
               "default": 100
-            }
+            },
+            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
             "name": "offset",
@@ -553,7 +558,8 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "sort",
@@ -561,28 +567,32 @@
             "schema": {
               "type": "string",
               "default": "recent"
-            }
+            },
+            "description": "The order of the topics; recent is the only supported value."
           },
           {
             "name": "q",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The text to search for in the topics."
           },
           {
             "name": "topic_user_name",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Returns only topics that this user started."
           },
           {
             "name": "user_name",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A user name, or @me for the signed-in user."
           }
         ],
         "security": [
@@ -609,7 +619,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Searches forum topics."
       }
     },
     "/manga": {
@@ -625,7 +636,8 @@
             "required": false,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The text to search for in the titles."
           },
           {
             "name": "limit",
@@ -633,7 +645,8 @@
             "schema": {
               "type": "integer",
               "default": 100
-            }
+            },
+            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
             "name": "offset",
@@ -641,14 +654,16 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -675,7 +690,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Searches manga by title."
       }
     },
     "/manga/{manga_id}": {
@@ -691,14 +707,16 @@
             "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "The manga's MyAnimeList ID."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -725,7 +743,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns the details of a manga."
       }
     },
     "/manga/{manga_id}/my_list_status": {
@@ -748,39 +767,7 @@
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "status": {
-                    "type": "string"
-                  },
-                  "is_rereading": {
-                    "type": "boolean"
-                  },
-                  "score": {
-                    "type": "integer"
-                  },
-                  "num_volumes_read": {
-                    "type": "integer"
-                  },
-                  "num_chapters_read": {
-                    "type": "integer"
-                  },
-                  "priority": {
-                    "type": "integer"
-                  },
-                  "num_times_reread": {
-                    "type": "integer"
-                  },
-                  "reread_value": {
-                    "type": "integer"
-                  },
-                  "tags": {
-                    "type": "string"
-                  },
-                  "comments": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/components/schemas/MangaListStatusPatch"
               }
             }
           }
@@ -804,7 +791,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Adds a manga to the signed-in user's list, or changes its list entry. Only the fields that are set in the body are changed."
       },
       "delete": {
         "tags": [
@@ -831,7 +819,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Removes a manga from the signed-in user's list. MyAnimeList also answers with success when the manga isn't on the list."
       }
     },
     "/manga/ranking": {
@@ -847,7 +836,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Which ranking to return: all, manga, novels, oneshots, doujin, manhwa, manhua, bypopularity or favorite."
           },
           {
             "name": "limit",
@@ -855,7 +845,8 @@
             "schema": {
               "type": "integer",
               "default": 100
-            }
+            },
+            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
             "name": "offset",
@@ -863,14 +854,16 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -897,7 +890,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns a page of a manga ranking."
       }
     },
     "/users/{user_name}": {
@@ -913,14 +907,16 @@
             "schema": {
               "type": "string"
             },
-            "required": true
+            "required": true,
+            "description": "@me, for the signed-in user."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -942,7 +938,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns a user's profile. MyAnimeList only supports @me, the signed-in user."
       }
     },
     "/users/{user_name}/animelist": {
@@ -958,21 +955,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A user name, or @me for the signed-in user."
           },
           {
             "name": "status",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Returns only the entries with this list status: watching, completed, on_hold, dropped or plan_to_watch."
           },
           {
             "name": "sort",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The order of the entries: list_score, list_updated_at, anime_title or anime_start_date."
           },
           {
             "name": "limit",
@@ -980,7 +980,8 @@
             "schema": {
               "type": "integer",
               "default": 100
-            }
+            },
+            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
             "name": "offset",
@@ -988,14 +989,16 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -1022,7 +1025,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns a page of a user's anime list."
       }
     },
     "/users/{user_name}/mangalist": {
@@ -1038,21 +1042,24 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A user name, or @me for the signed-in user."
           },
           {
             "name": "status",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Returns only the entries with this list status: reading, completed, on_hold, dropped or plan_to_read."
           },
           {
             "name": "sort",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "The order of the entries: list_score, list_updated_at, manga_title or manga_start_date."
           },
           {
             "name": "limit",
@@ -1060,7 +1067,8 @@
             "schema": {
               "type": "integer",
               "default": 100
-            }
+            },
+            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
           },
           {
             "name": "offset",
@@ -1068,14 +1076,16 @@
             "schema": {
               "type": "integer",
               "default": 0
-            }
+            },
+            "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
           },
           {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
           }
         ],
         "security": [
@@ -1102,7 +1112,8 @@
             },
             "description": ""
           }
-        }
+        },
+        "summary": "Returns a page of a user's manga list."
       }
     }
   },
@@ -1144,47 +1155,46 @@
                 "items": {
                   "$ref": "#/components/schemas/Picture"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "More pictures of the anime."
               },
               "background": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "Background information about the anime, for example about its production."
               },
               "related_anime": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/RelatedAnimeEdge"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "Anime related to this one, for example sequels and prequels."
               },
               "related_manga": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/RelatedMangaEdge"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "Manga related to this anime, for example the one it is based on."
               },
               "recommendations": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/AnimeRecommendationAggregationEdgeBase"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "Anime that users recommend to fans of this one."
               },
               "statistics": {
-                "allOf": [
-                  {
-                    "type": "object",
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/AnimeStatistics"
-                  }
-                ]
+                "$ref": "#/components/schemas/AnimeStatistics",
+                "description": "How many users have the anime on their list, by list status."
               }
             }
           }
-        ]
+        ],
+        "description": "An anime, with the fields that only the details endpoint returns."
       },
       "AnimeForList": {
         "allOf": [
@@ -1196,73 +1206,59 @@
             "properties": {
               "media_type": {
                 "type": "string",
-                "nullable": false
+                "nullable": false,
+                "description": "The kind of anime, for example tv, movie, ova, ona, special or music."
               },
               "status": {
                 "type": "string",
-                "nullable": false
+                "nullable": false,
+                "description": "Whether the anime is airing: finished_airing, currently_airing or not_yet_aired."
               },
               "my_list_status": {
-                "allOf": [
-                  {
-                    "type": "object",
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/AnimeListStatus"
-                  }
-                ]
+                "$ref": "#/components/schemas/AnimeListStatus",
+                "description": "The signed-in user's list entry for the anime. Only present when the anime is on their list."
               },
               "num_episodes": {
                 "type": "integer",
-                "nullable": false
+                "nullable": false,
+                "description": "The number of episodes, or 0 when it isn't known yet."
               },
               "start_season": {
-                "allOf": [
-                  {
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/AnimeSeason"
-                  }
-                ]
+                "$ref": "#/components/schemas/AnimeSeason",
+                "description": "The season in which the anime started airing."
               },
               "broadcast": {
-                "type": "object",
-                "properties": {
-                  "day_of_the_week": {
-                    "type": "string",
-                    "nullable": false
-                  },
-                  "start_time": {
-                    "type": "string",
-                    "nullable": true
-                  }
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/Broadcast",
+                "description": "When new episodes are broadcast in Japan."
               },
               "source": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "What the anime is based on, for example original, manga, light_novel or game."
               },
               "average_episode_duration": {
                 "type": "integer",
-                "nullable": true
+                "nullable": true,
+                "description": "The average length of an episode in seconds."
               },
               "rating": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "The age rating: g, pg, pg_13, r, r+ or rx."
               },
               "studios": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/AnimeStudio"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "The studios that animated the anime."
               }
             }
           }
-        ]
+        ],
+        "x-base-class": true,
+        "description": "An anime, as it appears in searches, rankings and lists."
       },
       "AnimeList": {
         "allOf": [
@@ -1272,20 +1268,17 @@
               "data": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "node": {
-                      "$ref": "#/components/schemas/AnimeForList"
-                    }
-                  }
-                }
+                  "$ref": "#/components/schemas/AnimeListEdge"
+                },
+                "description": "The anime on this page."
               }
             }
           },
           {
             "$ref": "#/components/schemas/List"
           }
-        ]
+        ],
+        "description": "A page of anime."
       },
       "AnimeListForRanking": {
         "allOf": [
@@ -1295,497 +1288,515 @@
               "data": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "node": {
-                      "$ref": "#/components/schemas/AnimeForList"
-                    },
-                    "ranking": {
-                      "$ref": "#/components/schemas/RankingInfo"
-                    }
-                  }
-                }
+                  "$ref": "#/components/schemas/AnimeRankingEdge"
+                },
+                "description": "The anime on this page, each with its place in the ranking."
               }
             }
           },
           {
             "$ref": "#/components/schemas/List"
           }
-        ]
+        ],
+        "description": "A page of an anime ranking."
       },
       "AnimeListStatus": {
         "type": "object",
         "properties": {
           "status": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The list status: watching, completed, on_hold, dropped or plan_to_watch."
           },
           "score": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The user's score, from 1 to 10, or 0 when the user hasn't scored the work."
           },
           "num_episodes_watched": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How many episodes the user has watched."
           },
           "is_rewatching": {
             "type": "boolean",
-            "nullable": false
+            "nullable": false,
+            "description": "Whether the user is watching the anime again."
           },
           "start_date": {
             "type": "string",
             "format": "date",
-            "nullable": true
+            "nullable": true,
+            "description": "When the user started the work, as YYYY-MM-DD."
           },
           "finish_date": {
             "type": "string",
             "format": "date",
-            "nullable": true
+            "nullable": true,
+            "description": "When the user finished the work, as YYYY-MM-DD."
           },
           "priority": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The priority of the entry: 0 (low), 1 (medium) or 2 (high)."
           },
           "num_times_rewatched": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How many times the user has watched the anime again."
           },
           "rewatch_value": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How much the user would like to watch the anime again, from 0 (not set) to 5."
           },
           "tags": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "nullable": false
+            "nullable": false,
+            "description": "The user's tags for the entry."
           },
           "comments": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The user's comments on the entry."
           },
           "updated_at": {
             "type": "string",
             "format": "date-time",
-            "nullable": false
+            "nullable": false,
+            "description": "When the entry was last changed."
           }
-        }
+        },
+        "description": "An entry of an anime on a user's list."
       },
       "AnimeRecommendationAggregationEdgeBase": {
         "type": "object",
         "properties": {
           "node": {
-            "$ref": "#/components/schemas/AnimeForList"
+            "$ref": "#/components/schemas/AnimeForList",
+            "description": "The recommended anime."
           },
           "num_recommendations": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How many users recommended it."
           }
-        }
+        },
+        "description": "An anime that users recommend together with another one."
       },
       "AnimeSeason": {
         "type": "object",
         "properties": {
           "year": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The year."
           },
           "season": {
-            "type": "string",
-            "enum": [
-              "winter",
-              "spring",
-              "summer",
-              "fall"
-            ],
-            "nullable": false
+            "$ref": "#/components/schemas/Season",
+            "description": "The season: winter (January to March), spring, summer or fall."
           }
-        }
+        },
+        "description": "A season of a year."
       },
       "AnimeStatistics": {
         "type": "object",
         "properties": {
           "num_list_users": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How many users have the anime on their list."
           },
           "status": {
-            "type": "object",
-            "properties": {
-              "watching": {
-                "type": "integer"
-              },
-              "completed": {
-                "type": "integer"
-              },
-              "on_hold": {
-                "type": "integer"
-              },
-              "dropped": {
-                "type": "integer"
-              },
-              "plan_to_watch": {
-                "type": "integer"
-              }
-            },
-            "nullable": false
+            "$ref": "#/components/schemas/AnimeStatusStatistics",
+            "description": "How many users have the anime on their list, by list status."
           }
-        }
+        },
+        "description": "How many users have an anime on their list, by list status."
       },
       "AnimeStudio": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The studio's MyAnimeList ID."
           },
           "name": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The studio's name."
           }
-        }
+        },
+        "description": "An animation studio."
       },
       "Date": {
-        "type": "string"
+        "type": "string",
+        "description": "A date in the form YYYY-MM-DD."
       },
       "ForumBoard": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "nullable": false
-              },
-              "title": {
-                "type": "string",
-                "nullable": false
-              },
-              "description": {
-                "type": "string",
-                "nullable": false
-              },
-              "subboards": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ForumSubboard"
-                },
-                "nullable": false
-              }
-            }
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false,
+            "description": "The board's ID, for filtering topics by board."
+          },
+          "title": {
+            "type": "string",
+            "nullable": false,
+            "description": "The board's title."
+          },
+          "description": {
+            "type": "string",
+            "nullable": false,
+            "description": "A short description of the board's topic."
+          },
+          "subboards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForumSubboard"
+            },
+            "nullable": false,
+            "description": "The board's subboards."
           }
-        ]
+        },
+        "description": "A forum board."
       },
       "ForumBoards": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "categories": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ForumCategory"
-                },
-                "nullable": false
-              }
-            }
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForumCategory"
+            },
+            "nullable": false,
+            "description": "The categories of boards."
           }
-        ]
+        },
+        "description": "The forum's categories with their boards."
       },
       "ForumCategory": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "title": {
-                "type": "string",
-                "nullable": false
-              },
-              "boards": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ForumBoard"
-                },
-                "nullable": false
-              }
-            }
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": false,
+            "description": "The category's title."
+          },
+          "boards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForumBoard"
+            },
+            "nullable": false,
+            "description": "The boards in the category."
           }
-        ]
+        },
+        "description": "A category of forum boards."
       },
       "ForumSubboard": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The subboard's ID, for filtering topics by subboard."
           },
           "title": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The subboard's title."
           }
-        }
+        },
+        "description": "A subboard of a forum board."
       },
       "ForumTopic": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "data": {
-                "$ref": "#/components/schemas/ForumTopicData"
-              },
-              "paging": {
-                "$ref": "#/components/schemas/ForumTopicPaging"
-              }
-            }
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ForumTopicData",
+            "description": "The topic with the posts on this page."
+          },
+          "paging": {
+            "$ref": "#/components/schemas/ForumTopicPaging",
+            "description": "The links to the previous and next page of posts."
           }
-        ]
+        },
+        "description": "A page of a forum topic's posts."
       },
       "ForumTopicData": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "title": {
-                "type": "string",
-                "nullable": false
-              },
-              "posts": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ForumTopicPost"
-                },
-                "nullable": false
-              },
-              "poll": {
-                "$ref": "#/components/schemas/ForumTopicPoll"
-              }
-            }
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": false,
+            "description": "The topic's title."
+          },
+          "posts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForumTopicPost"
+            },
+            "nullable": false,
+            "description": "The posts on this page."
+          },
+          "poll": {
+            "$ref": "#/components/schemas/ForumTopicPoll",
+            "description": "The topic's poll, when it has one."
           }
-        ]
+        },
+        "description": "A forum topic with a page of its posts."
       },
       "ForumTopicPaging": {
         "type": "object",
         "properties": {
           "previous": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The address of the previous page, or missing on the first page."
           },
           "next": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The address of the next page, or missing on the last page."
           }
-        }
+        },
+        "description": "The links to the previous and next page of posts."
       },
       "ForumTopicPoll": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "nullable": false
-              },
-              "question": {
-                "type": "string",
-                "nullable": false
-              },
-              "closed": {
-                "type": "boolean",
-                "nullable": false
-              },
-              "options": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ForumTopicPollOption"
-                },
-                "nullable": false
-              }
-            }
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false,
+            "description": "The poll's ID."
+          },
+          "question": {
+            "type": "string",
+            "nullable": false,
+            "description": "The question of the poll."
+          },
+          "closed": {
+            "type": "boolean",
+            "nullable": false,
+            "description": "Whether the poll is closed for votes."
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForumTopicPollOption"
+            },
+            "nullable": false,
+            "description": "The options to vote for."
           }
-        ]
+        },
+        "description": "The poll of a forum topic."
       },
       "ForumTopicPollOption": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The option's ID."
           },
           "text": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The option's text."
           },
           "votes": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How many users voted for the option."
           }
-        }
+        },
+        "description": "An option of a forum poll."
       },
       "ForumTopicPost": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "nullable": false
-              },
-              "number": {
-                "type": "integer",
-                "nullable": false
-              },
-              "created_at": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": false
-              },
-              "created_by": {
-                "$ref": "#/components/schemas/ForumTopicPostCreatedBy"
-              },
-              "body": {
-                "type": "string",
-                "nullable": false
-              },
-              "signature": {
-                "type": "string",
-                "nullable": false
-              }
-            }
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false,
+            "description": "The post's ID."
+          },
+          "number": {
+            "type": "integer",
+            "nullable": false,
+            "description": "The post's number within the topic, starting at 1."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": false,
+            "description": "When the post was written."
+          },
+          "created_by": {
+            "$ref": "#/components/schemas/ForumTopicPostCreatedBy",
+            "description": "The post's author."
+          },
+          "body": {
+            "type": "string",
+            "nullable": false,
+            "description": "The post's text, with BBCode markup."
+          },
+          "signature": {
+            "type": "string",
+            "nullable": false,
+            "description": "The author's forum signature, with BBCode markup."
           }
-        ]
+        },
+        "description": "A post in a forum topic."
       },
       "ForumTopicPostCreatedBy": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The author's MyAnimeList ID."
           },
           "name": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The author's user name."
           },
           "forum_avator": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The address of the author's forum avatar. The JSON name keeps MyAnimeList's spelling."
           }
-        }
+        },
+        "description": "The author of a forum post."
       },
       "ForumTopics": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ForumTopicsData"
-                },
-                "nullable": false
-              },
-              "paging": {
-                "$ref": "#/components/schemas/ForumTopicPaging"
-              }
-            }
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForumTopicsData"
+            },
+            "nullable": false,
+            "description": "The topics on this page."
+          },
+          "paging": {
+            "$ref": "#/components/schemas/ForumTopicPaging",
+            "description": "The links to the previous and next page."
           }
-        ]
+        },
+        "description": "A page of forum topics."
       },
       "ForumTopicsCreatedBy": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The user's MyAnimeList ID."
           },
           "name": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The user name."
           }
-        }
+        },
+        "description": "A user who started a topic or wrote a post."
       },
       "ForumTopicsData": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "nullable": false
-              },
-              "title": {
-                "type": "string",
-                "nullable": false
-              },
-              "created_at": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": false
-              },
-              "created_by": {
-                "$ref": "#/components/schemas/ForumTopicsCreatedBy"
-              },
-              "number_of_posts": {
-                "type": "integer",
-                "nullable": false
-              },
-              "last_post_created_at": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": false
-              },
-              "last_post_created_by": {
-                "$ref": "#/components/schemas/ForumTopicsCreatedBy"
-              },
-              "is_locked": {
-                "type": "boolean",
-                "nullable": false
-              }
-            }
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": false,
+            "description": "The topic's ID."
+          },
+          "title": {
+            "type": "string",
+            "nullable": false,
+            "description": "The topic's title."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": false,
+            "description": "When the topic was started."
+          },
+          "created_by": {
+            "$ref": "#/components/schemas/ForumTopicsCreatedBy",
+            "description": "The user who started the topic."
+          },
+          "number_of_posts": {
+            "type": "integer",
+            "nullable": false,
+            "description": "How many posts the topic has."
+          },
+          "last_post_created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": false,
+            "description": "When the latest post was written."
+          },
+          "last_post_created_by": {
+            "$ref": "#/components/schemas/ForumTopicsCreatedBy",
+            "description": "The user who wrote the latest post."
+          },
+          "is_locked": {
+            "type": "boolean",
+            "nullable": false,
+            "description": "Whether the topic is closed for new posts."
           }
-        ]
+        },
+        "description": "A forum topic in a search result."
       },
       "Genre": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The genre's MyAnimeList ID."
           },
           "name": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The genre's English name."
           }
-        }
+        },
+        "description": "A genre."
       },
       "List": {
         "type": "object",
         "properties": {
           "paging": {
-            "type": "object",
-            "properties": {
-              "previous": {
-                "type": "string"
-              },
-              "next": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/components/schemas/Paging",
+            "description": "The links to the previous and next page."
           }
-        }
+        },
+        "x-base-class": true,
+        "description": "A page of a paged result."
       },
       "Magazine": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The magazine's MyAnimeList ID."
           },
           "name": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The magazine's name."
           }
-        }
+        },
+        "description": "A magazine that publishes manga."
       },
       "MangaForDetails": {
         "allOf": [
@@ -1800,43 +1811,50 @@
                 "items": {
                   "$ref": "#/components/schemas/Picture"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "More pictures of the manga."
               },
               "background": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "Background information about the manga, for example about its publication."
               },
               "related_anime": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/RelatedAnimeEdge"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "Anime related to this manga, for example adaptations."
               },
               "related_manga": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/RelatedMangaEdge"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "Manga related to this one, for example sequels and spin-offs."
               },
               "recommendations": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/MangaRecommendationAggregationEdgeBase"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "Manga that users recommend to fans of this one."
               },
               "serialization": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/MangaMagazineRelationEdge"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "The magazines in which the manga was serialized."
               }
             }
           }
-        ]
+        ],
+        "description": "A manga, with the fields that only the details endpoint returns."
       },
       "MangaForList": {
         "allOf": [
@@ -1848,41 +1866,41 @@
             "properties": {
               "media_type": {
                 "type": "string",
-                "nullable": false
+                "nullable": false,
+                "description": "The kind of manga, for example manga, light_novel, novel, one_shot, manhwa or manhua."
               },
               "status": {
                 "type": "string",
-                "nullable": false
+                "nullable": false,
+                "description": "Whether the manga is being published: finished, currently_publishing or not_yet_published."
               },
               "my_list_status": {
-                "allOf": [
-                  {
-                    "type": "object",
-                    "nullable": true
-                  },
-                  {
-                    "$ref": "#/components/schemas/MangaListStatus"
-                  }
-                ]
+                "$ref": "#/components/schemas/MangaListStatus",
+                "description": "The signed-in user's list entry for the manga. Only present when the manga is on their list."
               },
               "num_volumes": {
                 "type": "integer",
-                "nullable": false
+                "nullable": false,
+                "description": "The number of volumes, or 0 when it isn't known yet."
               },
               "num_chapters": {
                 "type": "integer",
-                "nullable": false
+                "nullable": false,
+                "description": "The number of chapters, or 0 when it isn't known yet."
               },
               "authors": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/PersonRoleEdge"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "The authors and artists, each with their role. Request their names with authors{first_name,last_name}."
               }
             }
           }
-        ]
+        ],
+        "x-base-class": true,
+        "description": "A manga, as it appears in searches, rankings and lists."
       },
       "MangaList": {
         "allOf": [
@@ -1892,20 +1910,17 @@
               "data": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "node": {
-                      "$ref": "#/components/schemas/MangaForList"
-                    }
-                  }
-                }
+                  "$ref": "#/components/schemas/MangaListEdge"
+                },
+                "description": "The manga on this page."
               }
             }
           },
           {
             "$ref": "#/components/schemas/List"
           }
-        ]
+        ],
+        "description": "A page of manga."
       },
       "MangaListForRanking": {
         "allOf": [
@@ -1915,139 +1930,160 @@
               "data": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "node": {
-                      "$ref": "#/components/schemas/MangaForList"
-                    },
-                    "ranking": {
-                      "$ref": "#/components/schemas/RankingInfo"
-                    }
-                  }
-                }
+                  "$ref": "#/components/schemas/MangaRankingEdge"
+                },
+                "description": "The manga on this page, each with its place in the ranking."
               }
             }
           },
           {
             "$ref": "#/components/schemas/List"
           }
-        ]
+        ],
+        "description": "A page of a manga ranking."
       },
       "MangaListStatus": {
         "type": "object",
         "properties": {
           "status": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The list status: reading, completed, on_hold, dropped or plan_to_read."
           },
           "score": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The user's score, from 1 to 10, or 0 when the user hasn't scored the work."
           },
           "num_volumes_read": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How many volumes the user has read."
           },
           "num_chapters_read": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How many chapters the user has read."
           },
           "is_rereading": {
             "type": "boolean",
-            "nullable": false
+            "nullable": false,
+            "description": "Whether the user is reading the manga again."
           },
           "start_date": {
             "type": "string",
             "format": "date",
-            "nullable": true
+            "nullable": true,
+            "description": "When the user started the work, as YYYY-MM-DD."
           },
           "finish_date": {
             "type": "string",
             "format": "date",
-            "nullable": true
+            "nullable": true,
+            "description": "When the user finished the work, as YYYY-MM-DD."
           },
           "priority": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The priority of the entry: 0 (low), 1 (medium) or 2 (high)."
           },
           "num_times_reread": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How many times the user has read the manga again."
           },
           "reread_value": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How much the user would like to read the manga again, from 0 (not set) to 5."
           },
           "tags": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "nullable": false
+            "nullable": false,
+            "description": "The user's tags for the entry."
           },
           "comments": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The user's comments on the entry."
           },
           "updated_at": {
             "type": "string",
             "format": "date-time",
-            "nullable": false
+            "nullable": false,
+            "description": "When the entry was last changed."
           }
-        }
+        },
+        "description": "An entry of a manga on a user's list."
       },
       "MangaMagazineRelationEdge": {
         "type": "object",
         "properties": {
           "node": {
-            "$ref": "#/components/schemas/Magazine"
+            "$ref": "#/components/schemas/Magazine",
+            "description": "The magazine."
           },
           "role": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The kind of serialization. Usually empty."
           }
-        }
+        },
+        "description": "A magazine in which a manga was serialized."
       },
       "MangaRecommendationAggregationEdgeBase": {
         "type": "object",
         "properties": {
           "node": {
-            "$ref": "#/components/schemas/MangaForList"
+            "$ref": "#/components/schemas/MangaForList",
+            "description": "The recommended manga."
           },
           "num_recommendations": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "How many users recommended it."
           }
-        }
+        },
+        "description": "A manga that users recommend together with another one."
       },
       "PersonBase": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The person's MyAnimeList ID."
           },
           "first_name": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The person's first name."
           },
           "last_name": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The person's last name."
           }
-        }
+        },
+        "description": "A person, for example an author."
       },
       "PersonRoleEdge": {
         "type": "object",
         "properties": {
           "node": {
-            "$ref": "#/components/schemas/PersonBase"
+            "$ref": "#/components/schemas/PersonBase",
+            "description": "The person."
           },
           "role": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The person's role in the work, in English, for example Story or Art."
           }
-        }
+        },
+        "description": "A person and their role in a work."
       },
       "Picture": {
         "type": "object",
@@ -2055,59 +2091,73 @@
           "large": {
             "type": "string",
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "description": "The address of the large picture."
           },
           "medium": {
             "type": "string",
             "format": "uri",
-            "nullable": false
+            "nullable": false,
+            "description": "The address of the medium-sized picture."
           }
-        }
+        },
+        "description": "The addresses of a picture in two sizes."
       },
       "RankingInfo": {
         "type": "object",
         "properties": {
           "rank": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The place in the ranking, starting at 1."
           },
           "previous_rank": {
             "type": "integer",
-            "nullable": true
+            "nullable": true,
+            "description": "The place in the ranking's previous version, when MyAnimeList sends it."
           }
-        }
+        },
+        "description": "A place in a ranking."
       },
       "RelatedAnimeEdge": {
         "type": "object",
         "properties": {
           "node": {
-            "$ref": "#/components/schemas/AnimeForList"
+            "$ref": "#/components/schemas/AnimeForList",
+            "description": "The related anime."
           },
           "relation_type": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "How the works are related, for example sequel, prequel, side_story, spin_off or other."
           },
           "relation_type_formatted": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The relation as English text, for example Sequel."
           }
-        }
+        },
+        "description": "An anime related to another anime or manga."
       },
       "RelatedMangaEdge": {
         "type": "object",
         "properties": {
           "node": {
-            "$ref": "#/components/schemas/MangaForList"
+            "$ref": "#/components/schemas/MangaForList",
+            "description": "The related manga."
           },
           "relation_type": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "How the works are related, for example sequel, prequel, side_story, spin_off or other."
           },
           "relation_type_formatted": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The relation as English text, for example Sequel."
           }
-        }
+        },
+        "description": "A manga related to another anime or manga."
       },
       "User": {
         "allOf": [
@@ -2119,107 +2169,44 @@
             "properties": {
               "gender": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "The gender the user chose to show on their profile."
               },
               "birthday": {
                 "type": "string",
                 "format": "date",
-                "nullable": true
+                "nullable": true,
+                "description": "The birthday the user chose to show on their profile."
               },
               "location": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "The location the user chose to show on their profile."
               },
               "joined_at": {
                 "type": "string",
                 "format": "date-time",
-                "nullable": false
+                "nullable": false,
+                "description": "When the user joined MyAnimeList."
               },
               "anime_statistics": {
-                "type": "object",
-                "x-optional": true,
-                "properties": {
-                  "num_items_watching": {
-                    "type": "integer",
-                    "nullable": false
-                  },
-                  "num_items_completed": {
-                    "type": "integer",
-                    "nullable": false
-                  },
-                  "num_items_on_hold": {
-                    "type": "integer",
-                    "nullable": false
-                  },
-                  "num_items_dropped": {
-                    "type": "integer",
-                    "nullable": false
-                  },
-                  "num_items_plan_to_watch": {
-                    "type": "integer",
-                    "nullable": false
-                  },
-                  "num_items": {
-                    "type": "integer",
-                    "nullable": false
-                  },
-                  "num_days_watched": {
-                    "type": "number",
-                    "format": "float",
-                    "nullable": false
-                  },
-                  "num_days_watching": {
-                    "type": "number",
-                    "format": "float",
-                    "nullable": false
-                  },
-                  "num_days_completed": {
-                    "type": "number",
-                    "format": "float",
-                    "nullable": false
-                  },
-                  "num_days_on_hold": {
-                    "type": "number",
-                    "format": "float",
-                    "nullable": false
-                  },
-                  "num_days_dropped": {
-                    "type": "number",
-                    "format": "float",
-                    "nullable": false
-                  },
-                  "num_days": {
-                    "type": "number",
-                    "format": "float",
-                    "nullable": false
-                  },
-                  "num_episodes": {
-                    "type": "integer",
-                    "nullable": false
-                  },
-                  "num_times_rewatched": {
-                    "type": "integer",
-                    "nullable": false
-                  },
-                  "mean_score": {
-                    "type": "number",
-                    "format": "float",
-                    "nullable": false
-                  }
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/UserAnimeStatistics",
+                "description": "Totals over the user's anime list."
               },
               "time_zone": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "The user's time zone, for example Europe/Berlin."
               },
               "is_supporter": {
                 "type": "boolean",
-                "nullable": true
+                "nullable": true,
+                "description": "Whether the user supports MyAnimeList with a paid subscription."
               }
             }
           }
-        ]
+        ],
+        "description": "A user's profile."
       },
       "UserAnimeList": {
         "allOf": [
@@ -2230,25 +2217,30 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/UserAnimeListEdge"
-                }
+                },
+                "description": "The list entries on this page."
               }
             }
           },
           {
             "$ref": "#/components/schemas/List"
           }
-        ]
+        ],
+        "description": "A page of a user's anime list."
       },
       "UserAnimeListEdge": {
         "type": "object",
         "properties": {
           "node": {
-            "$ref": "#/components/schemas/AnimeForList"
+            "$ref": "#/components/schemas/AnimeForList",
+            "description": "The anime."
           },
           "list_status": {
-            "$ref": "#/components/schemas/AnimeListStatus"
+            "$ref": "#/components/schemas/AnimeListStatus",
+            "description": "The user's list entry for the anime. Only present when the request's fields include list_status."
           }
-        }
+        },
+        "description": "An anime on a user's list, with its list entry."
       },
       "UserBase": {
         "type": "object",
@@ -2256,18 +2248,23 @@
           "id": {
             "type": "integer",
             "format": "int32",
-            "nullable": false
+            "nullable": false,
+            "description": "The user's MyAnimeList ID."
           },
           "name": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The user name."
           },
           "picture": {
             "type": "string",
             "format": "uri",
-            "nullable": false
+            "nullable": false,
+            "description": "The address of the user's profile picture."
           }
-        }
+        },
+        "x-base-class": true,
+        "description": "A user."
       },
       "UserMangaList": {
         "allOf": [
@@ -2278,49 +2275,51 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/UserMangaListEdge"
-                }
+                },
+                "description": "The list entries on this page."
               }
             }
           },
           {
             "$ref": "#/components/schemas/List"
           }
-        ]
+        ],
+        "description": "A page of a user's manga list."
       },
       "UserMangaListEdge": {
         "type": "object",
         "properties": {
           "node": {
-            "$ref": "#/components/schemas/MangaForList"
+            "$ref": "#/components/schemas/MangaForList",
+            "description": "The manga."
           },
           "list_status": {
-            "$ref": "#/components/schemas/MangaListStatus"
+            "$ref": "#/components/schemas/MangaListStatus",
+            "description": "The user's list entry for the manga. Only present when the request's fields include list_status."
           }
-        }
+        },
+        "description": "A manga on a user's list, with its list entry."
       },
       "WorkBase": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "nullable": false
+            "nullable": false,
+            "description": "The work's MyAnimeList ID."
           },
           "title": {
             "type": "string",
-            "nullable": false
+            "nullable": false,
+            "description": "The main title, usually romanized Japanese."
           },
           "main_picture": {
-            "allOf": [
-              {
-                "type": "object",
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/Picture"
-              }
-            ]
+            "$ref": "#/components/schemas/Picture",
+            "description": "The main picture, usually the cover or key visual."
           }
-        }
+        },
+        "x-base-class": true,
+        "description": "An anime or manga, with the fields that every response has."
       },
       "WorkForList": {
         "allOf": [
@@ -2331,83 +2330,400 @@
             "type": "object",
             "properties": {
               "alternative_titles": {
-                "type": "object",
-                "properties": {
-                  "synonyms": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "nullable": true
-                  },
-                  "en": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "ja": {
-                    "type": "string",
-                    "nullable": true
-                  }
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/AlternativeTitles",
+                "description": "The titles in other languages and other names of the work."
               },
               "start_date": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "When the work started airing or publishing: YYYY-MM-DD, or only YYYY-MM or YYYY when the exact date isn't known."
               },
               "end_date": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "When the work finished airing or publishing, in the same form as the start date."
               },
               "synopsis": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "A summary of the story."
               },
               "mean": {
                 "type": "number",
                 "format": "float",
-                "nullable": true
+                "nullable": true,
+                "description": "The mean of the users' scores, from 1 to 10. Missing while too few users scored the work."
               },
               "rank": {
                 "type": "integer",
-                "nullable": true
+                "nullable": true,
+                "description": "The place in the ranking by score."
               },
               "popularity": {
                 "type": "integer",
-                "nullable": true
+                "nullable": true,
+                "description": "The place in the ranking by the number of users who have the work on their list."
               },
               "num_list_users": {
                 "type": "integer",
-                "nullable": false
+                "nullable": false,
+                "description": "How many users have the work on their list."
               },
               "num_scoring_users": {
                 "type": "integer",
-                "nullable": false
+                "nullable": false,
+                "description": "How many users scored the work."
               },
               "nsfw": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "Whether the work is safe for work: white (safe), gray (maybe not) or black (not safe)."
               },
               "genres": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/Genre"
                 },
-                "nullable": false
+                "nullable": false,
+                "description": "The genres, themes and demographics of the work."
               },
               "created_at": {
                 "type": "string",
                 "format": "date-time",
-                "nullable": false
+                "nullable": false,
+                "description": "When the work was added to MyAnimeList."
               },
               "updated_at": {
                 "type": "string",
                 "format": "date-time",
-                "nullable": false
+                "nullable": false,
+                "description": "When the work's entry on MyAnimeList was last changed."
               }
             }
           }
-        ]
+        ],
+        "x-base-class": true,
+        "description": "An anime or manga, with the fields that searches, rankings and lists can return."
+      },
+      "AnimeListEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/AnimeForList",
+            "description": "The anime."
+          }
+        },
+        "description": "An anime in a search result or a season."
+      },
+      "AnimeRankingEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/AnimeForList",
+            "description": "The anime."
+          },
+          "ranking": {
+            "$ref": "#/components/schemas/RankingInfo",
+            "description": "The anime's place in the ranking."
+          }
+        },
+        "description": "An anime in a ranking, with its place."
+      },
+      "MangaListEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/MangaForList",
+            "description": "The manga."
+          }
+        },
+        "description": "A manga in a search result."
+      },
+      "MangaRankingEdge": {
+        "type": "object",
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/MangaForList",
+            "description": "The manga."
+          },
+          "ranking": {
+            "$ref": "#/components/schemas/RankingInfo",
+            "description": "The manga's place in the ranking."
+          }
+        },
+        "description": "A manga in a ranking, with its place."
+      },
+      "Paging": {
+        "type": "object",
+        "properties": {
+          "previous": {
+            "type": "string",
+            "description": "The address of the previous page, or missing on the first page."
+          },
+          "next": {
+            "type": "string",
+            "description": "The address of the next page, or missing on the last page."
+          }
+        },
+        "description": "The links to the previous and next page of a paged result."
+      },
+      "AlternativeTitles": {
+        "type": "object",
+        "properties": {
+          "synonyms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Other names the work is known by."
+          },
+          "en": {
+            "type": "string",
+            "nullable": true,
+            "description": "The English title."
+          },
+          "ja": {
+            "type": "string",
+            "nullable": true,
+            "description": "The Japanese title."
+          }
+        },
+        "nullable": true,
+        "description": "The titles of an anime or manga in other languages, and its other names."
+      },
+      "Broadcast": {
+        "type": "object",
+        "properties": {
+          "day_of_the_week": {
+            "type": "string",
+            "nullable": false,
+            "description": "The day of the week in lowercase English, for example monday, or other."
+          },
+          "start_time": {
+            "type": "string",
+            "nullable": true,
+            "description": "The time of day in Japan Standard Time, as HH:mm."
+          }
+        },
+        "nullable": true,
+        "description": "When new episodes of an anime are broadcast in Japan."
+      },
+      "Season": {
+        "type": "string",
+        "enum": [
+          "winter",
+          "spring",
+          "summer",
+          "fall"
+        ],
+        "nullable": false,
+        "description": "A season of the year."
+      },
+      "AnimeStatusStatistics": {
+        "type": "object",
+        "properties": {
+          "watching": {
+            "type": "integer",
+            "description": "How many users are watching the anime."
+          },
+          "completed": {
+            "type": "integer",
+            "description": "How many users have completed the anime."
+          },
+          "on_hold": {
+            "type": "integer",
+            "description": "How many users have put the anime on hold."
+          },
+          "dropped": {
+            "type": "integer",
+            "description": "How many users have dropped the anime."
+          },
+          "plan_to_watch": {
+            "type": "integer",
+            "description": "How many users plan to watch the anime."
+          }
+        },
+        "nullable": false,
+        "description": "How many users have an anime on their list with each list status."
+      },
+      "UserAnimeStatistics": {
+        "type": "object",
+        "x-optional": true,
+        "properties": {
+          "num_items_watching": {
+            "type": "integer",
+            "nullable": false,
+            "description": "How many anime the user is watching."
+          },
+          "num_items_completed": {
+            "type": "integer",
+            "nullable": false,
+            "description": "How many anime the user has completed."
+          },
+          "num_items_on_hold": {
+            "type": "integer",
+            "nullable": false,
+            "description": "How many anime the user has put on hold."
+          },
+          "num_items_dropped": {
+            "type": "integer",
+            "nullable": false,
+            "description": "How many anime the user has dropped."
+          },
+          "num_items_plan_to_watch": {
+            "type": "integer",
+            "nullable": false,
+            "description": "How many anime the user plans to watch."
+          },
+          "num_items": {
+            "type": "integer",
+            "nullable": false,
+            "description": "How many anime are on the user's list."
+          },
+          "num_days_watched": {
+            "type": "number",
+            "format": "float",
+            "nullable": false,
+            "description": "The days the user spent watching anime, over the whole list."
+          },
+          "num_days_watching": {
+            "type": "number",
+            "format": "float",
+            "nullable": false,
+            "description": "The days the user spent on the anime they are watching."
+          },
+          "num_days_completed": {
+            "type": "number",
+            "format": "float",
+            "nullable": false,
+            "description": "The days the user spent on completed anime."
+          },
+          "num_days_on_hold": {
+            "type": "number",
+            "format": "float",
+            "nullable": false,
+            "description": "The days the user spent on anime they put on hold."
+          },
+          "num_days_dropped": {
+            "type": "number",
+            "format": "float",
+            "nullable": false,
+            "description": "The days the user spent on anime they dropped."
+          },
+          "num_days": {
+            "type": "number",
+            "format": "float",
+            "nullable": false,
+            "description": "The days the user spent watching anime in total."
+          },
+          "num_episodes": {
+            "type": "integer",
+            "nullable": false,
+            "description": "How many episodes the user has watched."
+          },
+          "num_times_rewatched": {
+            "type": "integer",
+            "nullable": false,
+            "description": "How many times the user has watched anime again."
+          },
+          "mean_score": {
+            "type": "number",
+            "format": "float",
+            "nullable": false,
+            "description": "The mean of the scores the user gave."
+          }
+        },
+        "nullable": true,
+        "description": "Totals over a user's anime list."
+      },
+      "AnimeListStatusPatch": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The new list status: watching, completed, on_hold, dropped or plan_to_watch."
+          },
+          "is_rewatching": {
+            "type": "boolean",
+            "description": "Whether the user is watching the anime again."
+          },
+          "score": {
+            "type": "integer",
+            "description": "The new score, from 1 to 10, or 0 to remove the score."
+          },
+          "num_watched_episodes": {
+            "type": "integer",
+            "description": "How many episodes the user has watched."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The new priority: 0 (low), 1 (medium) or 2 (high)."
+          },
+          "num_times_rewatched": {
+            "type": "integer",
+            "description": "How many times the user has watched the anime again."
+          },
+          "rewatch_value": {
+            "type": "integer",
+            "description": "How much the user would like to watch the anime again, from 0 (not set) to 5."
+          },
+          "tags": {
+            "type": "string",
+            "description": "The new tags of the entry, separated by commas. They replace the existing ones."
+          },
+          "comments": {
+            "type": "string",
+            "description": "The new comments on the entry. They replace the existing ones."
+          }
+        },
+        "description": "The fields of an anime list entry to change. Fields that aren't set are left as they are."
+      },
+      "MangaListStatusPatch": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The new list status: reading, completed, on_hold, dropped or plan_to_read."
+          },
+          "is_rereading": {
+            "type": "boolean",
+            "description": "Whether the user is reading the manga again."
+          },
+          "score": {
+            "type": "integer",
+            "description": "The new score, from 1 to 10, or 0 to remove the score."
+          },
+          "num_volumes_read": {
+            "type": "integer",
+            "description": "How many volumes the user has read."
+          },
+          "num_chapters_read": {
+            "type": "integer",
+            "description": "How many chapters the user has read."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The new priority: 0 (low), 1 (medium) or 2 (high)."
+          },
+          "num_times_reread": {
+            "type": "integer",
+            "description": "How many times the user has read the manga again."
+          },
+          "reread_value": {
+            "type": "integer",
+            "description": "How much the user would like to read the manga again, from 0 (not set) to 5."
+          },
+          "tags": {
+            "type": "string",
+            "description": "The new tags of the entry, separated by commas. They replace the existing ones."
+          },
+          "comments": {
+            "type": "string",
+            "description": "The new comments on the entry. They replace the existing ones."
+          }
+        },
+        "description": "The fields of a manga list entry to change. Fields that aren't set are left as they are."
       }
     }
   }

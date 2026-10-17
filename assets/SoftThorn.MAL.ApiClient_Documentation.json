@@ -1,0 +1,389 @@
+{
+  "$comment": "Our own descriptions for the generated XML documentation. UpdateOpenApiSpec merges them into the spec after removing MyAnimeList's documentation, which its API agreement doesn't allow us to copy. Write new entries in your own words. Properties are looked up by their path from the schema, longest match first.",
+  "operations": {
+    "GET /anime": {
+      "summary": "Searches anime by title.",
+      "parameters": {
+        "q": "The text to search for in the titles."
+      }
+    },
+    "GET /anime/{anime_id}": {
+      "summary": "Returns the details of an anime."
+    },
+    "PATCH /anime/{anime_id}/my_list_status": {
+      "summary": "Adds an anime to the signed-in user's list, or changes its list entry. Only the fields that are set in the body are changed."
+    },
+    "DELETE /anime/{anime_id}/my_list_status": {
+      "summary": "Removes an anime from the signed-in user's list. MyAnimeList also answers with success when the anime isn't on the list."
+    },
+    "GET /anime/ranking": {
+      "summary": "Returns a page of an anime ranking.",
+      "parameters": {
+        "ranking_type": "Which ranking to return: all, airing, upcoming, tv, ova, movie, special, bypopularity or favorite."
+      }
+    },
+    "GET /anime/season/{year}/{season}": {
+      "summary": "Returns the anime that started airing in a season.",
+      "parameters": {
+        "sort": "The order of the anime: anime_score or anime_num_list_users, each from the highest value down."
+      }
+    },
+    "GET /anime/suggestions": {
+      "summary": "Returns anime that MyAnimeList suggests for the signed-in user."
+    },
+    "GET /forum/boards": {
+      "summary": "Returns the forum's categories with their boards."
+    },
+    "GET /forum/topic/{topic_id}": {
+      "summary": "Returns a page of a forum topic's posts, with the topic's poll if it has one.",
+      "parameters": {
+        "limit": "How many posts to return.",
+        "offset": "How many posts to skip, for paging."
+      }
+    },
+    "GET /forum/topics": {
+      "summary": "Searches forum topics.",
+      "parameters": {
+        "q": "The text to search for in the topics.",
+        "sort": "The order of the topics; recent is the only supported value."
+      }
+    },
+    "GET /manga": {
+      "summary": "Searches manga by title.",
+      "parameters": {
+        "q": "The text to search for in the titles."
+      }
+    },
+    "GET /manga/{manga_id}": {
+      "summary": "Returns the details of a manga."
+    },
+    "PATCH /manga/{manga_id}/my_list_status": {
+      "summary": "Adds a manga to the signed-in user's list, or changes its list entry. Only the fields that are set in the body are changed."
+    },
+    "DELETE /manga/{manga_id}/my_list_status": {
+      "summary": "Removes a manga from the signed-in user's list. MyAnimeList also answers with success when the manga isn't on the list."
+    },
+    "GET /manga/ranking": {
+      "summary": "Returns a page of a manga ranking.",
+      "parameters": {
+        "ranking_type": "Which ranking to return: all, manga, novels, oneshots, doujin, manhwa, manhua, bypopularity or favorite."
+      }
+    },
+    "GET /users/{user_name}": {
+      "summary": "Returns a user's profile. MyAnimeList only supports @me, the signed-in user.",
+      "parameters": {
+        "user_name": "@me, for the signed-in user."
+      }
+    },
+    "GET /users/{user_name}/animelist": {
+      "summary": "Returns a page of a user's anime list.",
+      "parameters": {
+        "status": "Returns only the entries with this list status: watching, completed, on_hold, dropped or plan_to_watch.",
+        "sort": "The order of the entries: list_score, list_updated_at, anime_title or anime_start_date."
+      }
+    },
+    "GET /users/{user_name}/mangalist": {
+      "summary": "Returns a page of a user's manga list.",
+      "parameters": {
+        "status": "Returns only the entries with this list status: reading, completed, on_hold, dropped or plan_to_read.",
+        "sort": "The order of the entries: list_score, list_updated_at, manga_title or manga_start_date."
+      }
+    }
+  },
+  "parameters": {
+    "anime_id": "The anime's MyAnimeList ID.",
+    "manga_id": "The manga's MyAnimeList ID.",
+    "topic_id": "The forum topic's ID.",
+    "board_id": "Returns only topics of the forum board with this ID.",
+    "subboard_id": "Returns only topics of the forum subboard with this ID.",
+    "topic_user_name": "Returns only topics that this user started.",
+    "user_name": "A user name, or @me for the signed-in user.",
+    "year": "The year of the season.",
+    "season": "The season: winter (January to March), spring, summer or fall.",
+    "limit": "How many entries to return. MyAnimeList caps the value per endpoint.",
+    "offset": "How many entries to skip, for paging. The response's paging links contain the next offset.",
+    "fields": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
+  },
+  "schemas": {
+    "AnimeForDetails": "An anime, with the fields that only the details endpoint returns.",
+    "AnimeForList": "An anime, as it appears in searches, rankings and lists.",
+    "AnimeList": "A page of anime.",
+    "AnimeListForRanking": "A page of an anime ranking.",
+    "AlternativeTitles": "The titles of an anime or manga in other languages, and its other names.",
+    "AnimeListEdge": "An anime in a search result or a season.",
+    "AnimeListStatus": "An entry of an anime on a user's list.",
+    "AnimeListStatusPatch": "The fields of an anime list entry to change. Fields that aren't set are left as they are.",
+    "AnimeRecommendationAggregationEdgeBase": "An anime that users recommend together with another one.",
+    "AnimeRankingEdge": "An anime in a ranking, with its place.",
+    "AnimeSeason": "A season of a year.",
+    "AnimeStatistics": "How many users have an anime on their list, by list status.",
+    "AnimeStatusStatistics": "How many users have an anime on their list with each list status.",
+    "AnimeStudio": "An animation studio.",
+    "Broadcast": "When new episodes of an anime are broadcast in Japan.",
+    "Date": "A date in the form YYYY-MM-DD.",
+    "ForumBoard": "A forum board.",
+    "ForumBoards": "The forum's categories with their boards.",
+    "ForumCategory": "A category of forum boards.",
+    "ForumSubboard": "A subboard of a forum board.",
+    "ForumTopic": "A page of a forum topic's posts.",
+    "ForumTopicData": "A forum topic with a page of its posts.",
+    "ForumTopicPaging": "The links to the previous and next page of posts.",
+    "ForumTopicPoll": "The poll of a forum topic.",
+    "ForumTopicPollOption": "An option of a forum poll.",
+    "ForumTopicPost": "A post in a forum topic.",
+    "ForumTopicPostCreatedBy": "The author of a forum post.",
+    "ForumTopics": "A page of forum topics.",
+    "ForumTopicsCreatedBy": "A user who started a topic or wrote a post.",
+    "ForumTopicsData": "A forum topic in a search result.",
+    "Genre": "A genre.",
+    "List": "A page of a paged result.",
+    "Magazine": "A magazine that publishes manga.",
+    "MangaForDetails": "A manga, with the fields that only the details endpoint returns.",
+    "MangaForList": "A manga, as it appears in searches, rankings and lists.",
+    "MangaList": "A page of manga.",
+    "MangaListForRanking": "A page of a manga ranking.",
+    "MangaListEdge": "A manga in a search result.",
+    "MangaListStatus": "An entry of a manga on a user's list.",
+    "MangaListStatusPatch": "The fields of a manga list entry to change. Fields that aren't set are left as they are.",
+    "MangaRankingEdge": "A manga in a ranking, with its place.",
+    "MangaMagazineRelationEdge": "A magazine in which a manga was serialized.",
+    "MangaRecommendationAggregationEdgeBase": "A manga that users recommend together with another one.",
+    "Paging": "The links to the previous and next page of a paged result.",
+    "PersonBase": "A person, for example an author.",
+    "PersonRoleEdge": "A person and their role in a work.",
+    "Picture": "The addresses of a picture in two sizes.",
+    "RankingInfo": "A place in a ranking.",
+    "RelatedAnimeEdge": "An anime related to another anime or manga.",
+    "RelatedMangaEdge": "A manga related to another anime or manga.",
+    "Season": "A season of the year.",
+    "User": "A user's profile.",
+    "UserAnimeList": "A page of a user's anime list.",
+    "UserAnimeListEdge": "An anime on a user's list, with its list entry.",
+    "UserAnimeStatistics": "Totals over a user's anime list.",
+    "UserBase": "A user.",
+    "UserMangaList": "A page of a user's manga list.",
+    "UserMangaListEdge": "A manga on a user's list, with its list entry.",
+    "WorkBase": "An anime or manga, with the fields that every response has.",
+    "WorkForList": "An anime or manga, with the fields that searches, rankings and lists can return."
+  },
+  "properties": {
+    "WorkBase.id": "The work's MyAnimeList ID.",
+    "WorkBase.title": "The main title, usually romanized Japanese.",
+    "WorkBase.main_picture": "The main picture, usually the cover or key visual.",
+    "WorkForList.alternative_titles": "The titles in other languages and other names of the work.",
+    "AlternativeTitles.synonyms": "Other names the work is known by.",
+    "AlternativeTitles.en": "The English title.",
+    "AlternativeTitles.ja": "The Japanese title.",
+    "WorkForList.start_date": "When the work started airing or publishing: YYYY-MM-DD, or only YYYY-MM or YYYY when the exact date isn't known.",
+    "WorkForList.end_date": "When the work finished airing or publishing, in the same form as the start date.",
+    "WorkForList.synopsis": "A summary of the story.",
+    "WorkForList.mean": "The mean of the users' scores, from 1 to 10. Missing while too few users scored the work.",
+    "WorkForList.rank": "The place in the ranking by score.",
+    "WorkForList.popularity": "The place in the ranking by the number of users who have the work on their list.",
+    "WorkForList.num_list_users": "How many users have the work on their list.",
+    "WorkForList.num_scoring_users": "How many users scored the work.",
+    "WorkForList.nsfw": "Whether the work is safe for work: white (safe), gray (maybe not) or black (not safe).",
+    "WorkForList.genres": "The genres, themes and demographics of the work.",
+    "WorkForList.created_at": "When the work was added to MyAnimeList.",
+    "WorkForList.updated_at": "When the work's entry on MyAnimeList was last changed.",
+
+    "AnimeForList.media_type": "The kind of anime, for example tv, movie, ova, ona, special or music.",
+    "AnimeForList.status": "Whether the anime is airing: finished_airing, currently_airing or not_yet_aired.",
+    "AnimeForList.my_list_status": "The signed-in user's list entry for the anime. Only present when the anime is on their list.",
+    "AnimeForList.num_episodes": "The number of episodes, or 0 when it isn't known yet.",
+    "AnimeForList.start_season": "The season in which the anime started airing.",
+    "AnimeForList.broadcast": "When new episodes are broadcast in Japan.",
+    "Broadcast.day_of_the_week": "The day of the week in lowercase English, for example monday, or other.",
+    "Broadcast.start_time": "The time of day in Japan Standard Time, as HH:mm.",
+    "AnimeForList.source": "What the anime is based on, for example original, manga, light_novel or game.",
+    "AnimeForList.average_episode_duration": "The average length of an episode in seconds.",
+    "AnimeForList.rating": "The age rating: g, pg, pg_13, r, r+ or rx.",
+    "AnimeForList.studios": "The studios that animated the anime.",
+
+    "AnimeForDetails.pictures": "More pictures of the anime.",
+    "AnimeForDetails.background": "Background information about the anime, for example about its production.",
+    "AnimeForDetails.related_anime": "Anime related to this one, for example sequels and prequels.",
+    "AnimeForDetails.related_manga": "Manga related to this anime, for example the one it is based on.",
+    "AnimeForDetails.recommendations": "Anime that users recommend to fans of this one.",
+    "AnimeForDetails.statistics": "How many users have the anime on their list, by list status.",
+
+    "MangaForList.media_type": "The kind of manga, for example manga, light_novel, novel, one_shot, manhwa or manhua.",
+    "MangaForList.status": "Whether the manga is being published: finished, currently_publishing or not_yet_published.",
+    "MangaForList.my_list_status": "The signed-in user's list entry for the manga. Only present when the manga is on their list.",
+    "MangaForList.num_volumes": "The number of volumes, or 0 when it isn't known yet.",
+    "MangaForList.num_chapters": "The number of chapters, or 0 when it isn't known yet.",
+    "MangaForList.authors": "The authors and artists, each with their role. Request their names with authors{first_name,last_name}.",
+
+    "MangaForDetails.pictures": "More pictures of the manga.",
+    "MangaForDetails.background": "Background information about the manga, for example about its publication.",
+    "MangaForDetails.related_anime": "Anime related to this manga, for example adaptations.",
+    "MangaForDetails.related_manga": "Manga related to this one, for example sequels and spin-offs.",
+    "MangaForDetails.recommendations": "Manga that users recommend to fans of this one.",
+    "MangaForDetails.serialization": "The magazines in which the manga was serialized.",
+
+    "AnimeList.data": "The anime on this page.",
+    "AnimeListEdge.node": "The anime.",
+    "AnimeListForRanking.data": "The anime on this page, each with its place in the ranking.",
+    "AnimeRankingEdge.node": "The anime.",
+    "AnimeRankingEdge.ranking": "The anime's place in the ranking.",
+    "MangaList.data": "The manga on this page.",
+    "MangaListEdge.node": "The manga.",
+    "MangaListForRanking.data": "The manga on this page, each with its place in the ranking.",
+    "MangaRankingEdge.node": "The manga.",
+    "MangaRankingEdge.ranking": "The manga's place in the ranking.",
+    "UserAnimeList.data": "The list entries on this page.",
+    "UserMangaList.data": "The list entries on this page.",
+    "UserAnimeListEdge.node": "The anime.",
+    "UserAnimeListEdge.list_status": "The user's list entry for the anime. Only present when the request's fields include list_status.",
+    "UserMangaListEdge.node": "The manga.",
+    "UserMangaListEdge.list_status": "The user's list entry for the manga. Only present when the request's fields include list_status.",
+    "List.paging": "The links to the previous and next page.",
+    "Paging.previous": "The address of the previous page, or missing on the first page.",
+    "Paging.next": "The address of the next page, or missing on the last page.",
+
+    "AnimeListStatus.status": "The list status: watching, completed, on_hold, dropped or plan_to_watch.",
+    "AnimeListStatus.num_episodes_watched": "How many episodes the user has watched.",
+    "AnimeListStatus.is_rewatching": "Whether the user is watching the anime again.",
+    "AnimeListStatus.num_times_rewatched": "How many times the user has watched the anime again.",
+    "AnimeListStatus.rewatch_value": "How much the user would like to watch the anime again, from 0 (not set) to 5.",
+    "MangaListStatus.status": "The list status: reading, completed, on_hold, dropped or plan_to_read.",
+    "MangaListStatus.num_volumes_read": "How many volumes the user has read.",
+    "MangaListStatus.num_chapters_read": "How many chapters the user has read.",
+    "MangaListStatus.is_rereading": "Whether the user is reading the manga again.",
+    "MangaListStatus.num_times_reread": "How many times the user has read the manga again.",
+    "MangaListStatus.reread_value": "How much the user would like to read the manga again, from 0 (not set) to 5.",
+    "score": "The user's score, from 1 to 10, or 0 when the user hasn't scored the work.",
+    "start_date": "When the user started the work, as YYYY-MM-DD.",
+    "finish_date": "When the user finished the work, as YYYY-MM-DD.",
+    "priority": "The priority of the entry: 0 (low), 1 (medium) or 2 (high).",
+    "tags": "The user's tags for the entry.",
+    "comments": "The user's comments on the entry.",
+    "updated_at": "When the entry was last changed.",
+
+    "AnimeListStatusPatch.status": "The new list status: watching, completed, on_hold, dropped or plan_to_watch.",
+    "AnimeListStatusPatch.is_rewatching": "Whether the user is watching the anime again.",
+    "AnimeListStatusPatch.score": "The new score, from 1 to 10, or 0 to remove the score.",
+    "AnimeListStatusPatch.num_watched_episodes": "How many episodes the user has watched.",
+    "AnimeListStatusPatch.priority": "The new priority: 0 (low), 1 (medium) or 2 (high).",
+    "AnimeListStatusPatch.num_times_rewatched": "How many times the user has watched the anime again.",
+    "AnimeListStatusPatch.rewatch_value": "How much the user would like to watch the anime again, from 0 (not set) to 5.",
+    "AnimeListStatusPatch.tags": "The new tags of the entry, separated by commas. They replace the existing ones.",
+    "AnimeListStatusPatch.comments": "The new comments on the entry. They replace the existing ones.",
+    "MangaListStatusPatch.status": "The new list status: reading, completed, on_hold, dropped or plan_to_read.",
+    "MangaListStatusPatch.is_rereading": "Whether the user is reading the manga again.",
+    "MangaListStatusPatch.score": "The new score, from 1 to 10, or 0 to remove the score.",
+    "MangaListStatusPatch.num_volumes_read": "How many volumes the user has read.",
+    "MangaListStatusPatch.num_chapters_read": "How many chapters the user has read.",
+    "MangaListStatusPatch.priority": "The new priority: 0 (low), 1 (medium) or 2 (high).",
+    "MangaListStatusPatch.num_times_reread": "How many times the user has read the manga again.",
+    "MangaListStatusPatch.reread_value": "How much the user would like to read the manga again, from 0 (not set) to 5.",
+    "MangaListStatusPatch.tags": "The new tags of the entry, separated by commas. They replace the existing ones.",
+    "MangaListStatusPatch.comments": "The new comments on the entry. They replace the existing ones.",
+
+    "AnimeRecommendationAggregationEdgeBase.node": "The recommended anime.",
+    "AnimeRecommendationAggregationEdgeBase.num_recommendations": "How many users recommended it.",
+    "MangaRecommendationAggregationEdgeBase.node": "The recommended manga.",
+    "MangaRecommendationAggregationEdgeBase.num_recommendations": "How many users recommended it.",
+    "AnimeSeason.year": "The year.",
+    "AnimeSeason.season": "The season: winter (January to March), spring, summer or fall.",
+    "AnimeStatistics.num_list_users": "How many users have the anime on their list.",
+    "AnimeStatistics.status": "How many users have the anime on their list, by list status.",
+    "AnimeStatusStatistics.watching": "How many users are watching the anime.",
+    "AnimeStatusStatistics.completed": "How many users have completed the anime.",
+    "AnimeStatusStatistics.on_hold": "How many users have put the anime on hold.",
+    "AnimeStatusStatistics.dropped": "How many users have dropped the anime.",
+    "AnimeStatusStatistics.plan_to_watch": "How many users plan to watch the anime.",
+    "AnimeStudio.id": "The studio's MyAnimeList ID.",
+    "AnimeStudio.name": "The studio's name.",
+    "Genre.id": "The genre's MyAnimeList ID.",
+    "Genre.name": "The genre's English name.",
+    "Magazine.id": "The magazine's MyAnimeList ID.",
+    "Magazine.name": "The magazine's name.",
+    "MangaMagazineRelationEdge.node": "The magazine.",
+    "MangaMagazineRelationEdge.role": "The kind of serialization. Usually empty.",
+    "PersonBase.id": "The person's MyAnimeList ID.",
+    "PersonBase.first_name": "The person's first name.",
+    "PersonBase.last_name": "The person's last name.",
+    "PersonRoleEdge.node": "The person.",
+    "PersonRoleEdge.role": "The person's role in the work, in English, for example Story or Art.",
+    "Picture.large": "The address of the large picture.",
+    "Picture.medium": "The address of the medium-sized picture.",
+    "RankingInfo.rank": "The place in the ranking, starting at 1.",
+    "RankingInfo.previous_rank": "The place in the ranking's previous version, when MyAnimeList sends it.",
+    "RelatedAnimeEdge.node": "The related anime.",
+    "RelatedMangaEdge.node": "The related manga.",
+    "relation_type": "How the works are related, for example sequel, prequel, side_story, spin_off or other.",
+    "relation_type_formatted": "The relation as English text, for example Sequel.",
+
+    "UserBase.id": "The user's MyAnimeList ID.",
+    "UserBase.name": "The user name.",
+    "UserBase.picture": "The address of the user's profile picture.",
+    "User.gender": "The gender the user chose to show on their profile.",
+    "User.birthday": "The birthday the user chose to show on their profile.",
+    "User.location": "The location the user chose to show on their profile.",
+    "User.joined_at": "When the user joined MyAnimeList.",
+    "User.anime_statistics": "Totals over the user's anime list.",
+    "UserAnimeStatistics.num_items_watching": "How many anime the user is watching.",
+    "UserAnimeStatistics.num_items_completed": "How many anime the user has completed.",
+    "UserAnimeStatistics.num_items_on_hold": "How many anime the user has put on hold.",
+    "UserAnimeStatistics.num_items_dropped": "How many anime the user has dropped.",
+    "UserAnimeStatistics.num_items_plan_to_watch": "How many anime the user plans to watch.",
+    "UserAnimeStatistics.num_items": "How many anime are on the user's list.",
+    "UserAnimeStatistics.num_days_watched": "The days the user spent watching anime, over the whole list.",
+    "UserAnimeStatistics.num_days_watching": "The days the user spent on the anime they are watching.",
+    "UserAnimeStatistics.num_days_completed": "The days the user spent on completed anime.",
+    "UserAnimeStatistics.num_days_on_hold": "The days the user spent on anime they put on hold.",
+    "UserAnimeStatistics.num_days_dropped": "The days the user spent on anime they dropped.",
+    "UserAnimeStatistics.num_days": "The days the user spent watching anime in total.",
+    "UserAnimeStatistics.num_episodes": "How many episodes the user has watched.",
+    "UserAnimeStatistics.num_times_rewatched": "How many times the user has watched anime again.",
+    "UserAnimeStatistics.mean_score": "The mean of the scores the user gave.",
+    "User.time_zone": "The user's time zone, for example Europe/Berlin.",
+    "User.is_supporter": "Whether the user supports MyAnimeList with a paid subscription.",
+
+    "ForumBoards.categories": "The categories of boards.",
+    "ForumCategory.title": "The category's title.",
+    "ForumCategory.boards": "The boards in the category.",
+    "ForumBoard.id": "The board's ID, for filtering topics by board.",
+    "ForumBoard.title": "The board's title.",
+    "ForumBoard.description": "A short description of the board's topic.",
+    "ForumBoard.subboards": "The board's subboards.",
+    "ForumSubboard.id": "The subboard's ID, for filtering topics by subboard.",
+    "ForumSubboard.title": "The subboard's title.",
+    "ForumTopics.data": "The topics on this page.",
+    "ForumTopics.paging": "The links to the previous and next page.",
+    "ForumTopicsData.id": "The topic's ID.",
+    "ForumTopicsData.title": "The topic's title.",
+    "ForumTopicsData.created_at": "When the topic was started.",
+    "ForumTopicsData.created_by": "The user who started the topic.",
+    "ForumTopicsData.number_of_posts": "How many posts the topic has.",
+    "ForumTopicsData.last_post_created_at": "When the latest post was written.",
+    "ForumTopicsData.last_post_created_by": "The user who wrote the latest post.",
+    "ForumTopicsData.is_locked": "Whether the topic is closed for new posts.",
+    "ForumTopicsCreatedBy.id": "The user's MyAnimeList ID.",
+    "ForumTopicsCreatedBy.name": "The user name.",
+    "ForumTopic.data": "The topic with the posts on this page.",
+    "ForumTopic.paging": "The links to the previous and next page of posts.",
+    "ForumTopicPaging.previous": "The address of the previous page, or missing on the first page.",
+    "ForumTopicPaging.next": "The address of the next page, or missing on the last page.",
+    "ForumTopicData.title": "The topic's title.",
+    "ForumTopicData.posts": "The posts on this page.",
+    "ForumTopicData.poll": "The topic's poll, when it has one.",
+    "ForumTopicPost.id": "The post's ID.",
+    "ForumTopicPost.number": "The post's number within the topic, starting at 1.",
+    "ForumTopicPost.created_at": "When the post was written.",
+    "ForumTopicPost.created_by": "The post's author.",
+    "ForumTopicPost.body": "The post's text, with BBCode markup.",
+    "ForumTopicPost.signature": "The author's forum signature, with BBCode markup.",
+    "ForumTopicPostCreatedBy.id": "The author's MyAnimeList ID.",
+    "ForumTopicPostCreatedBy.name": "The author's user name.",
+    "ForumTopicPostCreatedBy.forum_avator": "The address of the author's forum avatar. The JSON name keeps MyAnimeList's spelling.",
+    "ForumTopicPoll.id": "The poll's ID.",
+    "ForumTopicPoll.question": "The question of the poll.",
+    "ForumTopicPoll.closed": "Whether the poll is closed for votes.",
+    "ForumTopicPoll.options": "The options to vote for.",
+    "ForumTopicPollOption.id": "The option's ID.",
+    "ForumTopicPollOption.text": "The option's text.",
+    "ForumTopicPollOption.votes": "How many users voted for the option."
+  }
+}

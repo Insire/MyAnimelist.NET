@@ -12,7 +12,6 @@
 #pragma warning disable 612 // Disable "CS0612 '...' is obsolete"
 #pragma warning disable 649 // Disable "CS0649 Field is never assigned to, and will always have its default value null"
 #pragma warning disable 1573 // Disable "CS1573 Parameter '...' has no matching param tag in the XML comment for ...
-#pragma warning disable 1591 // Disable "CS1591 Missing XML comment for publicly visible type or member ..."
 #pragma warning disable 8073 // Disable "CS8073 The result of the expression is always 'false' since a value of type 'T' is never equal to 'null' of type 'T?'"
 #pragma warning disable 3016 // Disable "CS3016 Arrays as attribute arguments is not CLS-compliant"
 #pragma warning disable 8600 // Disable "CS8600 Converting null literal or possible null value to non-nullable type"
@@ -27,14 +26,69 @@ namespace SoftThorn.MAL.ApiClient
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Client 
+    public partial interface ICatalogClient
+    {
+
+        /// <summary>
+        /// Searches anime by title.
+        /// </summary>
+        /// <param name="q">The text to search for in the titles.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<AnimeList> AnimeGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Returns the details of an anime.
+        /// </summary>
+        /// <param name="anime_id">The anime's MyAnimeList ID.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<AnimeForDetails> AnimeGetAsync(int anime_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Searches manga by title.
+        /// </summary>
+        /// <param name="q">The text to search for in the titles.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<MangaList> MangaGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Returns the details of a manga.
+        /// </summary>
+        /// <param name="manga_id">The manga's MyAnimeList ID.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<MangaForDetails> MangaGetAsync(int manga_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Returns a user's profile. MyAnimeList only supports @me, the signed-in user.
+        /// </summary>
+        /// <param name="user_name">@me, for the signed-in user.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<User> UsersAsync(string user_name, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    internal sealed partial class CatalogClient : ICatalogClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private static System.Lazy<System.Text.Json.JsonSerializerOptions> _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings, true);
         private System.Text.Json.JsonSerializerOptions _instanceSettings;
 
     #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public Client(System.Net.Http.HttpClient httpClient)
+        internal CatalogClient(System.Net.Http.HttpClient httpClient)
     #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
@@ -48,7 +102,7 @@ namespace SoftThorn.MAL.ApiClient
             return settings;
         }
 
-        protected System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
+        private System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
 
         static partial void UpdateJsonSerializerSettings(System.Text.Json.JsonSerializerOptions settings);
 
@@ -58,9 +112,16 @@ namespace SoftThorn.MAL.ApiClient
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<AnimeList> AnimeGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Searches anime by title.
+        /// </summary>
+        /// <param name="q">The text to search for in the titles.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<AnimeList> AnimeGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -146,9 +207,14 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<AnimeForDetails> AnimeGetAsync(int anime_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns the details of an anime.
+        /// </summary>
+        /// <param name="anime_id">The anime's MyAnimeList ID.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<AnimeForDetails> AnimeGetAsync(int anime_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (anime_id == null)
                 throw new System.ArgumentNullException("anime_id");
@@ -226,9 +292,16 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<MangaList> MangaGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Searches manga by title.
+        /// </summary>
+        /// <param name="q">The text to search for in the titles.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<MangaList> MangaGetAsync(string? q = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -314,9 +387,14 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<MangaForDetails> MangaGetAsync(int manga_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns the details of a manga.
+        /// </summary>
+        /// <param name="manga_id">The manga's MyAnimeList ID.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<MangaForDetails> MangaGetAsync(int manga_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (manga_id == null)
                 throw new System.ArgumentNullException("manga_id");
@@ -394,9 +472,14 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<User> UsersAsync(string user_name, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns a user's profile. MyAnimeList only supports @me, the signed-in user.
+        /// </summary>
+        /// <param name="user_name">@me, for the signed-in user.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<User> UsersAsync(string user_name, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (user_name == null)
                 throw new System.ArgumentNullException("user_name");
@@ -474,7 +557,7 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        protected struct ObjectResponseResult<T>
+        private struct ObjectResponseResult<T>
         {
             public ObjectResponseResult(T responseObject, string responseText)
             {
@@ -487,9 +570,9 @@ namespace SoftThorn.MAL.ApiClient
             public string Text { get; }
         }
 
-        public bool ReadResponseAsString { get; set; }
+        internal bool ReadResponseAsString { get; set; }
 
-        protected virtual async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
+        private async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
         {
             if (response == null || response.Content == null)
             {
@@ -584,14 +667,68 @@ namespace SoftThorn.MAL.ApiClient
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AnimeClient 
+    public partial interface IAnimeClient
+    {
+
+        /// <summary>
+        /// Adds an anime to the signed-in user's list, or changes its list entry. Only the fields that are set in the body are changed.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<AnimeListStatus> My_list_statusPatchAsync(int anime_id, AnimeListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Removes an anime from the signed-in user's list. MyAnimeList also answers with success when the anime isn't on the list.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task My_list_statusDeleteAsync(int anime_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Returns a page of an anime ranking.
+        /// </summary>
+        /// <param name="ranking_type">Which ranking to return: all, airing, upcoming, tv, ova, movie, special, bypopularity or favorite.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<AnimeListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Returns the anime that started airing in a season.
+        /// </summary>
+        /// <param name="year">The year of the season.</param>
+        /// <param name="season">The season: winter (January to March), spring, summer or fall.</param>
+        /// <param name="sort">The order of the anime: anime_score or anime_num_list_users, each from the highest value down.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<AnimeList> SeasonAsync(int year, string season, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Returns anime that MyAnimeList suggests for the signed-in user.
+        /// </summary>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<AnimeList> SuggestionsAsync(int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    internal sealed partial class AnimeClient : IAnimeClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private static System.Lazy<System.Text.Json.JsonSerializerOptions> _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings, true);
         private System.Text.Json.JsonSerializerOptions _instanceSettings;
 
     #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public AnimeClient(System.Net.Http.HttpClient httpClient)
+        internal AnimeClient(System.Net.Http.HttpClient httpClient)
     #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
@@ -605,7 +742,7 @@ namespace SoftThorn.MAL.ApiClient
             return settings;
         }
 
-        protected System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
+        private System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
 
         static partial void UpdateJsonSerializerSettings(System.Text.Json.JsonSerializerOptions settings);
 
@@ -615,9 +752,12 @@ namespace SoftThorn.MAL.ApiClient
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<AnimeListStatus> My_list_statusPatchAsync(int anime_id, Body? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Adds an anime to the signed-in user's list, or changes its list entry. Only the fields that are set in the body are changed.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<AnimeListStatus> My_list_statusPatchAsync(int anime_id, AnimeListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (anime_id == null)
                 throw new System.ArgumentNullException("anime_id");
@@ -694,9 +834,12 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task My_list_statusDeleteAsync(int anime_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Removes an anime from the signed-in user's list. MyAnimeList also answers with success when the anime isn't on the list.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task My_list_statusDeleteAsync(int anime_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (anime_id == null)
                 throw new System.ArgumentNullException("anime_id");
@@ -770,9 +913,16 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<AnimeListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns a page of an anime ranking.
+        /// </summary>
+        /// <param name="ranking_type">Which ranking to return: all, airing, upcoming, tv, ova, movie, special, bypopularity or favorite.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<AnimeListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (ranking_type == null)
                 throw new System.ArgumentNullException("ranking_type");
@@ -858,9 +1008,18 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<AnimeList> SeasonAsync(int year, string season, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns the anime that started airing in a season.
+        /// </summary>
+        /// <param name="year">The year of the season.</param>
+        /// <param name="season">The season: winter (January to March), spring, summer or fall.</param>
+        /// <param name="sort">The order of the anime: anime_score or anime_num_list_users, each from the highest value down.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<AnimeList> SeasonAsync(int year, string season, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (year == null)
                 throw new System.ArgumentNullException("year");
@@ -955,9 +1114,15 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<AnimeList> SuggestionsAsync(int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns anime that MyAnimeList suggests for the signed-in user.
+        /// </summary>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<AnimeList> SuggestionsAsync(int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1039,7 +1204,7 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        protected struct ObjectResponseResult<T>
+        private struct ObjectResponseResult<T>
         {
             public ObjectResponseResult(T responseObject, string responseText)
             {
@@ -1052,9 +1217,9 @@ namespace SoftThorn.MAL.ApiClient
             public string Text { get; }
         }
 
-        public bool ReadResponseAsString { get; set; }
+        internal bool ReadResponseAsString { get; set; }
 
-        protected virtual async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
+        private async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
         {
             if (response == null || response.Content == null)
             {
@@ -1149,14 +1314,52 @@ namespace SoftThorn.MAL.ApiClient
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumClient 
+    public partial interface IForumClient
+    {
+
+        /// <summary>
+        /// Returns the forum's categories with their boards.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<ForumBoards> BoardsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Returns a page of a forum topic's posts, with the topic's poll if it has one.
+        /// </summary>
+        /// <param name="topic_id">The forum topic's ID.</param>
+        /// <param name="limit">How many posts to return.</param>
+        /// <param name="offset">How many posts to skip, for paging.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<ForumTopic> TopicAsync(int topic_id, int? limit = null, int? offset = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Searches forum topics.
+        /// </summary>
+        /// <param name="board_id">Returns only topics of the forum board with this ID.</param>
+        /// <param name="subboard_id">Returns only topics of the forum subboard with this ID.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="sort">The order of the topics; recent is the only supported value.</param>
+        /// <param name="q">The text to search for in the topics.</param>
+        /// <param name="topic_user_name">Returns only topics that this user started.</param>
+        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<ForumTopics> TopicsAsync(int? board_id = null, int? subboard_id = null, int? limit = null, int? offset = null, string? sort = null, string? q = null, string? topic_user_name = null, string? user_name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    internal sealed partial class ForumClient : IForumClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private static System.Lazy<System.Text.Json.JsonSerializerOptions> _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings, true);
         private System.Text.Json.JsonSerializerOptions _instanceSettings;
 
     #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public ForumClient(System.Net.Http.HttpClient httpClient)
+        internal ForumClient(System.Net.Http.HttpClient httpClient)
     #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
@@ -1170,7 +1373,7 @@ namespace SoftThorn.MAL.ApiClient
             return settings;
         }
 
-        protected System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
+        private System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
 
         static partial void UpdateJsonSerializerSettings(System.Text.Json.JsonSerializerOptions settings);
 
@@ -1180,9 +1383,12 @@ namespace SoftThorn.MAL.ApiClient
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<ForumBoards> BoardsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns the forum's categories with their boards.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<ForumBoards> BoardsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1250,9 +1456,15 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<ForumTopic> TopicAsync(int topic_id, int? limit = null, int? offset = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns a page of a forum topic's posts, with the topic's poll if it has one.
+        /// </summary>
+        /// <param name="topic_id">The forum topic's ID.</param>
+        /// <param name="limit">How many posts to return.</param>
+        /// <param name="offset">How many posts to skip, for paging.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<ForumTopic> TopicAsync(int topic_id, int? limit = null, int? offset = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (topic_id == null)
                 throw new System.ArgumentNullException("topic_id");
@@ -1334,9 +1546,20 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<ForumTopics> TopicsAsync(int? board_id = null, int? subboard_id = null, int? limit = null, int? offset = null, string? sort = null, string? q = null, string? topic_user_name = null, string? user_name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Searches forum topics.
+        /// </summary>
+        /// <param name="board_id">Returns only topics of the forum board with this ID.</param>
+        /// <param name="subboard_id">Returns only topics of the forum subboard with this ID.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="sort">The order of the topics; recent is the only supported value.</param>
+        /// <param name="q">The text to search for in the topics.</param>
+        /// <param name="topic_user_name">Returns only topics that this user started.</param>
+        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<ForumTopics> TopicsAsync(int? board_id = null, int? subboard_id = null, int? limit = null, int? offset = null, string? sort = null, string? q = null, string? topic_user_name = null, string? user_name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1438,7 +1661,7 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        protected struct ObjectResponseResult<T>
+        private struct ObjectResponseResult<T>
         {
             public ObjectResponseResult(T responseObject, string responseText)
             {
@@ -1451,9 +1674,9 @@ namespace SoftThorn.MAL.ApiClient
             public string Text { get; }
         }
 
-        public bool ReadResponseAsString { get; set; }
+        internal bool ReadResponseAsString { get; set; }
 
-        protected virtual async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
+        private async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
         {
             if (response == null || response.Content == null)
             {
@@ -1548,14 +1771,45 @@ namespace SoftThorn.MAL.ApiClient
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MangaClient 
+    public partial interface IMangaClient
+    {
+
+        /// <summary>
+        /// Adds a manga to the signed-in user's list, or changes its list entry. Only the fields that are set in the body are changed.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<MangaListStatus> My_list_statusPatchAsync(int manga_id, MangaListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Removes a manga from the signed-in user's list. MyAnimeList also answers with success when the manga isn't on the list.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task My_list_statusDeleteAsync(int manga_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Returns a page of a manga ranking.
+        /// </summary>
+        /// <param name="ranking_type">Which ranking to return: all, manga, novels, oneshots, doujin, manhwa, manhua, bypopularity or favorite.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<MangaListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    internal sealed partial class MangaClient : IMangaClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private static System.Lazy<System.Text.Json.JsonSerializerOptions> _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings, true);
         private System.Text.Json.JsonSerializerOptions _instanceSettings;
 
     #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public MangaClient(System.Net.Http.HttpClient httpClient)
+        internal MangaClient(System.Net.Http.HttpClient httpClient)
     #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
@@ -1569,7 +1823,7 @@ namespace SoftThorn.MAL.ApiClient
             return settings;
         }
 
-        protected System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
+        private System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
 
         static partial void UpdateJsonSerializerSettings(System.Text.Json.JsonSerializerOptions settings);
 
@@ -1579,9 +1833,12 @@ namespace SoftThorn.MAL.ApiClient
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<MangaListStatus> My_list_statusPatchAsync(int manga_id, Body2? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Adds a manga to the signed-in user's list, or changes its list entry. Only the fields that are set in the body are changed.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<MangaListStatus> My_list_statusPatchAsync(int manga_id, MangaListStatusPatch? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (manga_id == null)
                 throw new System.ArgumentNullException("manga_id");
@@ -1658,9 +1915,12 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task My_list_statusDeleteAsync(int manga_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Removes a manga from the signed-in user's list. MyAnimeList also answers with success when the manga isn't on the list.
+        /// </summary>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task My_list_statusDeleteAsync(int manga_id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (manga_id == null)
                 throw new System.ArgumentNullException("manga_id");
@@ -1734,9 +1994,16 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<MangaListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns a page of a manga ranking.
+        /// </summary>
+        /// <param name="ranking_type">Which ranking to return: all, manga, novels, oneshots, doujin, manhwa, manhua, bypopularity or favorite.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<MangaListForRanking> RankingAsync(string ranking_type, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (ranking_type == null)
                 throw new System.ArgumentNullException("ranking_type");
@@ -1822,7 +2089,7 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        protected struct ObjectResponseResult<T>
+        private struct ObjectResponseResult<T>
         {
             public ObjectResponseResult(T responseObject, string responseText)
             {
@@ -1835,9 +2102,9 @@ namespace SoftThorn.MAL.ApiClient
             public string Text { get; }
         }
 
-        public bool ReadResponseAsString { get; set; }
+        internal bool ReadResponseAsString { get; set; }
 
-        protected virtual async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
+        private async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
         {
             if (response == null || response.Content == null)
             {
@@ -1932,14 +2199,46 @@ namespace SoftThorn.MAL.ApiClient
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UsersClient 
+    public partial interface IUsersClient
+    {
+
+        /// <summary>
+        /// Returns a page of a user's anime list.
+        /// </summary>
+        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="status">Returns only the entries with this list status: watching, completed, on_hold, dropped or plan_to_watch.</param>
+        /// <param name="sort">The order of the entries: list_score, list_updated_at, anime_title or anime_start_date.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<UserAnimeList> AnimelistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Returns a page of a user's manga list.
+        /// </summary>
+        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="status">Returns only the entries with this list status: reading, completed, on_hold, dropped or plan_to_read.</param>
+        /// <param name="sort">The order of the entries: list_score, list_updated_at, manga_title or manga_start_date.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        System.Threading.Tasks.Task<UserMangaList> MangalistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    internal sealed partial class UsersClient : IUsersClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private static System.Lazy<System.Text.Json.JsonSerializerOptions> _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings, true);
         private System.Text.Json.JsonSerializerOptions _instanceSettings;
 
     #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public UsersClient(System.Net.Http.HttpClient httpClient)
+        internal UsersClient(System.Net.Http.HttpClient httpClient)
     #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
@@ -1953,7 +2252,7 @@ namespace SoftThorn.MAL.ApiClient
             return settings;
         }
 
-        protected System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
+        private System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
 
         static partial void UpdateJsonSerializerSettings(System.Text.Json.JsonSerializerOptions settings);
 
@@ -1963,9 +2262,18 @@ namespace SoftThorn.MAL.ApiClient
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserAnimeList> AnimelistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns a page of a user's anime list.
+        /// </summary>
+        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="status">Returns only the entries with this list status: watching, completed, on_hold, dropped or plan_to_watch.</param>
+        /// <param name="sort">The order of the entries: list_score, list_updated_at, anime_title or anime_start_date.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<UserAnimeList> AnimelistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (user_name == null)
                 throw new System.ArgumentNullException("user_name");
@@ -2060,9 +2368,18 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserMangaList> MangalistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        /// <summary>
+        /// Returns a page of a user's manga list.
+        /// </summary>
+        /// <param name="user_name">A user name, or @me for the signed-in user.</param>
+        /// <param name="status">Returns only the entries with this list status: reading, completed, on_hold, dropped or plan_to_read.</param>
+        /// <param name="sort">The order of the entries: list_score, list_updated_at, manga_title or manga_start_date.</param>
+        /// <param name="limit">How many entries to return. MyAnimeList caps the value per endpoint.</param>
+        /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
+        /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
+        /// <param name="cancellationToken">Cancels the request.</param>
+        public async System.Threading.Tasks.Task<UserMangaList> MangalistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (user_name == null)
                 throw new System.ArgumentNullException("user_name");
@@ -2157,7 +2474,7 @@ namespace SoftThorn.MAL.ApiClient
             }
         }
 
-        protected struct ObjectResponseResult<T>
+        private struct ObjectResponseResult<T>
         {
             public ObjectResponseResult(T responseObject, string responseText)
             {
@@ -2170,9 +2487,9 @@ namespace SoftThorn.MAL.ApiClient
             public string Text { get; }
         }
 
-        public bool ReadResponseAsString { get; set; }
+        internal bool ReadResponseAsString { get; set; }
 
-        protected virtual async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
+        private async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
         {
             if (response == null || response.Content == null)
             {
@@ -2266,110 +2583,206 @@ namespace SoftThorn.MAL.ApiClient
         }
     }
 
+    /// <summary>
+    /// An anime, with the fields that only the details endpoint returns.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AnimeForDetails : AnimeForList
+    public sealed partial class AnimeForDetails : AnimeForList
     {
 
+        /// <summary>
+        /// More pictures of the anime.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("pictures")]
         public System.Collections.Generic.ICollection<Picture>? Pictures { get; set; } = default!;
 
+        /// <summary>
+        /// Background information about the anime, for example about its production.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("background")]
         public string? Background { get; set; } = default!;
 
+        /// <summary>
+        /// Anime related to this one, for example sequels and prequels.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("related_anime")]
         public System.Collections.Generic.ICollection<RelatedAnimeEdge>? Related_anime { get; set; } = default!;
 
+        /// <summary>
+        /// Manga related to this anime, for example the one it is based on.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("related_manga")]
         public System.Collections.Generic.ICollection<RelatedMangaEdge>? Related_manga { get; set; } = default!;
 
+        /// <summary>
+        /// Anime that users recommend to fans of this one.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("recommendations")]
         public System.Collections.Generic.ICollection<AnimeRecommendationAggregationEdgeBase>? Recommendations { get; set; } = default!;
 
+        /// <summary>
+        /// How many users have the anime on their list, by list status.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("statistics")]
-        public Statistics? Statistics { get; set; } = default!;
+        public AnimeStatistics? Statistics { get; set; } = default!;
 
     }
 
+    /// <summary>
+    /// An anime, as it appears in searches, rankings and lists.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class AnimeForList : WorkForList
     {
 
+        /// <summary>
+        /// The kind of anime, for example tv, movie, ova, ona, special or music.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("media_type")]
         public string? Media_type { get; set; } = default!;
 
+        /// <summary>
+        /// Whether the anime is airing: finished_airing, currently_airing or not_yet_aired.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public string? Status { get; set; } = default!;
 
+        /// <summary>
+        /// The signed-in user's list entry for the anime. Only present when the anime is on their list.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("my_list_status")]
-        public My_list_status? My_list_status { get; set; } = default!;
+        public AnimeListStatus? My_list_status { get; set; } = default!;
 
+        /// <summary>
+        /// The number of episodes, or 0 when it isn't known yet.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_episodes")]
         public int? Num_episodes { get; set; } = default!;
 
+        /// <summary>
+        /// The season in which the anime started airing.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("start_season")]
-        public Start_season? Start_season { get; set; } = default!;
+        public AnimeSeason? Start_season { get; set; } = default!;
 
+        /// <summary>
+        /// When new episodes are broadcast in Japan.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("broadcast")]
         public Broadcast? Broadcast { get; set; } = default!;
 
+        /// <summary>
+        /// What the anime is based on, for example original, manga, light_novel or game.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("source")]
         public string? Source { get; set; } = default!;
 
+        /// <summary>
+        /// The average length of an episode in seconds.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("average_episode_duration")]
         public int? Average_episode_duration { get; set; } = default!;
 
+        /// <summary>
+        /// The age rating: g, pg, pg_13, r, r+ or rx.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("rating")]
         public string? Rating { get; set; } = default!;
 
+        /// <summary>
+        /// The studios that animated the anime.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("studios")]
         public System.Collections.Generic.ICollection<AnimeStudio>? Studios { get; set; } = default!;
 
     }
 
+    /// <summary>
+    /// An entry of an anime on a user's list.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AnimeListStatus
+    public sealed partial class AnimeListStatus
     {
 
+        /// <summary>
+        /// The list status: watching, completed, on_hold, dropped or plan_to_watch.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public string? Status { get; set; } = default!;
 
+        /// <summary>
+        /// The user's score, from 1 to 10, or 0 when the user hasn't scored the work.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("score")]
         public int? Score { get; set; } = default!;
 
+        /// <summary>
+        /// How many episodes the user has watched.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_episodes_watched")]
         public int? Num_episodes_watched { get; set; } = default!;
 
+        /// <summary>
+        /// Whether the user is watching the anime again.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("is_rewatching")]
         public bool? Is_rewatching { get; set; } = default!;
 
+        /// <summary>
+        /// When the user started the work, as YYYY-MM-DD.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("start_date")]
         [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset? Start_date { get; set; } = default!;
 
+        /// <summary>
+        /// When the user finished the work, as YYYY-MM-DD.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
         [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset? Finish_date { get; set; } = default!;
 
+        /// <summary>
+        /// The priority of the entry: 0 (low), 1 (medium) or 2 (high).
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("priority")]
         public int? Priority { get; set; } = default!;
 
+        /// <summary>
+        /// How many times the user has watched the anime again.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
         public int? Num_times_rewatched { get; set; } = default!;
 
+        /// <summary>
+        /// How much the user would like to watch the anime again, from 0 (not set) to 5.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("rewatch_value")]
         public int? Rewatch_value { get; set; } = default!;
 
+        /// <summary>
+        /// The user's tags for the entry.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("tags")]
         public System.Collections.Generic.ICollection<string>? Tags { get; set; } = default!;
 
+        /// <summary>
+        /// The user's comments on the entry.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("comments")]
         public string? Comments { get; set; } = default!;
 
+        /// <summary>
+        /// When the entry was last changed.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
         public System.DateTimeOffset? Updated_at { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -2379,18 +2792,30 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// An anime that users recommend together with another one.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AnimeRecommendationAggregationEdgeBase
+    public sealed partial class AnimeRecommendationAggregationEdgeBase
     {
 
+        /// <summary>
+        /// The recommended anime.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("node")]
         public AnimeForList? Node { get; set; } = default!;
 
+        /// <summary>
+        /// How many users recommended it.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_recommendations")]
         public int? Num_recommendations { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -2400,19 +2825,31 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// A season of a year.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AnimeSeason
+    public sealed partial class AnimeSeason
     {
 
+        /// <summary>
+        /// The year.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("year")]
         public int? Year { get; set; } = default!;
 
+        /// <summary>
+        /// The season: winter (January to March), spring, summer or fall.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("season")]
-        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<AnimeSeasonSeason>))]
-        public AnimeSeasonSeason? Season { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<Season>))]
+        public Season? Season { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -2422,18 +2859,30 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// How many users have an anime on their list, by list status.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AnimeStatistics
+    public sealed partial class AnimeStatistics
     {
 
+        /// <summary>
+        /// How many users have the anime on their list.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("num_list_users")]
         public int? Num_list_users { get; set; } = default!;
 
+        /// <summary>
+        /// How many users have the anime on their list, by list status.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("status")]
-        public Status? Status { get; set; } = default!;
+        public AnimeStatusStatistics? Status { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -2443,18 +2892,30 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// An animation studio.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AnimeStudio
+    public sealed partial class AnimeStudio
     {
 
+        /// <summary>
+        /// The studio's MyAnimeList ID.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("id")]
         public int? Id { get; set; } = default!;
 
+        /// <summary>
+        /// The studio's name.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string? Name { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -2464,906 +2925,42 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// A forum board.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumBoard : Anonymous
+    public sealed partial class ForumBoard
     {
 
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumBoards : Anonymous2
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumCategory : Anonymous3
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumSubboard
-    {
-
+        /// <summary>
+        /// The board's ID, for filtering topics by board.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("id")]
         public int? Id { get; set; } = default!;
 
+        /// <summary>
+        /// The board's title.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("title")]
         public string? Title { get; set; } = default!;
 
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopic : Anonymous4
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopicData : Anonymous5
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopicPaging
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("previous")]
-        public string? Previous { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("next")]
-        public string? Next { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopicPoll : Anonymous6
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopicPollOption
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("text")]
-        public string? Text { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("votes")]
-        public int? Votes { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopicPost : Anonymous7
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopicPostCreatedBy
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("name")]
-        public string? Name { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("forum_avator")]
-        public string? Forum_avator { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopics : Anonymous8
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopicsCreatedBy
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("name")]
-        public string? Name { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ForumTopicsData : Anonymous9
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Genre
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("name")]
-        public string? Name { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class List
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("paging")]
-        public Paging? Paging { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Magazine
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("name")]
-        public string? Name { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MangaForDetails : MangaForList
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("pictures")]
-        public System.Collections.Generic.ICollection<Picture>? Pictures { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("background")]
-        public string? Background { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("related_anime")]
-        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? Related_anime { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("related_manga")]
-        public System.Collections.Generic.ICollection<RelatedMangaEdge>? Related_manga { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("recommendations")]
-        public System.Collections.Generic.ICollection<MangaRecommendationAggregationEdgeBase>? Recommendations { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("serialization")]
-        public System.Collections.Generic.ICollection<MangaMagazineRelationEdge>? Serialization { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MangaForList : WorkForList
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("media_type")]
-        public string? Media_type { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
-        public string? Status { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("my_list_status")]
-        public My_list_status2? My_list_status { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_volumes")]
-        public int? Num_volumes { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_chapters")]
-        public int? Num_chapters { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("authors")]
-        public System.Collections.Generic.ICollection<PersonRoleEdge>? Authors { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MangaListStatus
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
-        public string? Status { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("score")]
-        public int? Score { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_volumes_read")]
-        public int? Num_volumes_read { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_chapters_read")]
-        public int? Num_chapters_read { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("is_rereading")]
-        public bool? Is_rereading { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
-        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
-        public System.DateTimeOffset? Start_date { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
-        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
-        public System.DateTimeOffset? Finish_date { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("priority")]
-        public int? Priority { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_times_reread")]
-        public int? Num_times_reread { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("reread_value")]
-        public int? Reread_value { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("tags")]
-        public System.Collections.Generic.ICollection<string>? Tags { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("comments")]
-        public string? Comments { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
-        public System.DateTimeOffset? Updated_at { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MangaMagazineRelationEdge
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public Magazine? Node { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("role")]
-        public string? Role { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MangaRecommendationAggregationEdgeBase
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public MangaForList? Node { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_recommendations")]
-        public int? Num_recommendations { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class PersonBase
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("first_name")]
-        public string? First_name { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("last_name")]
-        public string? Last_name { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class PersonRoleEdge
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public PersonBase? Node { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("role")]
-        public string? Role { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Picture
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("large")]
-        public System.Uri? Large { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("medium")]
-        public System.Uri? Medium { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class RankingInfo
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("rank")]
-        public int? Rank { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("previous_rank")]
-        public int? Previous_rank { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class RelatedAnimeEdge
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public AnimeForList? Node { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("relation_type")]
-        public string? Relation_type { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("relation_type_formatted")]
-        public string? Relation_type_formatted { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class RelatedMangaEdge
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public MangaForList? Node { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("relation_type")]
-        public string? Relation_type { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("relation_type_formatted")]
-        public string? Relation_type_formatted { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class User : UserBase
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("gender")]
-        public string? Gender { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("birthday")]
-        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
-        public System.DateTimeOffset? Birthday { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("location")]
-        public string? Location { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("joined_at")]
-        public System.DateTimeOffset? Joined_at { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("anime_statistics")]
-        public Anime_statistics? Anime_statistics { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("time_zone")]
-        public string? Time_zone { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("is_supporter")]
-        public bool? Is_supporter { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UserAnimeListEdge
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public AnimeForList? Node { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("list_status")]
-        public AnimeListStatus? List_status { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UserBase
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("name")]
-        public string? Name { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("picture")]
-        public System.Uri? Picture { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UserMangaListEdge
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public MangaForList? Node { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("list_status")]
-        public MangaListStatus? List_status { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class WorkBase
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("title")]
-        public string? Title { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("main_picture")]
-        public Main_picture? Main_picture { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class WorkForList : WorkBase
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("alternative_titles")]
-        public Alternative_titles? Alternative_titles { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
-        public string? Start_date { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("end_date")]
-        public string? End_date { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("synopsis")]
-        public string? Synopsis { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("mean")]
-        public float? Mean { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("rank")]
-        public int? Rank { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("popularity")]
-        public int? Popularity { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_list_users")]
-        public int? Num_list_users { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_scoring_users")]
-        public int? Num_scoring_users { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("nsfw")]
-        public string? Nsfw { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("genres")]
-        public System.Collections.Generic.ICollection<Genre>? Genres { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("created_at")]
-        public System.DateTimeOffset? Created_at { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
-        public System.DateTimeOffset? Updated_at { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Body
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
-        public string? Status { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("is_rewatching")]
-        public bool? Is_rewatching { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("score")]
-        public int? Score { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_watched_episodes")]
-        public int? Num_watched_episodes { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("priority")]
-        public int? Priority { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
-        public int? Num_times_rewatched { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("rewatch_value")]
-        public int? Rewatch_value { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("tags")]
-        public string? Tags { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("comments")]
-        public string? Comments { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Body2
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
-        public string? Status { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("is_rereading")]
-        public bool? Is_rereading { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("score")]
-        public int? Score { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_volumes_read")]
-        public int? Num_volumes_read { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_chapters_read")]
-        public int? Num_chapters_read { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("priority")]
-        public int? Priority { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_times_reread")]
-        public int? Num_times_reread { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("reread_value")]
-        public int? Reread_value { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("tags")]
-        public string? Tags { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("comments")]
-        public string? Comments { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Statistics : AnimeStatistics
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class My_list_status : AnimeListStatus
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Start_season : AnimeSeason
-    {
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Broadcast
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("day_of_the_week")]
-        public string? Day_of_the_week { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("start_time")]
-        public string? Start_time { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Data
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public AnimeForList? Node { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Data2
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public AnimeForList? Node { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("ranking")]
-        public RankingInfo? Ranking { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum AnimeSeasonSeason
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"winter")]
-        Winter = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"spring")]
-        Spring = 1,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"summer")]
-        Summer = 2,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"fall")]
-        Fall = 3,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Status
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("watching")]
-        public int? Watching { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("completed")]
-        public int? Completed { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("on_hold")]
-        public int? On_hold { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("dropped")]
-        public int? Dropped { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("plan_to_watch")]
-        public int? Plan_to_watch { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("title")]
-        public string? Title { get; set; } = default!;
-
+        /// <summary>
+        /// A short description of the board's topic.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("description")]
         public string? Description { get; set; } = default!;
 
+        /// <summary>
+        /// The board's subboards.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("subboards")]
         public System.Collections.Generic.ICollection<ForumSubboard>? Subboards { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3373,15 +2970,24 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// The forum's categories with their boards.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous2
+    public sealed partial class ForumBoards
     {
 
+        /// <summary>
+        /// The categories of boards.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("categories")]
         public System.Collections.Generic.ICollection<ForumCategory>? Categories { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3391,18 +2997,30 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// A category of forum boards.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous3
+    public sealed partial class ForumCategory
     {
 
+        /// <summary>
+        /// The category's title.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("title")]
         public string? Title { get; set; } = default!;
 
+        /// <summary>
+        /// The boards in the category.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("boards")]
         public System.Collections.Generic.ICollection<ForumBoard>? Boards { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3412,18 +3030,63 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// A subboard of a forum board.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous4
+    public sealed partial class ForumSubboard
     {
 
+        /// <summary>
+        /// The subboard's ID, for filtering topics by subboard.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The subboard's title.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string? Title { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A page of a forum topic's posts.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class ForumTopic
+    {
+
+        /// <summary>
+        /// The topic with the posts on this page.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("data")]
         public ForumTopicData? Data { get; set; } = default!;
 
+        /// <summary>
+        /// The links to the previous and next page of posts.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("paging")]
         public ForumTopicPaging? Paging { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3433,21 +3096,36 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// A forum topic with a page of its posts.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous5
+    public sealed partial class ForumTopicData
     {
 
+        /// <summary>
+        /// The topic's title.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("title")]
         public string? Title { get; set; } = default!;
 
+        /// <summary>
+        /// The posts on this page.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("posts")]
         public System.Collections.Generic.ICollection<ForumTopicPost>? Posts { get; set; } = default!;
 
+        /// <summary>
+        /// The topic's poll, when it has one.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("poll")]
         public ForumTopicPoll? Poll { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3457,138 +3135,30 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// The links to the previous and next page of posts.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous6
+    public sealed partial class ForumTopicPaging
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("question")]
-        public string? Question { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("closed")]
-        public bool? Closed { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("options")]
-        public System.Collections.Generic.ICollection<ForumTopicPollOption>? Options { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous7
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("number")]
-        public int? Number { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("created_at")]
-        public System.DateTimeOffset? Created_at { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("created_by")]
-        public ForumTopicPostCreatedBy? Created_by { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("body")]
-        public string? Body { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("signature")]
-        public string? Signature { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous8
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("data")]
-        public System.Collections.Generic.ICollection<ForumTopicsData>? Data { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("paging")]
-        public ForumTopicPaging? Paging { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous9
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public int? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("title")]
-        public string? Title { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("created_at")]
-        public System.DateTimeOffset? Created_at { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("created_by")]
-        public ForumTopicsCreatedBy? Created_by { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("number_of_posts")]
-        public int? Number_of_posts { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("last_post_created_at")]
-        public System.DateTimeOffset? Last_post_created_at { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("last_post_created_by")]
-        public ForumTopicsCreatedBy? Last_post_created_by { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("is_locked")]
-        public bool? Is_locked { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Paging
-    {
-
+        /// <summary>
+        /// The address of the previous page, or missing on the first page.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("previous")]
         public string? Previous { get; set; } = default!;
 
+        /// <summary>
+        /// The address of the next page, or missing on the last page.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("next")]
         public string? Next { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3598,21 +3168,42 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// The poll of a forum topic.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class My_list_status2 : MangaListStatus
+    public sealed partial class ForumTopicPoll
     {
 
-    }
+        /// <summary>
+        /// The poll's ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
 
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Data3
-    {
+        /// <summary>
+        /// The question of the poll.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("question")]
+        public string? Question { get; set; } = default!;
 
-        [System.Text.Json.Serialization.JsonPropertyName("node")]
-        public MangaForList? Node { get; set; } = default!;
+        /// <summary>
+        /// Whether the poll is closed for votes.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("closed")]
+        public bool? Closed { get; set; } = default!;
+
+        /// <summary>
+        /// The options to vote for.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("options")]
+        public System.Collections.Generic.ICollection<ForumTopicPollOption>? Options { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3622,18 +3213,1149 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// An option of a forum poll.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Data4
+    public sealed partial class ForumTopicPollOption
     {
 
+        /// <summary>
+        /// The option's ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The option's text.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("text")]
+        public string? Text { get; set; } = default!;
+
+        /// <summary>
+        /// How many users voted for the option.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("votes")]
+        public int? Votes { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A post in a forum topic.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class ForumTopicPost
+    {
+
+        /// <summary>
+        /// The post's ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The post's number within the topic, starting at 1.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("number")]
+        public int? Number { get; set; } = default!;
+
+        /// <summary>
+        /// When the post was written.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("created_at")]
+        public System.DateTimeOffset? Created_at { get; set; } = default!;
+
+        /// <summary>
+        /// The post's author.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("created_by")]
+        public ForumTopicPostCreatedBy? Created_by { get; set; } = default!;
+
+        /// <summary>
+        /// The post's text, with BBCode markup.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("body")]
+        public string? Body { get; set; } = default!;
+
+        /// <summary>
+        /// The author's forum signature, with BBCode markup.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("signature")]
+        public string? Signature { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// The author of a forum post.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class ForumTopicPostCreatedBy
+    {
+
+        /// <summary>
+        /// The author's MyAnimeList ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The author's user name.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; } = default!;
+
+        /// <summary>
+        /// The address of the author's forum avatar. The JSON name keeps MyAnimeList's spelling.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("forum_avator")]
+        public string? Forum_avator { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A page of forum topics.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class ForumTopics
+    {
+
+        /// <summary>
+        /// The topics on this page.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        public System.Collections.Generic.ICollection<ForumTopicsData>? Data { get; set; } = default!;
+
+        /// <summary>
+        /// The links to the previous and next page.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("paging")]
+        public ForumTopicPaging? Paging { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A user who started a topic or wrote a post.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class ForumTopicsCreatedBy
+    {
+
+        /// <summary>
+        /// The user's MyAnimeList ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The user name.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A forum topic in a search result.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class ForumTopicsData
+    {
+
+        /// <summary>
+        /// The topic's ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The topic's title.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string? Title { get; set; } = default!;
+
+        /// <summary>
+        /// When the topic was started.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("created_at")]
+        public System.DateTimeOffset? Created_at { get; set; } = default!;
+
+        /// <summary>
+        /// The user who started the topic.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("created_by")]
+        public ForumTopicsCreatedBy? Created_by { get; set; } = default!;
+
+        /// <summary>
+        /// How many posts the topic has.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("number_of_posts")]
+        public int? Number_of_posts { get; set; } = default!;
+
+        /// <summary>
+        /// When the latest post was written.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("last_post_created_at")]
+        public System.DateTimeOffset? Last_post_created_at { get; set; } = default!;
+
+        /// <summary>
+        /// The user who wrote the latest post.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("last_post_created_by")]
+        public ForumTopicsCreatedBy? Last_post_created_by { get; set; } = default!;
+
+        /// <summary>
+        /// Whether the topic is closed for new posts.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("is_locked")]
+        public bool? Is_locked { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A genre.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class Genre
+    {
+
+        /// <summary>
+        /// The genre's MyAnimeList ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The genre's English name.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A magazine that publishes manga.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class Magazine
+    {
+
+        /// <summary>
+        /// The magazine's MyAnimeList ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The magazine's name.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A manga, with the fields that only the details endpoint returns.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class MangaForDetails : MangaForList
+    {
+
+        /// <summary>
+        /// More pictures of the manga.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("pictures")]
+        public System.Collections.Generic.ICollection<Picture>? Pictures { get; set; } = default!;
+
+        /// <summary>
+        /// Background information about the manga, for example about its publication.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("background")]
+        public string? Background { get; set; } = default!;
+
+        /// <summary>
+        /// Anime related to this manga, for example adaptations.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("related_anime")]
+        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? Related_anime { get; set; } = default!;
+
+        /// <summary>
+        /// Manga related to this one, for example sequels and spin-offs.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("related_manga")]
+        public System.Collections.Generic.ICollection<RelatedMangaEdge>? Related_manga { get; set; } = default!;
+
+        /// <summary>
+        /// Manga that users recommend to fans of this one.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("recommendations")]
+        public System.Collections.Generic.ICollection<MangaRecommendationAggregationEdgeBase>? Recommendations { get; set; } = default!;
+
+        /// <summary>
+        /// The magazines in which the manga was serialized.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("serialization")]
+        public System.Collections.Generic.ICollection<MangaMagazineRelationEdge>? Serialization { get; set; } = default!;
+
+    }
+
+    /// <summary>
+    /// A manga, as it appears in searches, rankings and lists.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class MangaForList : WorkForList
+    {
+
+        /// <summary>
+        /// The kind of manga, for example manga, light_novel, novel, one_shot, manhwa or manhua.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("media_type")]
+        public string? Media_type { get; set; } = default!;
+
+        /// <summary>
+        /// Whether the manga is being published: finished, currently_publishing or not_yet_published.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; } = default!;
+
+        /// <summary>
+        /// The signed-in user's list entry for the manga. Only present when the manga is on their list.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("my_list_status")]
+        public MangaListStatus? My_list_status { get; set; } = default!;
+
+        /// <summary>
+        /// The number of volumes, or 0 when it isn't known yet.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_volumes")]
+        public int? Num_volumes { get; set; } = default!;
+
+        /// <summary>
+        /// The number of chapters, or 0 when it isn't known yet.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_chapters")]
+        public int? Num_chapters { get; set; } = default!;
+
+        /// <summary>
+        /// The authors and artists, each with their role. Request their names with authors{first_name,last_name}.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("authors")]
+        public System.Collections.Generic.ICollection<PersonRoleEdge>? Authors { get; set; } = default!;
+
+    }
+
+    /// <summary>
+    /// An entry of a manga on a user's list.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class MangaListStatus
+    {
+
+        /// <summary>
+        /// The list status: reading, completed, on_hold, dropped or plan_to_read.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; } = default!;
+
+        /// <summary>
+        /// The user's score, from 1 to 10, or 0 when the user hasn't scored the work.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("score")]
+        public int? Score { get; set; } = default!;
+
+        /// <summary>
+        /// How many volumes the user has read.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_volumes_read")]
+        public int? Num_volumes_read { get; set; } = default!;
+
+        /// <summary>
+        /// How many chapters the user has read.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_chapters_read")]
+        public int? Num_chapters_read { get; set; } = default!;
+
+        /// <summary>
+        /// Whether the user is reading the manga again.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("is_rereading")]
+        public bool? Is_rereading { get; set; } = default!;
+
+        /// <summary>
+        /// When the user started the work, as YYYY-MM-DD.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset? Start_date { get; set; } = default!;
+
+        /// <summary>
+        /// When the user finished the work, as YYYY-MM-DD.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset? Finish_date { get; set; } = default!;
+
+        /// <summary>
+        /// The priority of the entry: 0 (low), 1 (medium) or 2 (high).
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("priority")]
+        public int? Priority { get; set; } = default!;
+
+        /// <summary>
+        /// How many times the user has read the manga again.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_times_reread")]
+        public int? Num_times_reread { get; set; } = default!;
+
+        /// <summary>
+        /// How much the user would like to read the manga again, from 0 (not set) to 5.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("reread_value")]
+        public int? Reread_value { get; set; } = default!;
+
+        /// <summary>
+        /// The user's tags for the entry.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("tags")]
+        public System.Collections.Generic.ICollection<string>? Tags { get; set; } = default!;
+
+        /// <summary>
+        /// The user's comments on the entry.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("comments")]
+        public string? Comments { get; set; } = default!;
+
+        /// <summary>
+        /// When the entry was last changed.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
+        public System.DateTimeOffset? Updated_at { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A magazine in which a manga was serialized.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class MangaMagazineRelationEdge
+    {
+
+        /// <summary>
+        /// The magazine.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public Magazine? Node { get; set; } = default!;
+
+        /// <summary>
+        /// The kind of serialization. Usually empty.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("role")]
+        public string? Role { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A manga that users recommend together with another one.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class MangaRecommendationAggregationEdgeBase
+    {
+
+        /// <summary>
+        /// The recommended manga.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("node")]
         public MangaForList? Node { get; set; } = default!;
 
+        /// <summary>
+        /// How many users recommended it.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_recommendations")]
+        public int? Num_recommendations { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A person, for example an author.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class PersonBase
+    {
+
+        /// <summary>
+        /// The person's MyAnimeList ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The person's first name.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("first_name")]
+        public string? First_name { get; set; } = default!;
+
+        /// <summary>
+        /// The person's last name.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("last_name")]
+        public string? Last_name { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A person and their role in a work.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class PersonRoleEdge
+    {
+
+        /// <summary>
+        /// The person.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public PersonBase? Node { get; set; } = default!;
+
+        /// <summary>
+        /// The person's role in the work, in English, for example Story or Art.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("role")]
+        public string? Role { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// The addresses of a picture in two sizes.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class Picture
+    {
+
+        /// <summary>
+        /// The address of the large picture.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("large")]
+        public System.Uri? Large { get; set; } = default!;
+
+        /// <summary>
+        /// The address of the medium-sized picture.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("medium")]
+        public System.Uri? Medium { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A place in a ranking.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class RankingInfo
+    {
+
+        /// <summary>
+        /// The place in the ranking, starting at 1.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("rank")]
+        public int? Rank { get; set; } = default!;
+
+        /// <summary>
+        /// The place in the ranking's previous version, when MyAnimeList sends it.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("previous_rank")]
+        public int? Previous_rank { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// An anime related to another anime or manga.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class RelatedAnimeEdge
+    {
+
+        /// <summary>
+        /// The related anime.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public AnimeForList? Node { get; set; } = default!;
+
+        /// <summary>
+        /// How the works are related, for example sequel, prequel, side_story, spin_off or other.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("relation_type")]
+        public string? Relation_type { get; set; } = default!;
+
+        /// <summary>
+        /// The relation as English text, for example Sequel.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("relation_type_formatted")]
+        public string? Relation_type_formatted { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A manga related to another anime or manga.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class RelatedMangaEdge
+    {
+
+        /// <summary>
+        /// The related manga.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public MangaForList? Node { get; set; } = default!;
+
+        /// <summary>
+        /// How the works are related, for example sequel, prequel, side_story, spin_off or other.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("relation_type")]
+        public string? Relation_type { get; set; } = default!;
+
+        /// <summary>
+        /// The relation as English text, for example Sequel.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("relation_type_formatted")]
+        public string? Relation_type_formatted { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A user's profile.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class User : UserBase
+    {
+
+        /// <summary>
+        /// The gender the user chose to show on their profile.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("gender")]
+        public string? Gender { get; set; } = default!;
+
+        /// <summary>
+        /// The birthday the user chose to show on their profile.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("birthday")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset? Birthday { get; set; } = default!;
+
+        /// <summary>
+        /// The location the user chose to show on their profile.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("location")]
+        public string? Location { get; set; } = default!;
+
+        /// <summary>
+        /// When the user joined MyAnimeList.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("joined_at")]
+        public System.DateTimeOffset? Joined_at { get; set; } = default!;
+
+        /// <summary>
+        /// Totals over the user's anime list.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("anime_statistics")]
+        public UserAnimeStatistics? Anime_statistics { get; set; } = default!;
+
+        /// <summary>
+        /// The user's time zone, for example Europe/Berlin.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("time_zone")]
+        public string? Time_zone { get; set; } = default!;
+
+        /// <summary>
+        /// Whether the user supports MyAnimeList with a paid subscription.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("is_supporter")]
+        public bool? Is_supporter { get; set; } = default!;
+
+    }
+
+    /// <summary>
+    /// An anime on a user's list, with its list entry.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class UserAnimeListEdge
+    {
+
+        /// <summary>
+        /// The anime.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public AnimeForList? Node { get; set; } = default!;
+
+        /// <summary>
+        /// The user's list entry for the anime. Only present when the request's fields include list_status.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("list_status")]
+        public AnimeListStatus? List_status { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A user.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UserBase
+    {
+
+        /// <summary>
+        /// The user's MyAnimeList ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The user name.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string? Name { get; set; } = default!;
+
+        /// <summary>
+        /// The address of the user's profile picture.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("picture")]
+        public System.Uri? Picture { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A manga on a user's list, with its list entry.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class UserMangaListEdge
+    {
+
+        /// <summary>
+        /// The manga.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public MangaForList? Node { get; set; } = default!;
+
+        /// <summary>
+        /// The user's list entry for the manga. Only present when the request's fields include list_status.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("list_status")]
+        public MangaListStatus? List_status { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// An anime or manga, with the fields that every response has.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class WorkBase
+    {
+
+        /// <summary>
+        /// The work's MyAnimeList ID.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        public int? Id { get; set; } = default!;
+
+        /// <summary>
+        /// The main title, usually romanized Japanese.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string? Title { get; set; } = default!;
+
+        /// <summary>
+        /// The main picture, usually the cover or key visual.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("main_picture")]
+        public Picture? Main_picture { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// An anime or manga, with the fields that searches, rankings and lists can return.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class WorkForList : WorkBase
+    {
+
+        /// <summary>
+        /// The titles in other languages and other names of the work.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("alternative_titles")]
+        public AlternativeTitles? Alternative_titles { get; set; } = default!;
+
+        /// <summary>
+        /// When the work started airing or publishing: YYYY-MM-DD, or only YYYY-MM or YYYY when the exact date isn't known.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
+        public string? Start_date { get; set; } = default!;
+
+        /// <summary>
+        /// When the work finished airing or publishing, in the same form as the start date.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("end_date")]
+        public string? End_date { get; set; } = default!;
+
+        /// <summary>
+        /// A summary of the story.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("synopsis")]
+        public string? Synopsis { get; set; } = default!;
+
+        /// <summary>
+        /// The mean of the users' scores, from 1 to 10. Missing while too few users scored the work.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("mean")]
+        public float? Mean { get; set; } = default!;
+
+        /// <summary>
+        /// The place in the ranking by score.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("rank")]
+        public int? Rank { get; set; } = default!;
+
+        /// <summary>
+        /// The place in the ranking by the number of users who have the work on their list.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("popularity")]
+        public int? Popularity { get; set; } = default!;
+
+        /// <summary>
+        /// How many users have the work on their list.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_list_users")]
+        public int? Num_list_users { get; set; } = default!;
+
+        /// <summary>
+        /// How many users scored the work.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_scoring_users")]
+        public int? Num_scoring_users { get; set; } = default!;
+
+        /// <summary>
+        /// Whether the work is safe for work: white (safe), gray (maybe not) or black (not safe).
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("nsfw")]
+        public string? Nsfw { get; set; } = default!;
+
+        /// <summary>
+        /// The genres, themes and demographics of the work.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("genres")]
+        public System.Collections.Generic.ICollection<Genre>? Genres { get; set; } = default!;
+
+        /// <summary>
+        /// When the work was added to MyAnimeList.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("created_at")]
+        public System.DateTimeOffset? Created_at { get; set; } = default!;
+
+        /// <summary>
+        /// When the work's entry on MyAnimeList was last changed.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("updated_at")]
+        public System.DateTimeOffset? Updated_at { get; set; } = default!;
+
+    }
+
+    /// <summary>
+    /// An anime in a search result or a season.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class AnimeListEdge
+    {
+
+        /// <summary>
+        /// The anime.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public AnimeForList? Node { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// An anime in a ranking, with its place.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class AnimeRankingEdge
+    {
+
+        /// <summary>
+        /// The anime.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public AnimeForList? Node { get; set; } = default!;
+
+        /// <summary>
+        /// The anime's place in the ranking.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("ranking")]
         public RankingInfo? Ranking { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3643,57 +4365,24 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// A manga in a search result.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anime_statistics
+    public sealed partial class MangaListEdge
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("num_items_watching")]
-        public int? Num_items_watching { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_items_completed")]
-        public int? Num_items_completed { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_items_on_hold")]
-        public int? Num_items_on_hold { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_items_dropped")]
-        public int? Num_items_dropped { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_items_plan_to_watch")]
-        public int? Num_items_plan_to_watch { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_items")]
-        public int? Num_items { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_days_watched")]
-        public float? Num_days_watched { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_days_watching")]
-        public float? Num_days_watching { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_days_completed")]
-        public float? Num_days_completed { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_days_on_hold")]
-        public float? Num_days_on_hold { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_days_dropped")]
-        public float? Num_days_dropped { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_days")]
-        public float? Num_days { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_episodes")]
-        public int? Num_episodes { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
-        public int? Num_times_rewatched { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("mean_score")]
-        public float? Mean_score { get; set; } = default!;
+        /// <summary>
+        /// The manga.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public MangaForList? Node { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3703,27 +4392,486 @@ namespace SoftThorn.MAL.ApiClient
 
     }
 
+    /// <summary>
+    /// A manga in a ranking, with its place.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Main_picture : Picture
+    public sealed partial class MangaRankingEdge
     {
+
+        /// <summary>
+        /// The manga.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("node")]
+        public MangaForList? Node { get; set; } = default!;
+
+        /// <summary>
+        /// The manga's place in the ranking.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("ranking")]
+        public RankingInfo? Ranking { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
 
     }
 
+    /// <summary>
+    /// The links to the previous and next page of a paged result.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Alternative_titles
+    public sealed partial class Paging
     {
 
+        /// <summary>
+        /// The address of the previous page, or missing on the first page.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("previous")]
+        public string? Previous { get; set; } = default!;
+
+        /// <summary>
+        /// The address of the next page, or missing on the last page.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("next")]
+        public string? Next { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// The titles of an anime or manga in other languages, and its other names.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class AlternativeTitles
+    {
+
+        /// <summary>
+        /// Other names the work is known by.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("synonyms")]
         public System.Collections.Generic.ICollection<string>? Synonyms { get; set; } = default!;
 
+        /// <summary>
+        /// The English title.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("en")]
         public string? En { get; set; } = default!;
 
+        /// <summary>
+        /// The Japanese title.
+        /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("ja")]
         public string? Ja { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// When new episodes of an anime are broadcast in Japan.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class Broadcast
+    {
+
+        /// <summary>
+        /// The day of the week in lowercase English, for example monday, or other.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("day_of_the_week")]
+        public string? Day_of_the_week { get; set; } = default!;
+
+        /// <summary>
+        /// The time of day in Japan Standard Time, as HH:mm.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("start_time")]
+        public string? Start_time { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// A season of the year.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum Season
+    {
+
+        /// <summary>
+        /// Sent as <c>winter</c>.
+        /// </summary>
+        [System.Runtime.Serialization.EnumMember(Value = @"winter")]
+        Winter = 0,
+
+        /// <summary>
+        /// Sent as <c>spring</c>.
+        /// </summary>
+        [System.Runtime.Serialization.EnumMember(Value = @"spring")]
+        Spring = 1,
+
+        /// <summary>
+        /// Sent as <c>summer</c>.
+        /// </summary>
+        [System.Runtime.Serialization.EnumMember(Value = @"summer")]
+        Summer = 2,
+
+        /// <summary>
+        /// Sent as <c>fall</c>.
+        /// </summary>
+        [System.Runtime.Serialization.EnumMember(Value = @"fall")]
+        Fall = 3,
+
+    }
+
+    /// <summary>
+    /// How many users have an anime on their list with each list status.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class AnimeStatusStatistics
+    {
+
+        /// <summary>
+        /// How many users are watching the anime.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("watching")]
+        public int? Watching { get; set; } = default!;
+
+        /// <summary>
+        /// How many users have completed the anime.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("completed")]
+        public int? Completed { get; set; } = default!;
+
+        /// <summary>
+        /// How many users have put the anime on hold.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("on_hold")]
+        public int? On_hold { get; set; } = default!;
+
+        /// <summary>
+        /// How many users have dropped the anime.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("dropped")]
+        public int? Dropped { get; set; } = default!;
+
+        /// <summary>
+        /// How many users plan to watch the anime.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("plan_to_watch")]
+        public int? Plan_to_watch { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// Totals over a user's anime list.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class UserAnimeStatistics
+    {
+
+        /// <summary>
+        /// How many anime the user is watching.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_watching")]
+        public int? Num_items_watching { get; set; } = default!;
+
+        /// <summary>
+        /// How many anime the user has completed.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_completed")]
+        public int? Num_items_completed { get; set; } = default!;
+
+        /// <summary>
+        /// How many anime the user has put on hold.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_on_hold")]
+        public int? Num_items_on_hold { get; set; } = default!;
+
+        /// <summary>
+        /// How many anime the user has dropped.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_dropped")]
+        public int? Num_items_dropped { get; set; } = default!;
+
+        /// <summary>
+        /// How many anime the user plans to watch.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_items_plan_to_watch")]
+        public int? Num_items_plan_to_watch { get; set; } = default!;
+
+        /// <summary>
+        /// How many anime are on the user's list.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_items")]
+        public int? Num_items { get; set; } = default!;
+
+        /// <summary>
+        /// The days the user spent watching anime, over the whole list.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_watched")]
+        public float? Num_days_watched { get; set; } = default!;
+
+        /// <summary>
+        /// The days the user spent on the anime they are watching.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_watching")]
+        public float? Num_days_watching { get; set; } = default!;
+
+        /// <summary>
+        /// The days the user spent on completed anime.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_completed")]
+        public float? Num_days_completed { get; set; } = default!;
+
+        /// <summary>
+        /// The days the user spent on anime they put on hold.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_on_hold")]
+        public float? Num_days_on_hold { get; set; } = default!;
+
+        /// <summary>
+        /// The days the user spent on anime they dropped.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_days_dropped")]
+        public float? Num_days_dropped { get; set; } = default!;
+
+        /// <summary>
+        /// The days the user spent watching anime in total.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_days")]
+        public float? Num_days { get; set; } = default!;
+
+        /// <summary>
+        /// How many episodes the user has watched.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_episodes")]
+        public int? Num_episodes { get; set; } = default!;
+
+        /// <summary>
+        /// How many times the user has watched anime again.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
+        public int? Num_times_rewatched { get; set; } = default!;
+
+        /// <summary>
+        /// The mean of the scores the user gave.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("mean_score")]
+        public float? Mean_score { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// The fields of an anime list entry to change. Fields that aren't set are left as they are.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class AnimeListStatusPatch
+    {
+
+        /// <summary>
+        /// The new list status: watching, completed, on_hold, dropped or plan_to_watch.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; } = default!;
+
+        /// <summary>
+        /// Whether the user is watching the anime again.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("is_rewatching")]
+        public bool? Is_rewatching { get; set; } = default!;
+
+        /// <summary>
+        /// The new score, from 1 to 10, or 0 to remove the score.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("score")]
+        public int? Score { get; set; } = default!;
+
+        /// <summary>
+        /// How many episodes the user has watched.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_watched_episodes")]
+        public int? Num_watched_episodes { get; set; } = default!;
+
+        /// <summary>
+        /// The new priority: 0 (low), 1 (medium) or 2 (high).
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("priority")]
+        public int? Priority { get; set; } = default!;
+
+        /// <summary>
+        /// How many times the user has watched the anime again.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_times_rewatched")]
+        public int? Num_times_rewatched { get; set; } = default!;
+
+        /// <summary>
+        /// How much the user would like to watch the anime again, from 0 (not set) to 5.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("rewatch_value")]
+        public int? Rewatch_value { get; set; } = default!;
+
+        /// <summary>
+        /// The new tags of the entry, separated by commas. They replace the existing ones.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("tags")]
+        public string? Tags { get; set; } = default!;
+
+        /// <summary>
+        /// The new comments on the entry. They replace the existing ones.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("comments")]
+        public string? Comments { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// The fields of a manga list entry to change. Fields that aren't set are left as they are.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public sealed partial class MangaListStatusPatch
+    {
+
+        /// <summary>
+        /// The new list status: reading, completed, on_hold, dropped or plan_to_read.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public string? Status { get; set; } = default!;
+
+        /// <summary>
+        /// Whether the user is reading the manga again.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("is_rereading")]
+        public bool? Is_rereading { get; set; } = default!;
+
+        /// <summary>
+        /// The new score, from 1 to 10, or 0 to remove the score.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("score")]
+        public int? Score { get; set; } = default!;
+
+        /// <summary>
+        /// How many volumes the user has read.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_volumes_read")]
+        public int? Num_volumes_read { get; set; } = default!;
+
+        /// <summary>
+        /// How many chapters the user has read.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_chapters_read")]
+        public int? Num_chapters_read { get; set; } = default!;
+
+        /// <summary>
+        /// The new priority: 0 (low), 1 (medium) or 2 (high).
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("priority")]
+        public int? Priority { get; set; } = default!;
+
+        /// <summary>
+        /// How many times the user has read the manga again.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("num_times_reread")]
+        public int? Num_times_reread { get; set; } = default!;
+
+        /// <summary>
+        /// How much the user would like to read the manga again, from 0 (not set) to 5.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("reread_value")]
+        public int? Reread_value { get; set; } = default!;
+
+        /// <summary>
+        /// The new tags of the entry, separated by commas. They replace the existing ones.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("tags")]
+        public string? Tags { get; set; } = default!;
+
+        /// <summary>
+        /// The new comments on the entry. They replace the existing ones.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("comments")]
+        public string? Comments { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        /// <summary>
+        /// The fields of the JSON object that no other property maps, for example fields MyAnimeList added after this library was released.
+        /// </summary>
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
@@ -3755,16 +4903,28 @@ namespace SoftThorn.MAL.ApiClient
 
 
 
+    /// <summary>
+    /// Thrown when MyAnimeList answers a request with an error status, or when its response can't be read.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ApiException : System.Exception
+    public sealed partial class ApiException : System.Exception
     {
+        /// <summary>
+        /// The HTTP status code of MyAnimeList's response, for example 404 when the requested entry doesn't exist.
+        /// </summary>
         public int StatusCode { get; private set; }
 
+        /// <summary>
+        /// The body of MyAnimeList's response, when it could be read.
+        /// </summary>
         public string? Response { get; private set; }
 
+        /// <summary>
+        /// The headers of MyAnimeList's response.
+        /// </summary>
         public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
 
-        public ApiException(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException)
+        internal ApiException(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException)
             : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + ((response == null) ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)), innerException)
         {
             StatusCode = statusCode;
@@ -3772,21 +4932,10 @@ namespace SoftThorn.MAL.ApiClient
             Headers = headers;
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return string.Format("HTTP Response: \n\n{0}\n\n{1}", Response, base.ToString());
-        }
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ApiException<TResult> : ApiException
-    {
-        public TResult Result { get; private set; }
-
-        public ApiException(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception? innerException)
-            : base(message, statusCode, response, headers, innerException)
-        {
-            Result = result;
         }
     }
 

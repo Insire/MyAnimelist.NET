@@ -289,7 +289,7 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             using var provider = services.BuildServiceProvider();
             var handlerFactory = provider.GetRequiredService<IHttpMessageHandlerFactory>();
 
-            foreach (var name in new[] { typeof(MalApiService).Name, Authentication.TokenClient.HttpClientName })
+            foreach (var name in new[] { MalApiService.HttpClientName, Authentication.TokenClient.HttpClientName })
             {
                 var handler = handlerFactory.CreateHandler(name);
                 while (handler is DelegatingHandler delegatingHandler)
@@ -317,12 +317,36 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             using var provider = services.BuildServiceProvider();
             var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
 
-            foreach (var name in new[] { typeof(MalApiService).Name, Authentication.TokenClient.HttpClientName })
+            foreach (var name in new[] { MalApiService.HttpClientName, Authentication.TokenClient.HttpClientName })
             {
                 var userAgent = httpClientFactory.CreateClient(name).DefaultRequestHeaders.UserAgent.ToString();
 
                 Assert.StartsWith("SoftThorn.MAL.ApiClient/", userAgent);
                 Assert.EndsWith("(+https://github.com/Insire/SoftThorn.MAL.ApiClient)", userAgent);
+            }
+        }
+
+        [Fact]
+        public void AddMalApiClient_Should_Resolve_IMalApiService()
+        {
+            // MalApiService is internal, so IMalApiService is registered through a typed client factory
+            var services = new ServiceCollection();
+            services.AddMalApiClient(new() { ClientId = "client-id", RedirectUrl = "http://localhost:5000/" });
+
+            using var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+            var service = provider.GetRequiredService<IMalApiService>();
+
+            Assert.NotNull(service.Catalog);
+            Assert.NotNull(service.Login);
+        }
+
+        [Fact]
+        public void IMalApiService_Should_Expose_Only_Public_Interfaces()
+        {
+            // consumers mock IMalApiService, which only works when everything it returns can be mocked as well
+            foreach (var property in typeof(IMalApiService).GetProperties())
+            {
+                Assert.True(property.PropertyType is { IsInterface: true, IsPublic: true }, property.Name);
             }
         }
 

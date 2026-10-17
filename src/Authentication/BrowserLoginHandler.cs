@@ -2,7 +2,8 @@
 
 namespace SoftThorn.MAL.ApiClient.Authentication
 {
-    public sealed class BrowserLoginHandler : IBrowserLoginHandler
+    // the default IBrowserLoginHandler: opens the login page in the user's default browser
+    internal sealed class BrowserLoginHandler : IBrowserLoginHandler
     {
         public ValueTask Handle(string authUrl)
         {

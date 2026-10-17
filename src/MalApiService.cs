@@ -2,24 +2,28 @@
 
 namespace SoftThorn.MAL.ApiClient
 {
-    public sealed class MalApiService
+    // the implementation behind IMalApiService, which is all that consumers see
+    internal sealed class MalApiService : IMalApiService
     {
-        public Client Catalog { get; }
+        // the name of the HttpClient that the API clients use, as IHttpClientFactory's typed clients name it
+        internal const string HttpClientName = nameof(MalApiService);
 
-        public AnimeClient Anime { get; }
+        public ICatalogClient Catalog { get; }
 
-        public ForumClient Forum { get; }
+        public IAnimeClient Anime { get; }
 
-        public MangaClient Manga { get; }
+        public IForumClient Forum { get; }
 
-        public UsersClient Users { get; }
+        public IMangaClient Manga { get; }
 
-        public LoginClient Login { get; }
+        public IUsersClient Users { get; }
+
+        public ILoginClient Login { get; }
 
         public MalApiService(HttpClient httpClient, ClientConfiguration clientConfiguration, IBrowserLoginHandler loginHandler, TokenClient tokenClient)
         {
             Login = new LoginClient(clientConfiguration, loginHandler, tokenClient);
-            Catalog = new Client(httpClient);
+            Catalog = new CatalogClient(httpClient);
             Anime = new AnimeClient(httpClient);
             Forum = new ForumClient(httpClient);
             Manga = new MangaClient(httpClient);

@@ -32,7 +32,11 @@ namespace Build.Tasks
             FixPathParameterNames(context, spec);
             FixForumTopic(context, spec);
             AddUserListFields(context, spec);
+            FlattenSingleAllOf(context, spec);
+            PromoteInlineSchemas(context, spec);
+            MarkBaseClasses(context, spec);
             RemoveDocumentation(context, spec);
+            AddDocumentation(context, spec);
 
             File.WriteAllText(Constants.OpenApiSpecPath, spec.ToJsonString(_options));
 
@@ -144,6 +148,289 @@ namespace Build.Tasks
                     ["in"] = "query",
                     ["schema"] = new JsonObject { ["type"] = "string" },
                 });
+            }
+        }
+
+        // MAL's spec wraps many schemas in an allOf with a single inline object (the forum schemas), or with a $ref plus an
+        // object that only says "nullable" (e.g. AnimeForDetails.statistics). NSwag turns each of them into a base class
+        // ("Anonymous", "Anonymous2", ...) or a subclass ("Statistics : AnimeStatistics"), so replace them with what they wrap.
+        private static void FlattenSingleAllOf(BuildContext context, JsonNode spec)
+        {
+            var flattened = 0;
+
+            Visit(spec["components"]);
+            Visit(spec["paths"]);
+
+            context.Information($"Flattened {flattened} allOf wrappers");
+
+            void Visit(JsonNode? node)
+            {
+                switch (node)
+                {
+                    case JsonObject jsonObject:
+                        if (jsonObject["allOf"] is JsonArray allOf)
+                        {
+                            var parts = allOf.Where(part => !IsNullableMarker(part)).ToArray();
+                            if (parts.Length == 1 && parts[0] is JsonObject part)
+                            {
+                                jsonObject.Remove("allOf");
+                                foreach (var (key, value) in part.ToArray())
+                                {
+                                    jsonObject[key] = value?.DeepClone();
+                                }
+
+                                flattened++;
+                            }
+                        }
+
+                        foreach (var (_, child) in jsonObject.ToArray())
+                        {
+                            Visit(child);
+                        }
+
+                        break;
+
+                    case JsonArray jsonArray:
+                        foreach (var child in jsonArray)
+                        {
+                            Visit(child);
+                        }
+
+                        break;
+                }
+            }
+
+            // every property is optional and therefore nullable in the generated code anyway
+            static bool IsNullableMarker(JsonNode? part)
+                => part is JsonObject jsonObject && jsonObject.All(property => property.Key is "nullable" or "type");
+        }
+
+        // NSwag names the classes of inline objects after their property ("Data", "Data2", "Anime_statistics") and gives
+        // them no XML documentation, so move them into named schemas. "[]" stands for the property's array items.
+        private static readonly (string Path, string Name)[] InlineSchemas =
+        [
+            ("AnimeList.data[]", "AnimeListEdge"),
+            ("AnimeListForRanking.data[]", "AnimeRankingEdge"),
+            ("MangaList.data[]", "MangaListEdge"),
+            ("MangaListForRanking.data[]", "MangaRankingEdge"),
+            ("List.paging", "Paging"),
+            ("WorkForList.alternative_titles", "AlternativeTitles"),
+            ("AnimeForList.broadcast", "Broadcast"),
+            ("AnimeSeason.season", "Season"),
+            ("AnimeStatistics.status", "AnimeStatusStatistics"),
+            ("User.anime_statistics", "UserAnimeStatistics"),
+        ];
+
+        private static void PromoteInlineSchemas(BuildContext context, JsonNode spec)
+        {
+            var schemas = spec["components"]!["schemas"]!.AsObject();
+
+            foreach (var (path, name) in InlineSchemas)
+            {
+                var segments = path.Split('.');
+                var isItems = segments[1].EndsWith("[]", StringComparison.Ordinal);
+                var propertyName = segments[1].TrimEnd('[', ']');
+
+                // the property may sit in one of the schema's allOf parts
+                var schema = schemas[segments[0]]!.AsObject();
+                var owner = new[] { schema }
+                    .Concat(schema["allOf"]?.AsArray().OfType<JsonObject>() ?? [])
+                    .Select(part => part["properties"] as JsonObject)
+                    .FirstOrDefault(properties => properties?.ContainsKey(propertyName) == true)
+                    ?? throw new InvalidOperationException($"'{path}' isn't in the spec");
+
+                var parent = isItems ? owner[propertyName]!["items"]!.AsObject() : null;
+                var inline = parent ?? owner[propertyName]!.AsObject();
+                if (inline.ContainsKey("$ref"))
+                {
+                    continue;
+                }
+
+                context.Information($"Moving '{path}' into the schema '{name}'");
+                schemas[name] = inline.DeepClone();
+
+                var reference = new JsonObject { ["$ref"] = $"#/components/schemas/{name}" };
+                if (isItems)
+                {
+                    owner[propertyName]!["items"] = reference;
+                }
+                else
+                {
+                    owner[propertyName] = reference;
+                }
+            }
+
+            // the form bodies of the list status PATCHes would become "Body" and "Body2"
+            foreach (var (operation, name) in RequestBodySchemas)
+            {
+                var (method, path) = (operation.Split(' ')[0].ToLowerInvariant(), operation.Split(' ')[1]);
+                foreach (var (_, content) in spec["paths"]![path]![method]!["requestBody"]!["content"]!.AsObject())
+                {
+                    if (content!["schema"] is JsonObject body && !body.ContainsKey("$ref"))
+                    {
+                        context.Information($"Moving the request body of '{operation}' into the schema '{name}'");
+                        schemas[name] = body.DeepClone();
+                        content["schema"] = new JsonObject { ["$ref"] = $"#/components/schemas/{name}" };
+                    }
+                }
+            }
+        }
+
+        private static readonly (string Operation, string Name)[] RequestBodySchemas =
+        [
+            ("PATCH /anime/{anime_id}/my_list_status", "AnimeListStatusPatch"),
+            ("PATCH /manga/{manga_id}/my_list_status", "MangaListStatusPatch"),
+        ];
+
+        // The schemas that others extend through allOf; Class.liquid seals every other class, and these can't be sealed
+        private const string BaseClassExtension = "x-base-class";
+
+        private static void MarkBaseClasses(BuildContext context, JsonNode spec)
+        {
+            var schemas = spec["components"]!["schemas"]!.AsObject();
+
+            var baseClasses = schemas
+                .SelectMany(schema => schema.Value?["allOf"]?.AsArray() ?? [])
+                .Select(part => (string?)part?["$ref"])
+                .OfType<string>()
+                .Select(reference => reference.Split('/').Last())
+                .Distinct()
+                .ToArray();
+
+            foreach (var (name, schema) in schemas)
+            {
+                if (baseClasses.Contains(name))
+                {
+                    schema![BaseClassExtension] = true;
+                }
+                else
+                {
+                    schema!.AsObject().Remove(BaseClassExtension);
+                }
+            }
+
+            context.Information($"Base classes: {string.Join(", ", baseClasses)}");
+        }
+
+        // Our own descriptions for the XML documentation (assets/SoftThorn.MAL.ApiClient_Documentation.json), added after
+        // RemoveDocumentation dropped MAL's. Operations and parameters are looked up by "METHOD /path" and parameter name,
+        // schemas by name, and properties by their path from the schema ("AnimeForList.start_season.year"), trying the
+        // longest match first, so "status" can mean one thing in a list status and another one on an anime.
+        private static void AddDocumentation(BuildContext context, JsonNode spec)
+        {
+            var documentation = JsonNode.Parse(File.ReadAllText(Constants.OpenApiDocumentationPath))!;
+            var operations = documentation["operations"]!.AsObject();
+            var parameters = documentation["parameters"]!.AsObject();
+            var schemas = documentation["schemas"]!.AsObject();
+            var properties = documentation["properties"]!.AsObject();
+            var missing = new List<string>();
+
+            foreach (var (path, pathItem) in spec["paths"]!.AsObject())
+            {
+                foreach (var (method, operation) in pathItem!.AsObject())
+                {
+                    if (operation is not JsonObject operationObject || method == "parameters")
+                    {
+                        continue;
+                    }
+
+                    var key = $"{method.ToUpperInvariant()} {path}";
+                    if (operations[key] is not JsonObject operationDocumentation)
+                    {
+                        missing.Add($"operation {key}");
+                        continue;
+                    }
+
+                    operationObject["summary"] = (string?)operationDocumentation["summary"];
+
+                    foreach (var parameter in operationObject["parameters"]?.AsArray() ?? [])
+                    {
+                        var name = (string)parameter!["name"]!;
+                        var description = (string?)operationDocumentation["parameters"]?[name] ?? (string?)parameters[name];
+                        if (description is null)
+                        {
+                            missing.Add($"parameter {name} of {key}");
+                            continue;
+                        }
+
+                        parameter["description"] = description;
+                    }
+                }
+            }
+
+            foreach (var (name, schema) in spec["components"]!["schemas"]!.AsObject())
+            {
+                var schemaObject = schema!.AsObject();
+
+                if ((string?)schemas[name] is { } description)
+                {
+                    schemaObject["description"] = description;
+                }
+                else
+                {
+                    missing.Add($"schema {name}");
+                }
+
+                DescribeProperties(schemaObject, name);
+            }
+
+            foreach (var entry in missing)
+            {
+                context.Warning($"No documentation for {entry}");
+            }
+
+            // inline objects become classes of their own, which take their description from the property (or array item)
+            void DescribeProperties(JsonObject schema, string path)
+            {
+                foreach (var part in schema["allOf"]?.AsArray().OfType<JsonObject>() ?? [])
+                {
+                    DescribeProperties(part, path);
+                }
+
+                foreach (var (name, property) in schema["properties"]?.AsObject() ?? [])
+                {
+                    if (property is not JsonObject propertyObject)
+                    {
+                        continue;
+                    }
+
+                    var propertyPath = $"{path}.{name}";
+                    var description = FindPropertyDescription(propertyPath);
+                    if (description is null)
+                    {
+                        missing.Add($"property {propertyPath}");
+                    }
+                    else
+                    {
+                        propertyObject["description"] = description;
+                    }
+
+                    var item = propertyObject["items"] as JsonObject;
+                    if (item?["properties"] is not null && description is not null)
+                    {
+                        item["description"] = description;
+                    }
+
+                    DescribeProperties(propertyObject, propertyPath);
+                    if (item is not null)
+                    {
+                        DescribeProperties(item, propertyPath);
+                    }
+                }
+            }
+
+            string? FindPropertyDescription(string propertyPath)
+            {
+                var segments = propertyPath.Split('.');
+                for (var start = 0; start < segments.Length; start++)
+                {
+                    if ((string?)properties[string.Join('.', segments[start..])] is { } description)
+                    {
+                        return description;
+                    }
+                }
+
+                return null;
             }
         }
 

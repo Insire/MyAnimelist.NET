@@ -5,9 +5,9 @@ namespace SoftThorn.MAL.ApiClient.Authentication
     /// <summary>
     /// Requests tokens from the MyAnimeList OAuth endpoint, stores them in the <see cref="IAuthCache"/> and refreshes them once they expire.
     /// </summary>
-    public sealed class TokenClient
+    internal sealed class TokenClient
     {
-        public const string HttpClientName = "SoftThorn.MAL.ApiClient.OAuth";
+        internal const string HttpClientName = "SoftThorn.MAL.ApiClient.OAuth";
 
         internal const string BaseUri = "https://myanimelist.net/v1/oauth2/";
 

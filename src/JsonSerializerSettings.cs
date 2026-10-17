@@ -13,27 +13,27 @@ namespace SoftThorn.MAL.ApiClient
         }
     }
 
-    public partial class Client
+    partial class CatalogClient
     {
         static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings) => MalJsonSerializerSettings.Update(settings);
     }
 
-    public partial class AnimeClient
+    partial class AnimeClient
     {
         static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings) => MalJsonSerializerSettings.Update(settings);
     }
 
-    public partial class ForumClient
+    partial class ForumClient
     {
         static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings) => MalJsonSerializerSettings.Update(settings);
     }
 
-    public partial class MangaClient
+    partial class MangaClient
     {
         static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings) => MalJsonSerializerSettings.Update(settings);
     }
 
-    public partial class UsersClient
+    partial class UsersClient
     {
         static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings) => MalJsonSerializerSettings.Update(settings);
     }
