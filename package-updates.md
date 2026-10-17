@@ -10,7 +10,7 @@ Steps marked **Decision needed** wait for the repo owner's answer. Don't start t
 
 ## Workflow (for every step)
 
-1. **Branch.** Work on a branch, not on `main`, for example `chore/package-updates`. Keep one commit per step, with a message like `chore(deps): <step title>`.
+1. **Branch.** Work on a branch, not on `main`, for example `chore/package-updates`. **Don't commit.** The owner reviews and commits every change. Leave the changes uncommitted and suggest a commit message per step, like `chore(deps): <step title>`.
 2. **Change versions only where they are defined.** Versions live in these places, never in a `.csproj`:
    - `Directory.Packages.props`: library and test packages (central package management).
    - `build/Directory.Packages.props`: packages for the Cake build project.
@@ -37,7 +37,7 @@ Steps marked **Decision needed** wait for the repo owner's answer. Don't start t
 
 6. **Run the step's own checks**, listed under each step.
 7. **Close out the step:**
-   - Commit.
+   - Leave the changes uncommitted. List the changed files and a suggested commit message for the owner.
    - Delete the step from this file.
    - Update `CLAUDE.md` if a fact it records changed.
 8. **When all steps are done:**

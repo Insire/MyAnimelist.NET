@@ -59,6 +59,10 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
 - Full pipeline: `./build.ps1`. Regenerate the client: `./build.ps1 --target UpdateOpenApiSpec`
 - Environment: Windows, PowerShell. Python is **not** installed, so don't use it for scripting.
 
+## Working agreements
+
+- **Don't create commits.** The owner reviews and commits every change. Leave the changes uncommitted, and finish with a list of changed files and a suggested commit message.
+
 ## Project status
 
 - Open source (MIT) and free. The owner doesn't plan to generate revenue from it (stated 2026-10-16). This matters for dependency licensing and fee models such as Verify's Open Source Maintenance Fee.
