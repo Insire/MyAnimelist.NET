@@ -88,9 +88,9 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
 - Cake process calls go through `context.RunProcess(...)` (`build/Util/BuildContextExtensions.cs`), which throws on a non-zero exit code. Don't call `StartProcess` directly.
   - The only exception is `TestTask`. A test failure sets `context.TestsAreFailing` and the build keeps going, so the coverage reports still get generated.
   - The pushes and the Codecov upload skip when that flag is set, and `BuildLifetime.Teardown` then fails the build. Cake exits with 127 in that case.
-- `BuildLifetime.Setup` sets `IsPublicRelease = Branch == "main"`. This was `"master"` until 2026-10-17.
-  - `BuildAndPackTask` passes it as `-p:PublicRelease`, so `main` builds get versions without the commit-hash suffix.
-  - `version.json`'s `publicReleaseRefSpec` also lists `v<major>.<minor>` release branches, which this check doesn't cover.
+- `BuildLifetime.Setup` takes `IsPublicRelease` from Nerdbank's `VersionOracle.PublicRelease`, so `version.json`'s `publicReleaseRefSpec` (`main` and `v<major>.<minor>` branches) is the single source of truth. To change which branches are public releases, edit `version.json`, not the build.
+  - It used to compare the branch with `"master"`; fixed on 2026-10-17.
+  - `BuildAndPackTask` passes the flag as `-p:PublicRelease`, so public-release builds get versions without the commit-hash suffix.
 
 Resolved on 2026-10-16:
 

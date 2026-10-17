@@ -13,11 +13,13 @@ namespace Build
         public override void Setup(BuildContext context, ISetupContext info)
         {
             var gitVersion = context.GitVersion();
-            context.GitVersion = context.GitVersioningGetVersion();
+            var versionOracle = context.GitVersioningGetVersion();
+            context.GitVersion = versionOracle;
             context.Branch = gitVersion.BranchName;
             context.Commit = gitVersion.Sha;
 
-            context.IsPublicRelease = context.Branch == "main";
+            // Nerdbank.GitVersioning matches the current ref against publicReleaseRefSpec in version.json (main and v<major>.<minor> branches)
+            context.IsPublicRelease = versionOracle.PublicRelease;
 
             context.Information("Branch: {0}", context.Branch);
 
