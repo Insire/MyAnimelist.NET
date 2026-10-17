@@ -30,6 +30,7 @@ namespace Build
         public string? Commit { get; internal set; }
 
         public bool TestsAreFailing { get; internal set; }
+        public bool IntegrationTestsSkipped { get; internal set; }
         public bool IsPublicRelease { get; internal set; }
         public bool PackagesPushedToNuGet { get; internal set; }
 

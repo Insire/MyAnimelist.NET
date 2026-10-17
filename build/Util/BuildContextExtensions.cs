@@ -22,6 +22,16 @@ namespace Build.Util
         }
 
         /// <summary>
+        /// Returns a secret from the environment, or null when it is empty or unresolved.
+        /// Azure leaves the macro text "$(NAME)" in a mapped env var when the secret isn't available, e.g. in builds of forks.
+        /// </summary>
+        public static string? GetSecretEnvironmentVariable(this BuildContext context, string name)
+        {
+            var value = context.EnvironmentVariable(name);
+            return string.IsNullOrEmpty(value) || value.StartsWith("$(", StringComparison.Ordinal) ? null : value;
+        }
+
+        /// <summary>
         /// Starts a process and fails the task when it exits with a non-zero exit code.
         /// </summary>
         public static void RunProcess(this BuildContext context, FilePath fileName, ProcessSettings settings)

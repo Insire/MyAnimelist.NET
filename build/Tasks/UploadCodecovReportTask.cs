@@ -8,6 +8,7 @@ using Cake.Core;
 using Cake.Core.Diagnostics;
 using Cake.Core.IO;
 using Cake.Frosting;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace Build.Tasks
@@ -36,6 +37,17 @@ namespace Build.Tasks
                     .AppendSwitch("--git-service", "github")
                 );
 
+            // Azure builds a pull request on its merge commit (refs/pull/<n>/merge), which doesn't exist on GitHub,
+            // so report the PR's own head commit, number and branch, which Codecov compares against the base branch
+            var pullRequest = context.AzurePipelines().Environment.PullRequest;
+            if (pullRequest.IsPullRequest)
+            {
+                settings.Arguments
+                    .AppendSwitch("--sha", context.EnvironmentVariable("SYSTEM_PULLREQUEST_SOURCECOMMITID"))
+                    .AppendSwitch("--pr", pullRequest.Number.ToString(CultureInfo.InvariantCulture))
+                    .AppendSwitchQuoted("--branch", pullRequest.SourceBranch.Replace("refs/heads/", ""));
+            }
+
             // a Codecov outage shouldn't stop the release, which runs after this task
             var exitCode = context.StartProcess(cli, settings);
             if (exitCode != 0)
@@ -60,15 +72,22 @@ namespace Build.Tasks
                 return false;
             }
 
-            if (string.IsNullOrEmpty(context.Environment.GetEnvironmentVariable("CODECOV_TOKEN")))
+            if (context.GetSecretEnvironmentVariable("CODECOV_TOKEN") is null)
             {
-                context.Log.Information($"Skipped {nameof(UploadCodecovReportTask)}, since environment variable CODECOV_TOKEN missing or empty.");
+                context.Log.Information($"Skipped {nameof(UploadCodecovReportTask)}, since environment variable CODECOV_TOKEN missing, empty or unresolved (builds of forks get no secrets).");
                 return false;
             }
 
             if (context.TestsAreFailing)
             {
                 context.Log.Information($"Skipped {nameof(UploadCodecovReportTask)}, since we got failing tests.");
+                return false;
+            }
+
+            if (context.IntegrationTestsSkipped)
+            {
+                // coverage of the unit tests alone would show up on Codecov as a drop
+                context.Log.Information($"Skipped {nameof(UploadCodecovReportTask)}, since the integration tests were skipped.");
                 return false;
             }
 

@@ -3,13 +3,14 @@
 # Every build of main or a v<major>.<minor> branch is a public release (see version.json) and gets pushed.
 # The GitHub service connection used for the checkout needs write access to the repository, to push the v<version> tag.
 #
-# Pull requests build too, but never publish: they get no nuget.org key, no Codecov token and no push credentials, and their ref isn't a public release.
+# Pull requests build too, but never publish: they get no nuget.org key and no push credentials, and their ref isn't a public release.
+# They do get the Codecov token and upload coverage, so Codecov can comment on the pull request and report its (informational) checks.
 # Builds of forks only run after approval, and only for pull requests against this repository. Pushes in a fork, to its own branches, never trigger this pipeline.
 # That gate isn't part of the YAML. In Azure DevOps, under Edit > Triggers > Pull request validation, set:
 #   - "Build pull requests from forks of this repository": on
 #   - "Make secrets available to builds of forks": OFF (fork code could read them)
 #   - "Require a team member's comment before building a pull request": on (builds start after "/AzurePipelines run" from a team member)
-# Without secrets, the integration tests of a fork build can't log in to MAL and fail. Run them locally before approving.
+# Without secrets, a fork build can't log in to MAL: Cake then runs the unit tests only, logs a warning and skips the Codecov upload. Run the integration tests locally before approving.
 #
 # Needs a variable group named "SoftThorn.MAL.ApiClient" with these variables (mark all of them as secret):
 #   NUGETORG_APIKEY   nuget.org API key with push rights for SoftThorn.MAL.ApiClient
@@ -63,7 +64,8 @@ jobs:
           # secret variables aren't exposed to scripts unless they are mapped explicitly
           ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
             NUGETORG_APIKEY: $(NUGETORG_APIKEY)
-            CODECOV_TOKEN: $(CODECOV_TOKEN)
+          # pull requests upload coverage too, for Codecov's PR comment and checks; the token can only upload reports
+          CODECOV_TOKEN: $(CODECOV_TOKEN)
           ClientConfiguration__ClientId: $(MAL_CLIENT_ID)
           ClientConfiguration__RedirectUrl: $(MAL_REDIRECT_URL)
           MalAuthSettings__UserName: $(MAL_USERNAME)

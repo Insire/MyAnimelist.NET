@@ -20,6 +20,7 @@ namespace SoftThorn.MAL.ApiClient
             // which throws for a handler that was already used, so handlers must be transient
             services.AddTransient<MalRetryHandler>();
             services.AddHttpClient(TokenClient.HttpClientName, AddUserAgent)
+                .ConfigurePrimaryHttpMessageHandler(DisableRedirects)
                 .AddHttpMessageHandler<MalRetryHandler>();
             services.AddTransient<MalLoginHandler>();
             services.AddSingleton<MalApiService>();
@@ -30,6 +31,7 @@ namespace SoftThorn.MAL.ApiClient
                     client.BaseAddress = new Uri(API_URI);
                     AddUserAgent(client);
                 })
+                .ConfigurePrimaryHttpMessageHandler(DisableRedirects)
                 .AddHttpMessageHandler<MalLoginHandler>()
                 .AddHttpMessageHandler<MalRetryHandler>();
 
@@ -44,6 +46,22 @@ namespace SoftThorn.MAL.ApiClient
             new("SoftThorn.MAL.ApiClient", typeof(RegistrationExtensions).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "0.0.0"),
             new("(+https://github.com/Insire/SoftThorn.MAL.ApiClient)"),
         ];
+
+        // MAL's API doesn't redirect, except to its error page (MalRetryHandler.ErrorPagePath), which never answers.
+        // Following that redirect would also send every retry there, since the handler rewrites the request's URI.
+        private static void DisableRedirects(HttpMessageHandler handler, IServiceProvider _)
+        {
+            switch (handler)
+            {
+                case HttpClientHandler httpClientHandler:
+                    httpClientHandler.AllowAutoRedirect = false;
+                    break;
+
+                case SocketsHttpHandler socketsHttpHandler:
+                    socketsHttpHandler.AllowAutoRedirect = false;
+                    break;
+            }
+        }
 
         private static void AddUserAgent(HttpClient client)
         {
