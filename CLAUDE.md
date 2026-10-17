@@ -57,7 +57,14 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
 - Central package management is in `Directory.Packages.props`; `build/` has its own. Versioning uses Nerdbank.GitVersioning (`version.json`) with plain SemVer, staying on 0.x for now (decided 2026-10-17, see `versioning.md`).
 - Package metadata: shared fields (authors, license, repository, copyright) are in `Directory.Build.props`, package-specific ones (description, tags, `PackageReadmeFile`) in `src/MyAnimelist.NET.csproj`. The README is packed and shown on nuget.org, so its links to repo files use absolute `github.com/.../blob/main/...` URLs. The package icon is still missing; the owner will choose one.
 - CI is **Azure DevOps** (`azure-pipelines.yml`), not GitHub Actions (owner's choice, 2026-10-17). It runs `./build.ps1` on pushes to `main`/`v*.*`, with `pr: none` because fork PRs get no secrets. Secrets come from the variable group `MyAnimelist.NET` and are mapped to env vars in the YAML. Every pipeline build of those branches pushes to nuget.org.
-- The README has an "AI assistance" section. Claude-assisted commits carry the `Co-Authored-By: Claude ...` trailer, so keep using it in suggested commit messages.
+- Release notes (added 2026-10-17): the Cake `ReleaseNotes` task (`build/Tasks/ReleaseNotesTask.cs`, parsing and rendering in `build/Util/ReleaseNotes.cs`) runs `git log <last v* tag>..HEAD` and groups conventional commits. Breaking changes come from `type!:` or a `BREAKING CHANGE:` footer, and highlights from `Release-Note:` footers. A count line is always included.
+  - Output goes to `tmp_build/results/release-notes.md` (Markdown with commit links) and `release-notes.txt` (plain text, internal changes left out).
+  - `BuildAndPack` depends on it and passes `-p:PackageReleaseNotesFile`, which `src/MyAnimelist.NET.csproj` reads into `PackageReleaseNotes`.
+  - `TagRelease` (a dependency of `Push`) creates a lightweight tag `v{SemVer2}` and pushes it, but only after `PushRemote` actually pushed (`context.PackagesPushedToNuGet`). On Azure, this relies on `persistCredentials: true` and a service connection with write access.
+  - Git is called through `context.RunGit`/`RunGitOrThrow` (the CLI, not Cake.Git).
+  - `./build.ps1 --target ReleaseNotes` previews the notes locally. There were no tags as of 2026-10-17, so the first release lists the whole history.
+  - Commit messages feed this task, see [Commit messages](#commit-messages).
+- The README has an "AI assistance" section. Claude-assisted commits carry the `Co-Authored-By: Claude ...` trailer (see [Commit messages](#commit-messages)).
 
 ## Commands
 
@@ -74,6 +81,37 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
 ## Working agreements
 
 - **Don't create commits.** The owner reviews and commits every change. Leave the changes uncommitted, and finish with a list of changed files and a suggested commit message.
+
+## Commit messages
+
+These rules apply to every commit message you write: suggested messages at the end of a session, and messages the owner's git client (Fork) asks you to generate for staged changes. The Cake `ReleaseNotes` task builds the release notes and the NuGet package notes from these messages, so the format matters.
+
+Fork runs Claude Code (`%userprofile%\.local\bin\claude.exe`) in the repo folder with a fixed prompt: "Generate commit message for staged changes", subject under 50 characters (soft) and 70 (hard), wrap at 72, no "generated" footer. Fork for Windows has no documented way to edit that prompt (the Mac version can, under Integration preferences, since 2.64), so these rules live here and add to it. When Fork asks for a message, output only the message: no explanation, no code fence, no list of changed files.
+
+Format ([conventional commits](https://www.conventionalcommits.org)):
+
+```text
+<type>(<optional scope>)<optional !>: <subject>
+
+<body>
+
+<footers>
+```
+
+- **Type** decides the release-notes section:
+  - User-facing (shown on nuget.org): `feat` (Features), `fix` (Bug fixes), `perf` (Performance), `chore(deps)` (Dependencies, for package or tool updates), `docs` (Documentation).
+  - Internal (GitHub release only, left out of the package notes): `build`, `ci`, `test`, `refactor`, `style`, `chore`.
+  - When a commit mixes kinds, pick the type that matters most to library users. For example, a fix plus the test that covers it is `fix`, not `test`.
+- **Scope** (optional) is the area, in lowercase: `auth`, `anime`, `manga`, `forum`, `users`, `catalog`, `client` (generated code / spec), `build`, `tests`. Leave it out when no single area fits.
+- **Subject:** imperative and lowercase (`add`, `fix`, `remove`, not `Added`/`Fixes`), no trailing period, under 50 characters if possible and never over 70, including the prefix. It appears as-is in the release notes, so write it for library users and name the public API when it changed.
+- **Body:** wrap at 72 characters. Say what changed and why, not file by file.
+- **Breaking changes** are any change to the public API of `src/` that can break a consumer's build or behavior: renamed or removed members, changed signatures or defaults, or a raised target framework.
+  - Mark them with `!` after the type/scope.
+  - Add a `BREAKING CHANGE: <what consumers have to change>` footer. Write the footer as migration advice; it appears under the breaking changes heading.
+  - Changes to `build/`, `tests/` or docs are never breaking.
+- **`Release-Note: <one sentence>`** footer: add it only for changes a library user should hear about first: new capabilities, notable fixes, breaking changes. It lands in the release's Highlights. Write a complete sentence for users. Internal changes never get one.
+- **Footer order:** `BREAKING CHANGE:`, then `Release-Note:`, then `Co-Authored-By:` last, each separated by a blank line. A footer can continue on the next line; it ends at a blank line or the next footer.
+- **`Co-Authored-By: Claude <model> <noreply@anthropic.com>`:** add it when you wrote or changed code or docs in the commit (the README's AI assistance section depends on it). Leave it out when you only wrote the message for changes the owner made.
 
 ## Project status
 

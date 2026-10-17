@@ -23,6 +23,28 @@ namespace Build.Util
             }
         }
 
+        /// <summary>
+        /// Runs git from the repository root and returns its exit code and standard output.
+        /// </summary>
+        public static (int ExitCode, string Output) RunGit(this BuildContext context, string arguments)
+        {
+            var settings = new ProcessSettings()
+            {
+                Arguments = arguments,
+                WorkingDirectory = ".",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            };
+
+            var exitCode = context.StartProcess("git", settings, out var output);
+            return (exitCode, string.Join("\n", output));
+        }
+
+        public static void RunGitOrThrow(this BuildContext context, string arguments)
+        {
+            context.RunProcess("git", new ProcessSettings().UseWorkingDirectory(".").WithArguments(builder => builder.Append(arguments)));
+        }
+
         public static void MergeReports(this BuildContext context, FilePathCollection files, ReportGeneratorReportType type, string subFolder)
         {
             context.ReportGeneratorSettings.ReportTypes = new[]

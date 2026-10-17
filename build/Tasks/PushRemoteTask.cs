@@ -30,6 +30,8 @@ namespace Build.Tasks
                 context.RunProcess(context.Tools.Resolve("nuget.exe"), settings);
             }
 
+            context.PackagesPushedToNuGet = true;
+
             base.Run(context);
         }
 

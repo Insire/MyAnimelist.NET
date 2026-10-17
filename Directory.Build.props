@@ -9,6 +9,5 @@
         <PackageProjectUrl>https://github.com/Insire/MyAnimelist.NET</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Insire/MyAnimelist.NET</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes></PackageReleaseNotes>
     </PropertyGroup>
 </Project>

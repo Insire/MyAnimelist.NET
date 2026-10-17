@@ -13,6 +13,11 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
+	<!-- the Cake ReleaseNotes task writes this file and BuildAndPack passes its path -->
+	<PropertyGroup Condition="'$(PackageReleaseNotesFile)' != '' and Exists('$(PackageReleaseNotesFile)')">
+		<PackageReleaseNotes>$([System.IO.File]::ReadAllText('$(PackageReleaseNotesFile)'))</PackageReleaseNotes>
+	</PropertyGroup>
+
 	<!-- Azure Pipelines sets TF_BUILD; normalizes source paths in the PDBs for deterministic builds -->
 	<PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>

@@ -19,6 +19,8 @@ namespace Build
         public DirectoryPath PackagesFolder { get; }
         public DirectoryPath CoberturaFolder { get; }
         public FilePath CoberturaResultFile { get; }
+        public FilePath ReleaseNotesMarkdownFile { get; }
+        public FilePath ReleaseNotesTextFile { get; }
 
         public ReportGeneratorSettings ReportGeneratorSettings { get; }
 
@@ -28,6 +30,7 @@ namespace Build
 
         public bool TestsAreFailing { get; internal set; }
         public bool IsPublicRelease { get; internal set; }
+        public bool PackagesPushedToNuGet { get; internal set; }
 
         public BuildContext(ICakeContext context)
             : base(context)
@@ -38,6 +41,8 @@ namespace Build
             CoberturaFolder = this.MakeAbsolute(new DirectoryPath(Constants.CoberturaPath));
 
             CoberturaResultFile = CoberturaFolder.CombineWithFilePath("Cobertura.xml");
+            ReleaseNotesMarkdownFile = ResultsFolder.CombineWithFilePath("release-notes.md");
+            ReleaseNotesTextFile = ResultsFolder.CombineWithFilePath("release-notes.txt");
 
             this.Information($"Provider: {this.BuildSystem().Provider}");
             this.Information($"Platform: {Environment.Platform.Family} ({(Environment.Platform.Is64Bit ? "x64" : "x86")})");
@@ -59,4 +64,4 @@ namespace Build
             DotnetExeName = Environment.Platform.IsWindows() ? "dotnet.exe" : "dotnet";
         }
     }
-}
+}

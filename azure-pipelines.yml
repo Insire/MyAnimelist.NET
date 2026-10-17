@@ -1,5 +1,6 @@
-# Runs the Cake "Default" target: tests with coverage, Codecov upload, pack, and push to nuget.org.
+# Runs the Cake "Default" target: tests with coverage, Codecov upload, release notes, pack, push to nuget.org, and tag.
 # Every build of main or a v<major>.<minor> branch is a public release (see version.json) and gets pushed.
+# The GitHub service connection used for the checkout needs write access to the repository, to push the v<version> tag.
 #
 # Needs a variable group named "MyAnimelist.NET" with these variables (mark all of them as secret):
 #   NUGETORG_APIKEY   nuget.org API key with push rights for MyAnimelist.NET
@@ -32,7 +33,8 @@ variables:
 
 steps:
   - checkout: self
-    fetchDepth: 0 # Nerdbank.GitVersioning and GitVersion need the full history
+    fetchDepth: 0 # Nerdbank.GitVersioning and GitVersion need the full history, the release notes need the tags
+    persistCredentials: true # the Cake TagRelease task pushes the v<version> tag after a successful nuget.org push
 
   - task: UseDotNet@2
     displayName: Install .NET 10 SDK
@@ -71,3 +73,10 @@ steps:
     inputs:
       targetPath: tmp_build/packages
       artifact: packages
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish release notes
+    condition: succeeded()
+    inputs:
+      targetPath: tmp_build/results/release-notes.md
+      artifact: release-notes
