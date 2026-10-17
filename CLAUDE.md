@@ -4,7 +4,7 @@ Notes for Claude Code sessions working in this repository.
 
 ## What this is
 
-SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an unofficial .NET 10 client library for the MyAnimeList API v2 (`https://api.myanimelist.net/v2/`), with OAuth2 PKCE login. Author: Peter Vietense (SoftThorn), MIT license, GitHub `Insire/MyAnimelist.NET` (to be renamed to `Insire/SoftThorn.MAL.ApiClient`, which every URL in the repo already uses). User-facing docs are in [README.md](README.md). The project is bound by MAL's API agreement, see [MyAnimeList API License Agreement](#myanimelist-api-license-agreement).
+SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an unofficial .NET 10 client library for the MyAnimeList API v2 (`https://api.myanimelist.net/v2/`), with OAuth2 PKCE login. Author: Peter Vietense (SoftThorn), MIT license, GitHub `Insire/SoftThorn.MAL.ApiClient` (renamed from `Insire/MyAnimelist.NET` on 2026-10-17, so every URL in the repo matches). User-facing docs are in [README.md](README.md). The project is bound by MAL's API agreement, see [MyAnimeList API License Agreement](#myanimelist-api-license-agreement).
 
 ## Layout
 
@@ -185,13 +185,13 @@ The project counts as one of "Your Applications" under MAL's [API License and De
 - **6, data limits:** `MalRetryHandler` backs off on `429`/`503`. Don't add anything that works around limits.
 - **3(c) / 4(f), personal data and credentials:** the library supports only OAuth and stores only tokens, in memory. Don't add persistent caching of user data or anything that asks for passwords. The integration tests' `MalAuthSettings` password is the owner's own test account in local user secrets, which is fine.
 - **2(a) / 3(c), Client ID:** never ship or commit one. Each consumer registers their own, and with it accepts the agreement. CI's comes from the Azure variable group.
-- **4(b), notification:** MAL wants to be told before an application is made available. The owner should contact MAL support before the first NuGet release (not done as of 2026-10-17).
+- **4(b), notification:** MAL wants to be told before an application is made available. The owner sent the notice through MAL's "Contact Customer Support" form on 2026-10-17 (inquiry type Legal), before the first NuGet release. The text followed the draft from that session: what the library is, how it follows the agreement, and a question whether MAL objects to "MAL" in the package name. The owner added a line saying the contact email is an alias, used only for MAL to reach them about the connected account or this library. No copy of the sent text was saved. The owner verified the email address through MAL's confirmation link, so the ticket should be in their queue. Nothing is needed from MAL, but if they object to the name, rename the package.
 - **4(d):** the developer is responsible for end users' acts, which is why the README has a "Using the MyAnimeList API responsibly" section for consumers.
 
 ## Pending work
 
 - `history-rewrite.md`: plan to remove MAL's documentation text from older commits (filter-branch + force-push). The owner runs it; delete the file when done.
-- Before the first NuGet release, the owner still has to rename the GitHub repo and the Azure variable group to `SoftThorn.MAL.ApiClient`, and notify MAL (4(b)).
+- The GitHub repo and the Azure variable group are renamed to `SoftThorn.MAL.ApiClient` (2026-10-17). MAL was notified under 4(b) on 2026-10-17 (see the license section), the owner verified the email, and MAL hasn't replied yet. If they object to the name, rename the package.
 
 - `package-updates.md` is the permanent NuGet/tool update queue. Follow its workflow and remove only the steps that are completed.
   - Never delete the file or its Workflow section.
