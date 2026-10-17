@@ -57,7 +57,7 @@ No pending updates as of 2026-10-17. Both solutions have no outdated or vulnerab
 - **Verify's maintenance fee:** the integration test csproj claims `Verify_SponsorshipExemption=OpenSource` until `Verify_SponsorshipExemptionUntil=2027-10`, approved by the owner on 2026-10-17. After that month the build fails with SponsorCheck SC021.
   - Renewing means bumping it by at most 12 months, and only while the project is still open source with no revenue.
   - Ask the owner before changing what is claimed.
-- **`System.Security.Cryptography.Pkcs` pin:** it's pinned to 9.0.21 in `build/Directory.Packages.props` (`vulnerable transitive dependencies`), because Cake's dependencies still resolve a vulnerable 9.0.20.
+- **`System.Security.Cryptography.Pkcs` pin:** it's pinned to 10.0.13 in `build/Directory.Packages.props` (`vulnerable transitive dependencies`), because Cake.Frosting 6.3.0 resolves a vulnerable 10.0.12 (since the build project moved to net10.0 on 2026-10-17; before that it was 9.0.20 → 9.0.21).
   - Each round, remove the pin, run `dotnet list build/Build.csproj package --vulnerable --include-transitive`, and drop the pin for good once that comes back clean.
 - **Codecov uploader:** `CodecovUploader` 0.8.0 is the latest version, but Codecov deprecated it in favor of the Codecov CLI. Replacing it is a separate task.
 - **Old tool versions in `tools/`:** after a Cake tool version bump, `tools/` keeps the old versions too.
