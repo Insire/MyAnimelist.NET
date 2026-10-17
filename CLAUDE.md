@@ -93,7 +93,10 @@ SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an uno
   - `icon.svg` is the source. `icon.png` (128×128, packed as `PackageIcon`) and `icon-512.png` were rendered from it with Playwright's headless Chromium (`chrome.exe --headless --default-background-color=00000000 --screenshot`), since ImageMagick and Inkscape aren't installed.
   - Re-render both PNGs after you change the SVG.
   - The README shows `icon.png` through an absolute `raw.githubusercontent.com/.../main/...` URL (nuget.org only shows images from trusted hosts), so the image only appears once it is pushed to `main`.
-- CI is **Azure DevOps** (`azure-pipelines.yml`), not GitHub Actions (owner's choice, 2026-10-17). It runs `./build.ps1` on pushes to `main`/`v*.*`, with `pr: none` because fork PRs get no secrets.
+- CI is **Azure DevOps** (`azure-pipelines.yml`), not GitHub Actions (owner's choice, 2026-10-17). It runs `./build.ps1` on pushes to `main`/`v*.*` and on PRs against them.
+  - The job has `timeoutInMinutes: 30` (the YAML needs an explicit `jobs:` for that).
+  - PR builds get no nuget.org key, Codecov token or push credentials (template conditions on `Build.Reason`), so they can't publish.
+  - Fork PRs are gated in the Azure UI, not in YAML (Triggers > Pull request validation): builds of forks on, secrets for forks off, and a team member's comment required first. A fork's own pushes never trigger the pipeline. Without secrets, a fork build's integration tests fail at login.
   - Since 2026-10-17 it runs as a container job on `ubuntu-latest` in `mcr.microsoft.com/playwright/dotnet:v<version>-noble`. That image is built on `dotnet/sdk:10.0-noble` and includes pwsh, git and the Playwright browsers with their system libraries, so the pipeline has no SDK or browser install steps.
     - The image tag must match `Microsoft.Playwright.Xunit.v3` in `Directory.Packages.props`, or the integration tests can't find their browser.
     - The steps run as a non-root user.
