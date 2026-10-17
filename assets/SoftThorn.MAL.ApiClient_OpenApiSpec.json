@@ -989,6 +989,13 @@
               "type": "integer",
               "default": 0
             }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -1061,6 +1068,13 @@
             "schema": {
               "type": "integer",
               "default": 0
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],

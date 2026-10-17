@@ -31,6 +31,7 @@ namespace Build.Tasks
 
             FixPathParameterNames(context, spec);
             FixForumTopic(context, spec);
+            AddUserListFields(context, spec);
             RemoveDocumentation(context, spec);
 
             File.WriteAllText(Constants.OpenApiSpecPath, spec.ToJsonString(_options));
@@ -121,6 +122,28 @@ namespace Build.Tasks
                 context.Information("Renaming ForumTopicPoll.close to closed");
                 pollProperties.Remove("close", out var close);
                 pollProperties.Insert(index, "closed", close);
+            }
+        }
+
+        // MAL's spec gives the user list endpoints no "fields" parameter, but the live API accepts one, and without it
+        // each entry only has the node's id, title and main_picture and no list_status
+        private static void AddUserListFields(BuildContext context, JsonNode spec)
+        {
+            foreach (var path in new[] { "/users/{user_name}/animelist", "/users/{user_name}/mangalist" })
+            {
+                if (spec["paths"]?[path]?["get"]?["parameters"] is not JsonArray parameters
+                    || parameters.Any(parameter => (string?)parameter?["name"] == "fields"))
+                {
+                    continue;
+                }
+
+                context.Information($"Adding the fields parameter to '{path}'");
+                parameters.Add(new JsonObject
+                {
+                    ["name"] = "fields",
+                    ["in"] = "query",
+                    ["schema"] = new JsonObject { ["type"] = "string" },
+                });
             }
         }
 

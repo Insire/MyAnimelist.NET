@@ -90,8 +90,8 @@ foreach (var entry in results.Data ?? [])
 // Top-ranked anime
 var ranking = await mal.Anime.RankingAsync(ranking_type: "all", limit: 10);
 
-// A user's anime list
-var list = await mal.Users.AnimelistAsync("@me", status: "watching");
+// A user's anime list, with each entry's list status (score, episodes watched, ...)
+var list = await mal.Users.AnimelistAsync("@me", status: "watching", fields: "list_status");
 ```
 
 ## API overview
@@ -168,7 +168,6 @@ You are also responsible for what your users do with your app (4(d)).
 - **Public clients only.** The library sends a Client ID but no client secret.
 - **PKCE uses `code_challenge_method=plain`**, because that is the only method MyAnimeList supports.
 - **No retry on `401 Unauthorized`.** Tokens are refreshed shortly before they expire. If MyAnimeList revokes a token earlier, requests fail until the user signs in again.
-- **User lists have no `fields` parameter.** MyAnimeList's OpenAPI spec doesn't define one for `Users.AnimelistAsync` and `Users.MangalistAsync`, so `list_status` can't be requested and each entry only contains id, title and picture.
 - **Not Native AOT or trimming compatible.** The clients use reflection-based `System.Text.Json`, which is off by default in Native AOT apps, so requests would fail at runtime there. Adding support would need source-generated JSON metadata for every model, so it isn't planned for now.
 - **No XML documentation on the generated clients.** MyAnimeList's agreement doesn't allow copying its API documentation, so the descriptions are stripped from the spec. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for what each endpoint and field means.
 

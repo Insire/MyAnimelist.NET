@@ -3,7 +3,6 @@ using SoftThorn.MAL.ApiClient.IntegrationTests.Snapshots;
 
 namespace SoftThorn.MAL.ApiClient.IntegrationTests
 {
-    // the list endpoints have no fields parameter, so MAL only returns id, title and main_picture of each node
     [Trait(Traits.CategoryTraitName, Traits.IntegrationTestTraitValue)]
     public sealed class UsersTests(OAuthFlowTestFixture fixture)
     {
@@ -15,10 +14,10 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
             await TestAccount.EnsureSeededAsync(sut, TestContext.Current.CancellationToken);
 
             // Act
-            var response = await sut.Users.AnimelistAsync("@me", sort: "anime_title", limit: 5, cancellationToken: TestContext.Current.CancellationToken);
+            var response = await sut.Users.AnimelistAsync("@me", sort: "anime_title", limit: 5, fields: Fields.UserAnimeList, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedAnimeId);
+            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedAnimeId && entry.List_status?.Status != null);
             await Verify(ModelShape.Of(response));
         }
 
@@ -30,10 +29,10 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
             await TestAccount.EnsureSeededAsync(sut, TestContext.Current.CancellationToken);
 
             // Act
-            var response = await sut.Users.MangalistAsync("@me", sort: "manga_title", limit: 5, cancellationToken: TestContext.Current.CancellationToken);
+            var response = await sut.Users.MangalistAsync("@me", sort: "manga_title", limit: 5, fields: Fields.UserMangaList, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedMangaId);
+            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedMangaId && entry.List_status?.Status != null);
             await Verify(ModelShape.Of(response));
         }
     }

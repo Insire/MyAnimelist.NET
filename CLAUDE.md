@@ -64,7 +64,7 @@ SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an uno
     - To test locally, run the binary with `upload-coverage --dry-run ... -C <sha> -B main -r <slug>`, which sends nothing.
     - The first real PR upload (run 20261017.5, PR 1) failed with 404 `Repository not found`: Codecov hadn't synced the GitHub rename yet and synced it about 5 minutes later. The PR parameters (`--sha` = source commit, `--pr`, `--branch`) were sent correctly. Check `https://api.codecov.io/api/v2/github/Insire/repos/SoftThorn.MAL.ApiClient/` to see what Codecov knows about the repo.
   - `UpdateOpenApiSpec`: re-scrapes the spec with HtmlAgilityPack and Jint, then runs nswag to regenerate the client. Run it by hand only, never in CI (scraping, see the license section).
-    - Before writing the spec, it patches places where MAL's spec doesn't match the live API: path parameter names that don't match the path template (`user_id` on `/users/{user_name}`), and `ForumTopic.data`/`ForumTopicData.poll`, which are objects rather than arrays, with `close` sent as `closed`. Add new spec fixes there, not only in the JSON file, or the next scrape reverts them.
+    - Before writing the spec, it patches places where MAL's spec doesn't match the live API: path parameter names that don't match the path template (`user_id` on `/users/{user_name}`), and `ForumTopic.data`/`ForumTopicData.poll`, which are objects rather than arrays, with `close` sent as `closed`. It also adds the `fields` query parameter that the spec leaves out on `/users/{user_name}/animelist` and `/mangalist` (added 2026-10-17; the live API accepts it, and without it MAL sends no `list_status`). Add new spec fixes there, not only in the JSON file, or the next scrape reverts them.
     - `RemoveDocumentation` then drops MAL's prose (`description`, `summary`, `example(s)`, `x-code-samples`, `x-logo`, except as field names inside schema `properties`) and blanks response and scope descriptions, which OpenAPI requires. As a result the generated client has no XML docs from MAL.
     - `--skip-download` (`./build.ps1 --target UpdateOpenApiSpec --skip-download`) reapplies the fixes to the committed spec and regenerates, without scraping. Prefer it unless MAL changed the API.
   - `ValidatePipeline` (`./build.ps1 --target ValidatePipeline`, added 2026-10-17) checks `azure-pipelines.yml` against the Azure Pipelines JSON schema without queuing a run. It isn't part of `Default`.
@@ -140,7 +140,8 @@ SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an uno
   - `BuildAndPack` depends on it and passes `-p:PackageReleaseNotesFile`, which `src/SoftThorn.MAL.ApiClient.csproj` reads into `PackageReleaseNotes`.
   - `TagRelease` (a dependency of `Push`) creates a lightweight tag `v{SemVer2}` and pushes it, but only after `PushRemote` actually pushed (`context.PackagesPushedToNuGet`). On Azure, this relies on `persistCredentials: true` and a service connection with write access.
   - Git is called through `context.RunGit`/`RunGitOrThrow` (the CLI, not Cake.Git).
-  - `./build.ps1 --target ReleaseNotes` previews the notes locally. There were no tags as of 2026-10-17, so the first release lists the whole history.
+  - `./build.ps1 --target ReleaseNotes` previews the notes locally.
+  - The first release, `0.0.37`, went to nuget.org on 2026-10-17, and the pipeline tagged it `v0.0.37`. The history rewrite then replaced that commit (`48cb67f`) with its twin `5dc3e9b` on `main` (identical tree). The tag stayed on the orphaned commit, so `git log v0.0.37..HEAD` listed almost the whole history, until the owner moved it to `5dc3e9b` the same day (`git tag -f`, then force-push the tag). After a history rewrite, check with `git merge-base --is-ancestor v0.0.37 HEAD` before building the next release.
   - Commit messages feed this task, see [Commit messages](#commit-messages).
 - The README has an "AI assistance" section. Claude-assisted commits carry the `Co-Authored-By: Claude ...` trailer (see [Commit messages](#commit-messages)).
 
@@ -215,7 +216,7 @@ The project counts as one of "Your Applications" under MAL's [API License and De
 - **1(a) / 3(a)(i)–(ii), API documentation:** it is part of "the API" and may not be copied, modified or published.
   - Never paste MAL's doc text into code, XML comments, README or the spec. Write your own wording and link to `https://myanimelist.net/apiconfig/references/api/v2`.
   - `UpdateOpenApiSpecTask.RemoveDocumentation` enforces this for the spec.
-  - Older commits still contain the prose, see `history-rewrite.md`.
+  - The owner rewrote the history on 2026-10-17 to remove the prose from older commits. No spec in `main`'s history has MAL's descriptions any more (checked 2026-10-17).
 - **4(i), no scraping:** `UpdateOpenApiSpec` scrapes the Redoc page anyway (owner's decision, 2026-10-17: keep it, run it by hand only, document it). Don't add it to CI or any other task, and don't add scraping fallbacks for data the API doesn't provide.
 - **3(a)(x), identity:** every request carries the library's User-Agent. Don't remove it.
 - **6, data limits:** `MalRetryHandler` backs off on `429`/`503`. Don't add anything that works around limits.
@@ -226,7 +227,6 @@ The project counts as one of "Your Applications" under MAL's [API License and De
 
 ## Pending work
 
-- `history-rewrite.md`: plan to remove MAL's documentation text from older commits (filter-branch + force-push). The owner runs it; delete the file when done.
 - The GitHub repo and the Azure variable group are renamed to `SoftThorn.MAL.ApiClient` (2026-10-17). MAL was notified under 4(b) on 2026-10-17 (see the license section), the owner verified the email, and MAL hasn't replied yet. If they object to the name, rename the package.
 
 - `package-updates.md` is the permanent NuGet/tool update queue. Follow its workflow and remove only the steps that are completed.
@@ -236,7 +236,7 @@ The project counts as one of "Your Applications" under MAL's [API License and De
 ## Known quirks / open issues (as of 2026-10-16)
 
 - `RedirectUrl` must end with `/` because it is used as the `HttpListener` prefix.
-- The package is not published on NuGet yet (confirmed by the user).
+- `0.0.37` is published on nuget.org (2026-10-17). `version.json` is at `0.1-alpha` on `feature/prepare_prerelease`; the owner plans a first release without the prerelease label.
 - There's no 401 retry: if MAL revokes a token before `ExpiresAt`, requests fail until the next login.
 - If `OAuthFlowTests` fails with Playwright waiting for `#loginUserName` (and the other integration tests are skipped), MAL showed `{"error":"invalid_client"}` instead of the login form. MAL reports both an unknown or revoked Client ID and a `RedirectUrl` that doesn't match the registered App Redirect URL that way, port included (seen 2026-10-17).
 - Even when run serially, MAL occasionally leaves a single request unanswered (on 2026-10-17, `ForumTests.TopicAsync` in one of three serial full runs; five isolated runs of `ForumTests` passed). `MalRetryHandler`'s per-attempt timeout now retries such GETs after 20s instead of failing after 100s.
@@ -244,12 +244,12 @@ The project counts as one of "Your Applications" under MAL's [API License and De
   - Fixed the same day: the clients no longer follow redirects, and `MalRetryHandler` retries redirected idempotent requests (see Layout).
   - What the new logs showed: once the redirects start, MAL redirects *every* request for about a minute (three windows of 45-65s in six back-to-back local runs). The 3 retries span about 5s, so the tests in that minute (about 10) still fail, but each within about 6s instead of 80-100s. It looks like throttling at MAL's edge rather than random errors. Not addressed yet.
   - Long Azure runs (11+ minutes in run 20261017.4, while a local run takes about 22s) can't come from these redirects, which fail within 200ms per attempt (seen again locally on 2026-10-17: the fourth suite run in three minutes got 307 on its first API request). They need requests MAL doesn't answer at all (up to about 87s per GET, 100s per PATCH) or a hung login. Which of the two wasn't known as of 2026-10-17; the Detailed console output and the login timeout should show it on the next run.
+- The CI login fails now and then on MAL's side. Run 20261017.6 hit the 2-minute login timeout with the browser on `https://myanimelist.net/submission/authorization` ("400 Bad Request"), the POST of the consent page's Allow button. The previous run (.5) passed, the only change between them was a docs commit, and a local login right after passed in 9s. Run .4, before the login timeout existed, stalled silently in the integration tests for 22 minutes, probably the same problem. The fixture logs only the start and the timeout, so why MAL answered 400 isn't known (as of 2026-10-17).
 - No Native AOT support, for the library or the tests (owner's decision, 2026-10-17: too much work for little benefit). The README lists it under Known limitations.
   - The library isn't AOT/trim compatible: the generated clients and `MalFormUrlEncoder` use reflection-based System.Text.Json, which Native AOT turns off by default. Support would need `IsAotCompatible`, a source-generated `JsonSerializerContext` for every model set as `TypeInfoResolver` in `JsonSerializerSettings.cs`, and checking the NSwag templates.
   - xUnit v3 4.0 supports Native AOT (`xunit.v3.aot.mtp-v2`, source-generated discovery, .NET 9+, C# only). Its docs claim no speed benefit. A run that isn't published still uses the JIT; only a `PublishAot` exe tests the code under AOT, and that needs clang on the CI image.
   - The integration tests could never switch, because Verify, Playwright, `ModelShape` and the custom collection orderer depend on reflection. The unit tests could, but it only pays off together with library support.
   - Don't switch to the AOT packages unless the owner decides to support AOT consumers.
-- MAL's spec gives `UsersClient.AnimelistAsync`/`MangalistAsync` no `fields` parameter, so `list_status` can't be requested and only `node` (id, title, main_picture) comes back (as of 2026-10-17).
 - Verified on 2026-10-17: the Cake targets `HtmlReport`, `BuildAndPack` and `UpdateOpenApiSpec`. `Default` was not run, because it pushes the package to `E:\Drop\NuGet`.
 - `tmp_build/results/reports/cobertura/Cobertura.xml` is first written by `ConvertCoverage` in Microsoft's XML coverage format (`dotnet-coverage merge -f xml`). `CoberturaReport` then overwrites it with ReportGenerator's real Cobertura output, which is what Codecov receives. That file has no branch data (`branches-valid="0"`), because the Microsoft XML format doesn't carry it.
 - Cake process calls go through `context.RunProcess(...)` (`build/Util/BuildContextExtensions.cs`), which throws on a non-zero exit code. Don't call `StartProcess` directly.

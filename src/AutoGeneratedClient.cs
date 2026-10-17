@@ -1965,7 +1965,7 @@ namespace SoftThorn.MAL.ApiClient
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserAnimeList> AnimelistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<UserAnimeList> AnimelistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (user_name == null)
                 throw new System.ArgumentNullException("user_name");
@@ -2001,6 +2001,10 @@ namespace SoftThorn.MAL.ApiClient
                     if (offset != null)
                     {
                         urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (fields != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("fields")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(fields, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
                     urlBuilder_.Length--;
 
@@ -2058,7 +2062,7 @@ namespace SoftThorn.MAL.ApiClient
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserMangaList> MangalistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<UserMangaList> MangalistAsync(string user_name, string? status = null, string? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (user_name == null)
                 throw new System.ArgumentNullException("user_name");
@@ -2094,6 +2098,10 @@ namespace SoftThorn.MAL.ApiClient
                     if (offset != null)
                     {
                         urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (fields != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("fields")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(fields, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
                     urlBuilder_.Length--;
 

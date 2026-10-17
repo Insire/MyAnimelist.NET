@@ -1,13 +1,78 @@
 ﻿{
   data: [
     {
+      list_status: {
+        comments: string,
+        is_rewatching: bool,
+        num_episodes_watched: int,
+        num_times_rewatched: int,
+        priority: int,
+        rewatch_value: int,
+        score: int,
+        status: string,
+        tags: [
+          string
+        ],
+        updated_at: date
+      },
       node: {
+        alternative_titles: {
+          en: string,
+          ja: string,
+          synonyms: [
+            string
+          ]
+        },
+        average_episode_duration: int,
+        broadcast: {
+          day_of_the_week: string,
+          start_time: string
+        },
+        created_at: date,
+        end_date: string,
+        genres: [
+          {
+            id: int,
+            name: string
+          }
+        ],
         id: int,
         main_picture: {
           large: uri,
           medium: uri
         },
-        title: string
+        mean: number,
+        media_type: string,
+        my_list_status: {
+          is_rewatching: bool,
+          num_episodes_watched: int,
+          score: int,
+          status: string,
+          updated_at: date
+        },
+        nsfw: string,
+        num_episodes: int,
+        num_list_users: int,
+        num_scoring_users: int,
+        popularity: int,
+        rank: int,
+        rating: string,
+        source: string,
+        start_date: string,
+        start_season: {
+          season: enum,
+          year: int
+        },
+        status: string,
+        studios: [
+          {
+            id: int,
+            name: string
+          }
+        ],
+        synopsis: string,
+        title: string,
+        updated_at: date
       }
     }
   ]
