@@ -1,6 +1,6 @@
 # Versioning
 
-MyAnimelist.NET follows [Semantic Versioning 2.0](https://semver.org/spec/v2.0.0.html).
+SoftThorn.MAL.ApiClient follows [Semantic Versioning 2.0](https://semver.org/spec/v2.0.0.html).
 
 | Number | Changes when |
 | - | - |

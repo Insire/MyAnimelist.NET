@@ -6,7 +6,7 @@
 using System.Reflection;
 
 [assembly: AssemblyCompany("SoftThorn")]
-[assembly: AssemblyProduct("MyAnimelist.NET")]
+[assembly: AssemblyProduct("SoftThorn.MAL.ApiClient")]
 [assembly: AssemblyCopyright("© 2025 Insire")]
 [assembly: AssemblyTrademark("")]
 

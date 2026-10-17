@@ -24,22 +24,14 @@ namespace Build.Tasks
 
         public override void Run(BuildContext context)
         {
-            var web = new HtmlWeb();
-            var document = web.Load("https://myanimelist.net/apiconfig/references/api/v2");
+            // --skip-download reapplies the fixes to the committed spec and regenerates, without fetching MAL's page
+            var spec = context.HasArgument("skip-download")
+                ? JsonNode.Parse(File.ReadAllText(Constants.OpenApiSpecPath))!
+                : DownloadSpec();
 
-            var nodes = document.DocumentNode.Descendants("script");
-
-            var scriptNode = nodes.Last()?.InnerText
-                .Replace("var container = document.getElementById('redoc');", "")
-                .Replace("Redoc.hydrate(__redoc_state, container);", "");
-
-            var openapiSpec = new Engine()
-                .Execute(scriptNode!)
-                .Evaluate("__redoc_state.spec.data").ToObject();
-
-            var spec = JsonSerializer.SerializeToNode(openapiSpec, options: _options)!;
             FixPathParameterNames(context, spec);
             FixForumTopic(context, spec);
+            RemoveDocumentation(context, spec);
 
             File.WriteAllText(Constants.OpenApiSpecPath, spec.ToJsonString(_options));
 
@@ -56,6 +48,25 @@ namespace Build.Tasks
                 );
 
             context.RunProcess(dotnetExe, settings);
+        }
+
+        // reads the spec out of the Redoc page's script; run this by hand only (see "MyAnimeList API License Agreement" in CLAUDE.md)
+        private JsonNode DownloadSpec()
+        {
+            var web = new HtmlWeb();
+            var document = web.Load("https://myanimelist.net/apiconfig/references/api/v2");
+
+            var nodes = document.DocumentNode.Descendants("script");
+
+            var scriptNode = nodes.Last()?.InnerText
+                .Replace("var container = document.getElementById('redoc');", "")
+                .Replace("Redoc.hydrate(__redoc_state, container);", "");
+
+            var openapiSpec = new Engine()
+                .Execute(scriptNode!)
+                .Evaluate("__redoc_state.spec.data").ToObject();
+
+            return JsonSerializer.SerializeToNode(openapiSpec, options: _options)!;
         }
 
         // MAL's spec declares path parameters that don't match the path template (e.g. "user_id" for "/users/{user_name}"),
@@ -111,6 +122,88 @@ namespace Build.Tasks
                 pollProperties.Remove("close", out var close);
                 pollProperties.Insert(index, "closed", close);
             }
+        }
+
+        // MAL's API License Agreement (3(a)(i)-(ii)) counts the API documentation as part of the API, which may not be
+        // copied, modified or published. Keep only the structure (paths, parameters, schemas, enums) and drop MAL's prose
+        // and sample content, so neither the committed spec nor the generated XML docs carry it.
+        private static readonly string[] DocumentationKeys = ["description", "summary", "example", "examples", "x-code-samples", "x-logo"];
+
+        private static void RemoveDocumentation(BuildContext context, JsonNode spec)
+        {
+            var removed = RemoveDocumentation(spec, isPropertyMap: false);
+
+            // OpenAPI requires a description on every response and scope, so keep the keys with empty values
+            foreach (var (_, pathItem) in spec["paths"]!.AsObject())
+            {
+                foreach (var (_, operation) in pathItem!.AsObject())
+                {
+                    if (operation is JsonObject && operation["responses"] is JsonObject responses)
+                    {
+                        foreach (var (_, response) in responses)
+                        {
+                            if (response is JsonObject responseObject)
+                            {
+                                responseObject["description"] = "";
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var (_, scheme) in spec["components"]?["securitySchemes"]?.AsObject() ?? [])
+            {
+                foreach (var (_, flow) in scheme?["flows"]?.AsObject() ?? [])
+                {
+                    if (flow?["scopes"] is JsonObject scopes)
+                    {
+                        foreach (var name in scopes.Select(scope => scope.Key).ToArray())
+                        {
+                            scopes[name] = "";
+                        }
+                    }
+                }
+            }
+
+            context.Information($"Removed {removed} documentation entries from the spec");
+        }
+
+        private static int RemoveDocumentation(JsonNode? node, bool isPropertyMap)
+        {
+            var removed = 0;
+
+            switch (node)
+            {
+                case JsonObject jsonObject:
+                    // in a schema's "properties" map the keys are field names, so a field called "description" must stay
+                    if (!isPropertyMap)
+                    {
+                        foreach (var key in DocumentationKeys)
+                        {
+                            if (jsonObject.Remove(key))
+                            {
+                                removed++;
+                            }
+                        }
+                    }
+
+                    foreach (var (key, child) in jsonObject)
+                    {
+                        removed += RemoveDocumentation(child, isPropertyMap: !isPropertyMap && key == "properties");
+                    }
+
+                    break;
+
+                case JsonArray jsonArray:
+                    foreach (var child in jsonArray)
+                    {
+                        removed += RemoveDocumentation(child, isPropertyMap: false);
+                    }
+
+                    break;
+            }
+
+            return removed;
         }
 
         private static void ReplaceArrayWithItem(BuildContext context, JsonNode? properties, string name)

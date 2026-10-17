@@ -112,7 +112,7 @@ namespace Build.Util
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine($"# MyAnimelist.NET {version} ({date:yyyy-MM-dd})");
+            builder.AppendLine($"# SoftThorn.MAL.ApiClient {version} ({date:yyyy-MM-dd})");
             builder.AppendLine();
             builder.AppendLine(Summary(previousTag, commits));
 

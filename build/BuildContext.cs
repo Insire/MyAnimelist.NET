@@ -51,7 +51,7 @@ namespace Build
             {
                 AssemblyFilters = new[]
                 {
-                    "-SoftThorn.MyAnimelistNET.*Tests*",
+                    "-SoftThorn.MAL.ApiClient.*Tests*",
                     "-xunit*"
                 },
                 ClassFilters = new[]

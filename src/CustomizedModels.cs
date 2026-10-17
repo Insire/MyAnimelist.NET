@@ -1,4 +1,4 @@
-﻿namespace SoftThorn.MyAnimelistNET
+﻿namespace SoftThorn.MAL.ApiClient
 {
     public class AnimeList
     {

@@ -5,7 +5,7 @@ namespace Build.Util
         public const string Configuration = "Release";
         public const string Platform = "AnyCPU";
 
-        public const string SolutionPath = "./SoftThorn.MyAnimelistNET.slnx";
+        public const string SolutionPath = "./SoftThorn.MAL.ApiClient.slnx";
         public const string NuGetConfigPath = "./nuget.config";
         public const string AssemblyInfoPath = "./SharedAssemblyInfo.cs";
 
@@ -14,12 +14,12 @@ namespace Build.Util
         public const string ReportsPath = "./tmp_build/results/reports";
         public const string CoberturaPath = "./tmp_build/results/reports/cobertura";
 
-        public const string RepositoryUrl = "https://github.com/Insire/MyAnimelist.NET";
+        public const string RepositoryUrl = "https://github.com/Insire/SoftThorn.MAL.ApiClient";
 
         public const string LocalNugetDirectory = @"E:\Drop\NuGet";
 
-        public const string OpenApiSpecPath = "./assets/SoftThorn.MyAnimelistNET_OpenApiSpec.json";
-        public const string NswagConfigFilePath = "./assets/SoftThorn.MyAnimelistNET_Config.nswag";
-        public const string ProjectPath = "./src//SoftThorn.MyAnimelistNET.csproj";
+        public const string OpenApiSpecPath = "./assets/SoftThorn.MAL.ApiClient_OpenApiSpec.json";
+        public const string NswagConfigFilePath = "./assets/SoftThorn.MAL.ApiClient_Config.nswag";
+        public const string ProjectPath = "./src//SoftThorn.MAL.ApiClient.csproj";
     }
 }

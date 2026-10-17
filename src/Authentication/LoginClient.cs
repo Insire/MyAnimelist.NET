@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SoftThorn.MyAnimelistNET.Authentication
+namespace SoftThorn.MAL.ApiClient.Authentication
 {
     public sealed class LoginClient
     {

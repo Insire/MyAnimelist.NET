@@ -4,13 +4,16 @@ Notes for Claude Code sessions working in this repository.
 
 ## What this is
 
-MyAnimelist.NET (NuGet package and root namespace `SoftThorn.MyAnimelistNET`): a .NET 10 client library for the MyAnimeList API v2 (`https://api.myanimelist.net/v2/`), with OAuth2 PKCE login. Author: Peter Vietense (SoftThorn), MIT license, GitHub `Insire/MyAnimelist.NET`. User-facing docs are in [README.md](README.md).
+SoftThorn.MAL.ApiClient (NuGet package, display name and root namespace): an unofficial .NET 10 client library for the MyAnimeList API v2 (`https://api.myanimelist.net/v2/`), with OAuth2 PKCE login. Author: Peter Vietense (SoftThorn), MIT license, GitHub `Insire/MyAnimelist.NET` (to be renamed to `Insire/SoftThorn.MAL.ApiClient`, which every URL in the repo already uses). User-facing docs are in [README.md](README.md). The project is bound by MAL's API agreement, see [MyAnimeList API License Agreement](#myanimelist-api-license-agreement).
 
 ## Layout
 
-- `src/` is the library (`SoftThorn.MyAnimelistNET.csproj`, namespace `SoftThorn.MyAnimelistNET`).
-  - `RegistrationExtensions.cs`: `AddMyAnimelist(ClientConfiguration)` is the DI entry point. It registers `IAuthCache`/`IBrowserLoginHandler` with `TryAdd` (overridable), a typed `HttpClient` for `MyAnimelistService`, and `MyAnimelistLoginHandler` (DelegatingHandler that adds the Bearer token).
-  - `MyAnimelistService.cs` is the facade. Property names don't match the generated class names:
+- `src/` is the library (`SoftThorn.MAL.ApiClient.csproj`, namespace `SoftThorn.MAL.ApiClient`).
+  - `RegistrationExtensions.cs`: `AddMalApiClient(ClientConfiguration)` is the DI entry point. It registers `IAuthCache`/`IBrowserLoginHandler` with `TryAdd` (overridable), a typed `HttpClient` for `MalApiService`, and `MalLoginHandler` (DelegatingHandler that adds the Bearer token).
+    - Both HttpClients (API and `TokenClient.HttpClientName`) get the `RegistrationExtensions.UserAgent` header (`SoftThorn.MAL.ApiClient/<informational version> (+github URL)`) and `MalRetryHandler`.
+  - `MalRetryHandler.cs` (internal): retries `429`/`503` up to 3 times, using `Retry-After` (delta or date) or else 1s/2s/4s backoff. A wait longer than 30s returns the response instead. Its `Delay` is an init property so tests can record waits.
+  - `Properties/AssemblyInfo.cs` holds `InternalsVisibleTo` for the unit tests. `GenerateAssemblyInfo` is off, so the MSBuild `InternalsVisibleTo` item does nothing.
+  - `MalApiService.cs` is the facade. Property names don't match the generated class names:
     - `Catalog` → `Client`: anime and manga search/details, `UsersAsync`
     - `Anime` → `AnimeClient`: ranking, season, suggestions, list status patch
     - `Manga` → `MangaClient`
@@ -29,22 +32,23 @@ MyAnimelist.NET (NuGet package and root namespace `SoftThorn.MyAnimelistNET`): a
       - It covers the code exchange and the refresh grant, using its own named HttpClient (`TokenClient.HttpClientName`) with no auth handler, so refreshing can't recurse.
       - It stamps `AuthResponse.ExpiresAt` using the injected `TimeProvider`.
       - `GetValidTokenAsync` refreshes once the token is within 1 minute of expiry, behind a `SemaphoreSlim`, so concurrent callers trigger a single refresh. A token without `ExpiresAt` is used as-is.
-      - `MyAnimelistLoginHandler` calls it before every request.
+      - `MalLoginHandler` calls it before every request.
     - `AuthCache`: in-memory `IMemoryCache` only, so tokens are lost on restart. There is no cache expiry, because the refresh token must outlive the access token. `SaveAsync` overwrites.
     - `BrowserLoginHandler`: `Process.Start` with the shell
     - `ClientConfiguration`/`ClientConfigurationOptions`: the options variant is nullable, for config binding
-- `assets/`: `SoftThorn.MyAnimelistNET_OpenApiSpec.json` (scraped from the MAL Redoc page), `SoftThorn.MyAnimelistNET_Config.nswag`, `Templates/*.liquid` (custom NSwag templates).
+- `assets/`: `SoftThorn.MAL.ApiClient_OpenApiSpec.json` (scraped from the MAL Redoc page, structure only: MAL's prose is stripped), `SoftThorn.MAL.ApiClient_Config.nswag`, `Templates/*.liquid` (custom NSwag templates).
 - `build/`: Cake Frosting build (`build.ps1`/`build.sh` → `dotnet run --project build/Build.csproj -- <args>`). Tasks are in `build/Tasks`, paths in `build/Util/Constants.cs`. Output goes to `tmp_build/`.
   - `Default`: clean, update `SharedAssemblyInfo.cs`, test, coverage/Codecov, pack, push. It pushes locally to `E:\Drop\NuGet`, or to nuget.org only on Azure Pipelines with `NUGETORG_APIKEY` set.
-  - `UpdateOpenApiSpec`: re-scrapes the spec with HtmlAgilityPack and Jint, then runs nswag to regenerate the client.
+  - `UpdateOpenApiSpec`: re-scrapes the spec with HtmlAgilityPack and Jint, then runs nswag to regenerate the client. Run it by hand only, never in CI (scraping, see the license section).
     - Before writing the spec, it patches places where MAL's spec doesn't match the live API: path parameter names that don't match the path template (`user_id` on `/users/{user_name}`), and `ForumTopic.data`/`ForumTopicData.poll`, which are objects rather than arrays, with `close` sent as `closed`. Add new spec fixes there, not only in the JSON file, or the next scrape reverts them.
-    - To regenerate from the existing spec without re-scraping, run `dotnet tools/.store/nswag.consolecore/<version>/nswag.consolecore/<version>/tools/net10.0/any/dotnet-nswag.dll run ./assets/SoftThorn.MyAnimelistNET_Config.nswag`.
+    - `RemoveDocumentation` then drops MAL's prose (`description`, `summary`, `example(s)`, `x-code-samples`, `x-logo`, except as field names inside schema `properties`) and blanks response and scope descriptions, which OpenAPI requires. As a result the generated client has no XML docs from MAL.
+    - `--skip-download` (`./build.ps1 --target UpdateOpenApiSpec --skip-download`) reapplies the fixes to the committed spec and regenerates, without scraping. Prefer it unless MAL changed the API.
   - The `.nswag` config must keep `generateImmutableArrayProperties`/`generateImmutableDictionaryProperties` set to `false`. With `true`, collections are `{ get; } = null` and System.Text.Json silently skips them.
 - `tests/` holds two xUnit v3 projects on Microsoft.Testing.Platform. Each has its own `Traits.cs` (`TestCategory`).
-  - `SoftThorn.MyAnimelistNET.UnitTests`: **no network access allowed.**
-    - `TokenClientTests` uses a stub HTTP handler and a fixed `TimeProvider`.
+  - `SoftThorn.MAL.ApiClient.UnitTests`: **no network access allowed.**
+    - `TokenClientTests` uses a stub HTTP handler and a fixed `TimeProvider`. `MalRetryHandlerTests` does the same and also checks the User-Agent on both registered clients.
     - New tests that don't call MAL go here.
-  - `SoftThorn.MyAnimelistNET.IntegrationTests`: **live tests against the real MAL API**, using Verify and Playwright.
+  - `SoftThorn.MAL.ApiClient.IntegrationTests`: **live tests against the real MAL API**, using Verify and Playwright.
     - `OAuth/OAuthFlowTestFixture` is an assembly fixture and a Playwright `PageTest`. It implements `IBrowserLoginHandler` to fill in the MAL login form automatically.
     - Config comes from user secrets (Debug, `UserSecretsId cc5b08ee-...`) or environment variables. It needs `ClientConfiguration:{ClientId,RedirectUrl}` and `MalAuthSettings:{UserName,Password}`. Secrets are set up on the user's machine.
     - The csproj sets `SolutionDir`/`SolutionName` because two `.slnx` files confuse Verify's auto-discovery.
@@ -55,16 +59,17 @@ MyAnimelist.NET (NuGet package and root namespace `SoftThorn.MyAnimelistNET`): a
     - `*.received.*` files are gitignored. Set `DiffEngine_Disabled=true` to stop Verify from opening a diff tool.
 - `Directory.Build.targets` links `SharedAssemblyInfo.cs` through `$(MSBuildThisFileDirectory)`, so projects can sit at any depth.
 - Central package management is in `Directory.Packages.props`; `build/` has its own. Versioning uses Nerdbank.GitVersioning (`version.json`) with plain SemVer, staying on 0.x for now (decided 2026-10-17, see `versioning.md`).
-- Naming (owner's choice, 2026-10-17): package ID, assemblies, root namespace, project/folder/solution names and asset file names all use `SoftThorn.MyAnimelistNET` (no `.NET` segment, so namespaces don't get a `NET` part). "MyAnimelist.NET" stays as the display name (README title, `Product`, release-notes heading), the GitHub repo name and the Azure variable group name.
-- Package metadata: shared fields (authors, license, repository, copyright) are in `Directory.Build.props`, package-specific ones (description, tags, `PackageReadmeFile`) in `src/SoftThorn.MyAnimelistNET.csproj`. The README is packed and shown on nuget.org, so its links to repo files use absolute `github.com/.../blob/main/...` URLs. The package icon (chosen by the owner on 2026-10-17) is in `assets/Icon/`.
+- Naming (owner's choice, 2026-10-17, second rename that day): package ID, assemblies, root namespace, project/folder/solution names, asset file names, the display name (README title, `Product`, release-notes heading) and the Azure variable group all use `SoftThorn.MAL.ApiClient`. Public types use `Mal`: `MalApiService`, `AddMalApiClient`, `MalLoginHandler`. The earlier name `SoftThorn.MyAnimelistNET` (and "MyAnimelist.NET" before it) was dropped because section 17 of MAL's agreement bans Company Marks in product names.
+  - The owner knowingly kept "MAL", although it is MAL's own abbreviation and probably a Company Mark too. Don't re-raise it unless MAL objects. Don't reintroduce "MyAnimeList" in names; in prose it may only say which API the library talks to.
+- Package metadata: shared fields (authors, license, repository, copyright) are in `Directory.Build.props`, package-specific ones (description, tags, `PackageReadmeFile`) in `src/SoftThorn.MAL.ApiClient.csproj`. The README is packed and shown on nuget.org, so its links to repo files use absolute `github.com/.../blob/main/...` URLs. The package icon (chosen by the owner on 2026-10-17) is in `assets/Icon/`.
   - It shows an anime eye (modern style, orange iris) on flat .NET purple `#512BD4`, with `{ }` braces as the pupil.
   - `icon.svg` is the source. `icon.png` (128×128, packed as `PackageIcon`) and `icon-512.png` were rendered from it with Playwright's headless Chromium (`chrome.exe --headless --default-background-color=00000000 --screenshot`), since ImageMagick and Inkscape aren't installed.
   - Re-render both PNGs after you change the SVG.
   - The README shows `icon.png` through an absolute `raw.githubusercontent.com/.../main/...` URL (nuget.org only shows images from trusted hosts), so the image only appears once it is pushed to `main`.
-- CI is **Azure DevOps** (`azure-pipelines.yml`), not GitHub Actions (owner's choice, 2026-10-17). It runs `./build.ps1` on pushes to `main`/`v*.*`, with `pr: none` because fork PRs get no secrets. Secrets come from the variable group `MyAnimelist.NET` and are mapped to env vars in the YAML. Every pipeline build of those branches pushes to nuget.org.
+- CI is **Azure DevOps** (`azure-pipelines.yml`), not GitHub Actions (owner's choice, 2026-10-17). It runs `./build.ps1` on pushes to `main`/`v*.*`, with `pr: none` because fork PRs get no secrets. Secrets come from the variable group `SoftThorn.MAL.ApiClient` (the owner has to rename the existing `MyAnimelist.NET` group) and are mapped to env vars in the YAML. Every pipeline build of those branches pushes to nuget.org.
 - Release notes (added 2026-10-17): the Cake `ReleaseNotes` task (`build/Tasks/ReleaseNotesTask.cs`, parsing and rendering in `build/Util/ReleaseNotes.cs`) runs `git log <last v* tag>..HEAD` and groups conventional commits. Breaking changes come from `type!:` or a `BREAKING CHANGE:` footer, and highlights from `Release-Note:` footers. A count line is always included.
   - Output goes to `tmp_build/results/release-notes.md` (Markdown with commit links) and `release-notes.txt` (plain text, internal changes left out).
-  - `BuildAndPack` depends on it and passes `-p:PackageReleaseNotesFile`, which `src/SoftThorn.MyAnimelistNET.csproj` reads into `PackageReleaseNotes`.
+  - `BuildAndPack` depends on it and passes `-p:PackageReleaseNotesFile`, which `src/SoftThorn.MAL.ApiClient.csproj` reads into `PackageReleaseNotes`.
   - `TagRelease` (a dependency of `Push`) creates a lightweight tag `v{SemVer2}` and pushes it, but only after `PushRemote` actually pushed (`context.PackagesPushedToNuGet`). On Azure, this relies on `persistCredentials: true` and a service connection with write access.
   - Git is called through `context.RunGit`/`RunGitOrThrow` (the CLI, not Cake.Git).
   - `./build.ps1 --target ReleaseNotes` previews the notes locally. There were no tags as of 2026-10-17, so the first release lists the whole history.
@@ -73,11 +78,11 @@ MyAnimelist.NET (NuGet package and root namespace `SoftThorn.MyAnimelistNET`): a
 
 ## Commands
 
-- Build: `dotnet build SoftThorn.MyAnimelistNET.slnx`
+- Build: `dotnet build SoftThorn.MAL.ApiClient.slnx`
 - Test:
-  - Unit tests only (no secrets): `dotnet test --project tests/SoftThorn.MyAnimelistNET.UnitTests/SoftThorn.MyAnimelistNET.UnitTests.csproj`
-  - Integration tests: `dotnet test --project tests/SoftThorn.MyAnimelistNET.IntegrationTests/SoftThorn.MyAnimelistNET.IntegrationTests.csproj`
-  - Both: `dotnet test --solution SoftThorn.MyAnimelistNET.slnx`. A bare `dotnet test` at the root fails, because there are two `.slnx` files.
+  - Unit tests only (no secrets): `dotnet test --project tests/SoftThorn.MAL.ApiClient.UnitTests/SoftThorn.MAL.ApiClient.UnitTests.csproj`
+  - Integration tests: `dotnet test --project tests/SoftThorn.MAL.ApiClient.IntegrationTests/SoftThorn.MAL.ApiClient.IntegrationTests.csproj`
+  - Both: `dotnet test --solution SoftThorn.MAL.ApiClient.slnx`. A bare `dotnet test` at the root fails, because there are two `.slnx` files.
   - `global.json` sets `test.runner = Microsoft.Testing.Platform`, so use MTP/xUnit v3 options such as `--filter-trait`, `--coverage` and `--report-xunit-trx`, not VSTest's `--filter`, `--collect` and `--logger`.
   - The Cake `Test` task uses the same options in Release. User secrets only load in Debug, so Release needs environment variables.
 - Full pipeline: `./build.ps1`. Regenerate the client: `./build.ps1 --target UpdateOpenApiSpec`
@@ -131,7 +136,27 @@ Format ([conventional commits](https://www.conventionalcommits.org)):
   - After that month the build fails with SC021.
   - Renewing means bumping it by at most 12 months, and only while the project is still open source with no revenue. Confirm with the owner before changing what is claimed.
 
+## MyAnimeList API License Agreement
+
+The project counts as one of "Your Applications" under MAL's [API License and Developer Agreement](https://myanimelist.net/static/apiagreement.html) (1(g): any application "that interact[s] with the API"). The version of 2019-08-08 was reviewed on 2026-10-17. Rules that shape this repo:
+
+- **17 / 3(a)(xiii), Company Marks:** no MAL marks in product, package or type names. Marks are allowed only to attribute MAL as the source. This drove the rename, see Naming above.
+- **1(a) / 3(a)(i)–(ii), API documentation:** it is part of "the API" and may not be copied, modified or published.
+  - Never paste MAL's doc text into code, XML comments, README or the spec. Write your own wording and link to `https://myanimelist.net/apiconfig/references/api/v2`.
+  - `UpdateOpenApiSpecTask.RemoveDocumentation` enforces this for the spec.
+  - Older commits still contain the prose, see `history-rewrite.md`.
+- **4(i), no scraping:** `UpdateOpenApiSpec` scrapes the Redoc page anyway (owner's decision, 2026-10-17: keep it, run it by hand only, document it). Don't add it to CI or any other task, and don't add scraping fallbacks for data the API doesn't provide.
+- **3(a)(x), identity:** every request carries the library's User-Agent. Don't remove it.
+- **6, data limits:** `MalRetryHandler` backs off on `429`/`503`. Don't add anything that works around limits.
+- **3(c) / 4(f), personal data and credentials:** the library supports only OAuth and stores only tokens, in memory. Don't add persistent caching of user data or anything that asks for passwords. The integration tests' `MalAuthSettings` password is the owner's own test account in local user secrets, which is fine.
+- **2(a) / 3(c), Client ID:** never ship or commit one. Each consumer registers their own, and with it accepts the agreement. CI's comes from the Azure variable group.
+- **4(b), notification:** MAL wants to be told before an application is made available. The owner should contact MAL support before the first NuGet release (not done as of 2026-10-17).
+- **4(d):** the developer is responsible for end users' acts, which is why the README has a "Using the MyAnimeList API responsibly" section for consumers.
+
 ## Pending work
+
+- `history-rewrite.md`: plan to remove MAL's documentation text from older commits (filter-branch + force-push). The owner runs it; delete the file when done.
+- Before the first NuGet release, the owner still has to rename the GitHub repo and the Azure variable group to `SoftThorn.MAL.ApiClient`, and notify MAL (4(b)).
 
 - `package-updates.md` is the permanent NuGet/tool update queue. Follow its workflow and remove only the steps that are completed.
   - Never delete the file or its Workflow section.
@@ -142,6 +167,7 @@ Format ([conventional commits](https://www.conventionalcommits.org)):
 - `RedirectUrl` must end with `/` because it is used as the `HttpListener` prefix.
 - The package is not published on NuGet yet (confirmed by the user).
 - There's no 401 retry: if MAL revokes a token before `ExpiresAt`, requests fail until the next login.
+- On 2026-10-17 the owner revoked the integration tests' MAL client, so every integration test fails in `OAuthFlowTestFixture` (MAL shows an error page instead of the login form, and Playwright times out on `#loginUserName`). The tests need a new Client ID in the user secrets and the Azure variable group.
 - MAL's spec gives `UsersClient.AnimelistAsync`/`MangalistAsync` no `fields` parameter, so `list_status` can't be requested and only `node` (id, title, main_picture) comes back (as of 2026-10-17).
 - Verified on 2026-10-17: the Cake targets `HtmlReport`, `BuildAndPack` and `UpdateOpenApiSpec`. `Default` was not run, because it pushes the package to `E:\Drop\NuGet`.
   - Release tests need the secrets as environment variables (`ClientConfiguration__ClientId` and so on). You can export them from `dotnet user-secrets list` in the integration test project.

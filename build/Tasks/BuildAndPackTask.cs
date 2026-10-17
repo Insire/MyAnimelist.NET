@@ -23,7 +23,7 @@ namespace Build.Tasks
                     .Append($"--output \"{Constants.PackagesPath}\"")
                     .Append($"-p:PackageVersion={context.GitVersion?.SemVer2}")
                     .Append($"-p:PublicRelease={context.IsPublicRelease}") // Nerdbank.GitVersioning - omit git commit ID
-                    .Append($"-p:PackageReleaseNotesFile=\"{context.ReleaseNotesTextFile.FullPath}\"") // read by src/SoftThorn.MyAnimelistNET.csproj
+                    .Append($"-p:PackageReleaseNotesFile=\"{context.ReleaseNotesTextFile.FullPath}\"") // read by src/SoftThorn.MAL.ApiClient.csproj
 
                     // Creating symbol packages
                     .Append("-p:IncludeSymbols=true")

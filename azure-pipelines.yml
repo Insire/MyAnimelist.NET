@@ -2,8 +2,8 @@
 # Every build of main or a v<major>.<minor> branch is a public release (see version.json) and gets pushed.
 # The GitHub service connection used for the checkout needs write access to the repository, to push the v<version> tag.
 #
-# Needs a variable group named "MyAnimelist.NET" with these variables (mark all of them as secret):
-#   NUGETORG_APIKEY   nuget.org API key with push rights for SoftThorn.MyAnimelistNET
+# Needs a variable group named "SoftThorn.MAL.ApiClient" with these variables (mark all of them as secret):
+#   NUGETORG_APIKEY   nuget.org API key with push rights for SoftThorn.MAL.ApiClient
 #   CODECOV_TOKEN     Codecov upload token
 #   MAL_CLIENT_ID     Client ID of the MyAnimeList API client used by the integration tests
 #   MAL_REDIRECT_URL  Redirect URL registered for that client, e.g. http://localhost:5000/callback/
@@ -23,7 +23,7 @@ pool:
   vmImage: windows-latest
 
 variables:
-  - group: MyAnimelist.NET
+  - group: SoftThorn.MAL.ApiClient
   - name: DOTNET_NOLOGO
     value: true
   - name: DOTNET_CLI_TELEMETRY_OPTOUT
@@ -44,8 +44,8 @@ steps:
 
   # Playwright keeps its browsers in the user profile, so they survive the clean in the Cake build
   - pwsh: |
-      dotnet build tests/SoftThorn.MyAnimelistNET.IntegrationTests/SoftThorn.MyAnimelistNET.IntegrationTests.csproj --configuration Release
-      ./tests/SoftThorn.MyAnimelistNET.IntegrationTests/bin/Release/net10.0/playwright.ps1 install chromium
+      dotnet build tests/SoftThorn.MAL.ApiClient.IntegrationTests/SoftThorn.MAL.ApiClient.IntegrationTests.csproj --configuration Release
+      ./tests/SoftThorn.MAL.ApiClient.IntegrationTests/bin/Release/net10.0/playwright.ps1 install chromium
     displayName: Install Playwright browsers
 
   - pwsh: ./build.ps1

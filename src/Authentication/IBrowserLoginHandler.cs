@@ -1,4 +1,4 @@
-﻿namespace SoftThorn.MyAnimelistNET.Authentication
+﻿namespace SoftThorn.MAL.ApiClient.Authentication
 {
     public interface IBrowserLoginHandler
     {

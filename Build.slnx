@@ -1,8 +1,8 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
-    <File Path="assets/SoftThorn.MyAnimelistNET_Config.nswag" />
-    <File Path="assets/SoftThorn.MyAnimelistNET_OpenApiSpec.json" />
+    <File Path="assets/SoftThorn.MAL.ApiClient_Config.nswag" />
+    <File Path="assets/SoftThorn.MAL.ApiClient_OpenApiSpec.json" />
     <File Path="build.ps1" />
     <File Path="build.sh" />
     <File Path="codecov.yml" />

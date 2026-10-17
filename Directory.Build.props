@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <Product>MyAnimelist.NET</Product>
+        <Product>SoftThorn.MAL.ApiClient</Product>
         <Company>SoftThorn</Company>
         <Authors>Peter Vietense</Authors>
         <Copyright>Copyright (c) 2025 Peter Vietense</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/Insire/MyAnimelist.NET</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/Insire/MyAnimelist.NET</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Insire/SoftThorn.MAL.ApiClient</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Insire/SoftThorn.MAL.ApiClient</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 </Project>

@@ -19,20 +19,20 @@ Steps marked **Decision needed** wait for the repo owner's answer. Don't start t
 3. **Build both solutions with no warnings or errors:**
 
    ```sh
-   dotnet build SoftThorn.MyAnimelistNET.slnx
+   dotnet build SoftThorn.MAL.ApiClient.slnx
    dotnet build build/Build.csproj
    ```
 
 4. **Run the unit tests.** They need no secrets.
 
    ```sh
-   dotnet test --project tests/SoftThorn.MyAnimelistNET.UnitTests/SoftThorn.MyAnimelistNET.UnitTests.csproj
+   dotnet test --project tests/SoftThorn.MAL.ApiClient.UnitTests/SoftThorn.MAL.ApiClient.UnitTests.csproj
    ```
 
 5. **Run the integration tests** when a step touches test infrastructure (xUnit, Verify, Playwright, MTP, or `Microsoft.Extensions.*`). They need user secrets, which exist on the owner's machine.
 
    ```sh
-   dotnet test --project tests/SoftThorn.MyAnimelistNET.IntegrationTests/SoftThorn.MyAnimelistNET.IntegrationTests.csproj
+   dotnet test --project tests/SoftThorn.MAL.ApiClient.IntegrationTests/SoftThorn.MAL.ApiClient.IntegrationTests.csproj
    ```
 
 6. **Run the step's own checks**, listed under each step.
@@ -41,8 +41,8 @@ Steps marked **Decision needed** wait for the repo owner's answer. Don't start t
    - Delete the step from this file.
    - Update `CLAUDE.md` if a fact it records changed.
 8. **When all steps are done:**
-   - Run `dotnet list SoftThorn.MyAnimelistNET.slnx package --outdated` and `dotnet list build/Build.csproj package --outdated` once more.
-   - Run `dotnet list SoftThorn.MyAnimelistNET.slnx package --vulnerable --include-transitive`.
+   - Run `dotnet list SoftThorn.MAL.ApiClient.slnx package --outdated` and `dotnet list build/Build.csproj package --outdated` once more.
+   - Run `dotnet list SoftThorn.MAL.ApiClient.slnx package --vulnerable --include-transitive`.
    - Add a step for anything new these commands turn up.
    - If they turn up nothing, leave the file with just the workflow and a line saying "No pending updates as of YYYY-MM-DD".
 
