@@ -54,7 +54,10 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
     - The test account's manga list is empty, so the `MangalistAsync` snapshot is `{}`. A snapshot of `@me` or a ranking can change when the account's list changes (`my_list_status` appears) or when a ranking gains or loses optional fields. Re-accept a snapshot only after checking that the diff is data, not a broken model.
     - `*.received.*` files are gitignored. Set `DiffEngine_Disabled=true` to stop Verify from opening a diff tool.
 - `Directory.Build.targets` links `SharedAssemblyInfo.cs` through `$(MSBuildThisFileDirectory)`, so projects can sit at any depth.
-- Central package management is in `Directory.Packages.props`; `build/` has its own. Versioning uses Nerdbank.GitVersioning (`version.json`).
+- Central package management is in `Directory.Packages.props`; `build/` has its own. Versioning uses Nerdbank.GitVersioning (`version.json`) with plain SemVer, staying on 0.x for now (decided 2026-10-17, see `versioning.md`).
+- Package metadata: shared fields (authors, license, repository, copyright) are in `Directory.Build.props`, package-specific ones (description, tags, `PackageReadmeFile`) in `src/MyAnimelist.NET.csproj`. The README is packed and shown on nuget.org, so its links to repo files use absolute `github.com/.../blob/main/...` URLs. The package icon is still missing; the owner will choose one.
+- CI is **Azure DevOps** (`azure-pipelines.yml`), not GitHub Actions (owner's choice, 2026-10-17). It runs `./build.ps1` on pushes to `main`/`v*.*`, with `pr: none` because fork PRs get no secrets. Secrets come from the variable group `MyAnimelist.NET` and are mapped to env vars in the YAML. Every pipeline build of those branches pushes to nuget.org.
+- The README has an "AI assistance" section. Claude-assisted commits carry the `Co-Authored-By: Claude ...` trailer, so keep using it in suggested commit messages.
 
 ## Commands
 

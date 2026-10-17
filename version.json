@@ -7,8 +7,8 @@
     ],
     "pathFilters": [
         ":!/tests",
-        ":!readme.md",
-        ":!LICENSE.md",
+        ":!README.md",
+        ":!LICENSE",
         ":!SharedAssemblyInfo.cs",
         ":!MyAnimelist.NET.slnx",
         ":!codecov.yml"
