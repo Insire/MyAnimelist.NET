@@ -1,4 +1,4 @@
-﻿namespace MyAnimelist.NET.Authentication
+﻿namespace SoftThorn.MyAnimelistNET.Authentication
 {
     internal sealed class MyAnimelistLoginHandler(TokenClient tokenClient) : DelegatingHandler
     {

@@ -1,4 +1,4 @@
-namespace MyAnimelist.NET.IntegrationTests
+namespace SoftThorn.MyAnimelistNET.IntegrationTests
 {
     /// <summary>
     /// The <c>fields</c> query values that request every property our models map, so the snapshots cover all of them.

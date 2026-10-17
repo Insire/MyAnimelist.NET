@@ -1,4 +1,4 @@
-﻿namespace MyAnimelist.NET.UnitTests
+﻿namespace SoftThorn.MyAnimelistNET.UnitTests
 {
     public static class Traits
     {

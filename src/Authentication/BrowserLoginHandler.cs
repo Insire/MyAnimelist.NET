@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace MyAnimelist.NET.Authentication
+namespace SoftThorn.MyAnimelistNET.Authentication
 {
     public sealed class BrowserLoginHandler : IBrowserLoginHandler
     {

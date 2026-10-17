@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using MyAnimelist.NET.Authentication;
+using SoftThorn.MyAnimelistNET.Authentication;
 
-namespace MyAnimelist.NET
+namespace SoftThorn.MyAnimelistNET
 {
     public static class RegistrationExtensions
     {

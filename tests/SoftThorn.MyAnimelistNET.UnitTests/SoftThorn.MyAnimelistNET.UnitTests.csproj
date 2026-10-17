@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<!-- tests in here must not touch the network; anything calling MyAnimeList belongs in MyAnimelist.NET.IntegrationTests -->
+	<!-- tests in here must not touch the network; anything calling MyAnimeList belongs in SoftThorn.MyAnimelistNET.IntegrationTests -->
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -20,11 +20,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\MyAnimelist.NET.csproj" />
+		<ProjectReference Include="..\..\src\SoftThorn.MyAnimelistNET.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Using Include="MyAnimelist.NET" />
+		<Using Include="SoftThorn.MyAnimelistNET" />
 		<Using Include="Xunit" />
 	</ItemGroup>
 

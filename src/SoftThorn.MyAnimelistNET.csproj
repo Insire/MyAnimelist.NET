@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<PackageId>MyAnimelist.NET</PackageId>
+		<PackageId>SoftThorn.MyAnimelistNET</PackageId>
 		<Description>Unofficial .NET client for the MyAnimeList API v2, with OAuth2 PKCE sign-in, automatic token refresh and Microsoft.Extensions.DependencyInjection integration.</Description>
 		<PackageTags>myanimelist;mal;anime;manga;api;client;oauth2;pkce</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>

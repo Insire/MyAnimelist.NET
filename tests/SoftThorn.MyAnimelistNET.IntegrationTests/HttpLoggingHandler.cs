@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 
-namespace MyAnimelist.NET.IntegrationTests
+namespace SoftThorn.MyAnimelistNET.IntegrationTests
 {
     public sealed class HttpLoggingHandler : DelegatingHandler
     {

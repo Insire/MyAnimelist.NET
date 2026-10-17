@@ -1,6 +1,6 @@
-﻿using MyAnimelist.NET.IntegrationTests.OAuth;
+﻿using SoftThorn.MyAnimelistNET.IntegrationTests.OAuth;
 
-namespace MyAnimelist.NET.IntegrationTests
+namespace SoftThorn.MyAnimelistNET.IntegrationTests
 {
     [Trait(Traits.CategoryTraitName, Traits.IntegrationTestTraitValue)]
     public sealed class FetchTests(OAuthFlowTestFixture fixture)

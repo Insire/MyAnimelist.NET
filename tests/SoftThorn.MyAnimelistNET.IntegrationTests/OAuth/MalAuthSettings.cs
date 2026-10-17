@@ -1,4 +1,4 @@
-﻿namespace MyAnimelist.NET.IntegrationTests.OAuth
+﻿namespace SoftThorn.MyAnimelistNET.IntegrationTests.OAuth
 {
     internal sealed class MalAuthSettings
     {

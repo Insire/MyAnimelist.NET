@@ -1,4 +1,4 @@
-﻿namespace MyAnimelist.NET.Authentication
+﻿namespace SoftThorn.MyAnimelistNET.Authentication
 {
     public sealed record class ClientConfigurationOptions
     {

@@ -2,12 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 using Microsoft.Playwright.Xunit.v3;
-using MyAnimelist.NET.Authentication;
-using MyAnimelist.NET.IntegrationTests.OAuth;
+using SoftThorn.MyAnimelistNET.Authentication;
+using SoftThorn.MyAnimelistNET.IntegrationTests.OAuth;
 
 [assembly: AssemblyFixture(typeof(OAuthFlowTestFixture))]
 
-namespace MyAnimelist.NET.IntegrationTests.OAuth
+namespace SoftThorn.MyAnimelistNET.IntegrationTests.OAuth
 {
     public sealed class OAuthFlowTestFixture : PageTest, IAsyncLifetime, IBrowserLoginHandler
     {

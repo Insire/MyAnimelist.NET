@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace MyAnimelist.NET.IntegrationTests.Snapshots
+namespace SoftThorn.MyAnimelistNET.IntegrationTests.Snapshots
 {
     internal static class SnapshotSettings
     {

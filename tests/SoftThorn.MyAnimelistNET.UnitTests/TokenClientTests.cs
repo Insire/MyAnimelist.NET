@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Caching.Memory;
-using MyAnimelist.NET.Authentication;
+using SoftThorn.MyAnimelistNET.Authentication;
 using System.Net;
 using System.Text;
 
-namespace MyAnimelist.NET.UnitTests
+namespace SoftThorn.MyAnimelistNET.UnitTests
 {
     [Trait(Traits.CategoryTraitName, Traits.UnitTestTraitValue)]
     public sealed class TokenClientTests

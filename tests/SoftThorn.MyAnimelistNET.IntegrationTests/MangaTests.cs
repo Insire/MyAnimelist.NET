@@ -1,7 +1,7 @@
-using MyAnimelist.NET.IntegrationTests.OAuth;
-using MyAnimelist.NET.IntegrationTests.Snapshots;
+using SoftThorn.MyAnimelistNET.IntegrationTests.OAuth;
+using SoftThorn.MyAnimelistNET.IntegrationTests.Snapshots;
 
-namespace MyAnimelist.NET.IntegrationTests
+namespace SoftThorn.MyAnimelistNET.IntegrationTests
 {
     [Trait(Traits.CategoryTraitName, Traits.IntegrationTestTraitValue)]
     public sealed class MangaTests(OAuthFlowTestFixture fixture)

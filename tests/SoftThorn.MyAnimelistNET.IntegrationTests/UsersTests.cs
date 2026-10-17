@@ -1,7 +1,7 @@
-using MyAnimelist.NET.IntegrationTests.OAuth;
-using MyAnimelist.NET.IntegrationTests.Snapshots;
+using SoftThorn.MyAnimelistNET.IntegrationTests.OAuth;
+using SoftThorn.MyAnimelistNET.IntegrationTests.Snapshots;
 
-namespace MyAnimelist.NET.IntegrationTests
+namespace SoftThorn.MyAnimelistNET.IntegrationTests
 {
     // the list endpoints have no fields parameter, so MAL only returns id, title and main_picture of each node
     [Trait(Traits.CategoryTraitName, Traits.IntegrationTestTraitValue)]

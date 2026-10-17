@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MyAnimelist.NET.Authentication
+namespace SoftThorn.MyAnimelistNET.Authentication
 {
     public readonly record struct AuthResponse
     {

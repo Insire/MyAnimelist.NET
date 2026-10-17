@@ -1,6 +1,6 @@
-﻿using MyAnimelist.NET.Authentication;
+﻿using SoftThorn.MyAnimelistNET.Authentication;
 
-namespace MyAnimelist.NET
+namespace SoftThorn.MyAnimelistNET
 {
     public sealed class MyAnimelistService
     {

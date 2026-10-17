@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MyAnimelist.NET.IntegrationTests.Snapshots
+namespace SoftThorn.MyAnimelistNET.IntegrationTests.Snapshots
 {
     /// <summary>
     /// Projects a deserialized response onto its structure: every populated member becomes its type name,

@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "MyAnimelist.NET_OpenApiSpec.json",
+      "url": "SoftThorn.MyAnimelistNET_OpenApiSpec.json",
       "output": null,
       "newLineBehavior": "Auto"
     }
@@ -59,7 +59,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "MyAnimelist.NET",
+      "namespace": "SoftThorn.MyAnimelistNET",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,

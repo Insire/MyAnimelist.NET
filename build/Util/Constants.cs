@@ -5,7 +5,7 @@ namespace Build.Util
         public const string Configuration = "Release";
         public const string Platform = "AnyCPU";
 
-        public const string SolutionPath = "./MyAnimelist.NET.slnx";
+        public const string SolutionPath = "./SoftThorn.MyAnimelistNET.slnx";
         public const string NuGetConfigPath = "./nuget.config";
         public const string AssemblyInfoPath = "./SharedAssemblyInfo.cs";
 
@@ -18,8 +18,8 @@ namespace Build.Util
 
         public const string LocalNugetDirectory = @"E:\Drop\NuGet";
 
-        public const string OpenApiSpecPath = "./assets/MyAnimelist.NET_OpenApiSpec.json";
-        public const string NswagConfigFilePath = "./assets/MyAnimelist.NET_Config.nswag";
-        public const string ProjectPath = "./src//MyAnimelist.NET.csproj";
+        public const string OpenApiSpecPath = "./assets/SoftThorn.MyAnimelistNET_OpenApiSpec.json";
+        public const string NswagConfigFilePath = "./assets/SoftThorn.MyAnimelistNET_Config.nswag";
+        public const string ProjectPath = "./src//SoftThorn.MyAnimelistNET.csproj";
     }
 }

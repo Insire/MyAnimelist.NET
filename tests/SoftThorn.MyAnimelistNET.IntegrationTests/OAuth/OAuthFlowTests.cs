@@ -1,4 +1,4 @@
-﻿namespace MyAnimelist.NET.IntegrationTests.OAuth
+﻿namespace SoftThorn.MyAnimelistNET.IntegrationTests.OAuth
 {
     [Trait(Traits.CategoryTraitName, Traits.IntegrationTestTraitValue)]
     public sealed class OAuthFlowTests(OAuthFlowTestFixture fixture)

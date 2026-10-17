@@ -1,4 +1,4 @@
-﻿namespace MyAnimelist.NET
+﻿namespace SoftThorn.MyAnimelistNET
 {
     public class AnimeList
     {

@@ -1,7 +1,7 @@
-﻿using MyAnimelist.NET.Authentication;
+﻿using SoftThorn.MyAnimelistNET.Authentication;
 using System.Collections.Concurrent;
 
-namespace MyAnimelist.NET.IntegrationTests.OAuth
+namespace SoftThorn.MyAnimelistNET.IntegrationTests.OAuth
 {
     internal sealed class AuthTestProgressCollector : IProgress<AuthProgress>
     {

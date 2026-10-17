@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 
-namespace MyAnimelist.NET.Authentication
+namespace SoftThorn.MyAnimelistNET.Authentication
 {
     public sealed class AuthCache : IAuthCache
     {
-        private const string MemoryCache_KEY = "MyAnimelist.NET_TokenCache_Key";
+        private const string MemoryCache_KEY = "SoftThorn.MyAnimelistNET_TokenCache_Key";
 
         private readonly IMemoryCache _memoryCache;
 

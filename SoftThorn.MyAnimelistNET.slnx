@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="assets/MyAnimelist.NET_Config.nswag" />
-    <File Path="assets/MyAnimelist.NET_OpenApiSpec.json" />
+    <File Path="assets/SoftThorn.MyAnimelistNET_Config.nswag" />
+    <File Path="assets/SoftThorn.MyAnimelistNET_OpenApiSpec.json" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="Directory.Packages.props" />
@@ -12,10 +12,10 @@
     <File Path="versioning.md" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/MyAnimelist.NET.csproj" />
+    <Project Path="src/SoftThorn.MyAnimelistNET.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/MyAnimelist.NET.IntegrationTests/MyAnimelist.NET.IntegrationTests.csproj" />
-    <Project Path="tests/MyAnimelist.NET.UnitTests/MyAnimelist.NET.UnitTests.csproj" />
+    <Project Path="tests/SoftThorn.MyAnimelistNET.IntegrationTests/SoftThorn.MyAnimelistNET.IntegrationTests.csproj" />
+    <Project Path="tests/SoftThorn.MyAnimelistNET.UnitTests/SoftThorn.MyAnimelistNET.UnitTests.csproj" />
   </Folder>
 </Solution>

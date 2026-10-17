@@ -8,7 +8,7 @@
 		<UserSecretsId>cc5b08ee-4b6b-4874-bfba-75c8768beed0</UserSecretsId>
 		<!-- two solution files sit next to this project; tell Verify which one to use -->
 		<SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*Undefined*'">$(MSBuildThisFileDirectory)..\..\</SolutionDir>
-		<SolutionName Condition="'$(SolutionName)' == '' or '$(SolutionName)' == '*Undefined*'">MyAnimelist.NET</SolutionName>
+		<SolutionName Condition="'$(SolutionName)' == '' or '$(SolutionName)' == '*Undefined*'">SoftThorn.MyAnimelistNET</SolutionName>
 		<!-- Verify's Open Source Maintenance Fee: this project is open source and generates no revenue. Renew before it expires (max 12 months ahead). -->
 		<Verify_SponsorshipExemption>OpenSource</Verify_SponsorshipExemption>
 		<Verify_SponsorshipExemptionUntil>2027-10</Verify_SponsorshipExemptionUntil>
@@ -30,11 +30,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\MyAnimelist.NET.csproj" />
+	  <ProjectReference Include="..\..\src\SoftThorn.MyAnimelistNET.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Using Include="MyAnimelist.NET" />
+		<Using Include="SoftThorn.MyAnimelistNET" />
 		<Using Include="Xunit" />
 	</ItemGroup>
 

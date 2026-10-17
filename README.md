@@ -2,7 +2,7 @@
 
 ![MyAnimelist.NET logo: an anime eye with curly braces as the pupil](assets/Icon/icon.png)
 
-[![NuGet](https://img.shields.io/nuget/v/MyAnimelist.NET.svg)](https://www.nuget.org/packages/MyAnimelist.NET)
+[![NuGet](https://img.shields.io/nuget/v/SoftThorn.MyAnimelistNET.svg)](https://www.nuget.org/packages/SoftThorn.MyAnimelistNET)
 [![codecov](https://codecov.io/gh/Insire/MyAnimelist.NET/branch/main/graph/badge.svg)](https://codecov.io/gh/Insire/MyAnimelist.NET)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Insire/MyAnimelist.NET/blob/main/LICENSE)
 
@@ -20,7 +20,7 @@ It lets you search for anime and manga, read rankings and seasonal lists, browse
 ## Installation
 
 ```sh
-dotnet add package MyAnimelist.NET
+dotnet add package SoftThorn.MyAnimelistNET
 ```
 
 ## Features
@@ -44,8 +44,8 @@ dotnet add package MyAnimelist.NET
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using MyAnimelist.NET;
-using MyAnimelist.NET.Authentication;
+using SoftThorn.MyAnimelistNET;
+using SoftThorn.MyAnimelistNET.Authentication;
 
 var services = new ServiceCollection();
 
@@ -154,8 +154,8 @@ src/            The library
 assets/         OpenAPI spec, NSwag config, and Liquid templates used for code generation
 build/          Cake Frosting build project
 tests/
-  MyAnimelist.NET.UnitTests/          Tests with no network access
-  MyAnimelist.NET.IntegrationTests/   Tests against the live MyAnimeList API
+  SoftThorn.MyAnimelistNET.UnitTests/          Tests with no network access
+  SoftThorn.MyAnimelistNET.IntegrationTests/   Tests against the live MyAnimeList API
 ```
 
 ## Building from source
@@ -163,7 +163,7 @@ tests/
 You need the [.NET 10 SDK](https://dotnet.microsoft.com/download).
 
 ```sh
-dotnet build MyAnimelist.NET.slnx
+dotnet build SoftThorn.MyAnimelistNET.slnx
 ```
 
 The full build pipeline (clean, version stamping, tests, coverage report, packing, publishing) runs through [Cake Frosting](https://cakebuild.net/docs/running-builds/runners/cake-frosting):
@@ -188,15 +188,15 @@ The tests are split into two projects:
 
 | Project | What it tests | Needs |
 | --- | --- | --- |
-| `tests/MyAnimelist.NET.UnitTests` | Library logic, with no network access | Nothing |
-| `tests/MyAnimelist.NET.IntegrationTests` | Signing in to a real MyAnimeList account and calling the live API. Playwright fills in the login form automatically. | Credentials and Playwright browsers (see below) |
+| `tests/SoftThorn.MyAnimelistNET.UnitTests` | Library logic, with no network access | Nothing |
+| `tests/SoftThorn.MyAnimelistNET.IntegrationTests` | Signing in to a real MyAnimeList account and calling the live API. Playwright fills in the login form automatically. | Credentials and Playwright browsers (see below) |
 
 Both use [Microsoft.Testing.Platform](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-intro). `global.json` turns it on for `dotnet test`.
 
 ### Unit tests
 
 ```sh
-dotnet test --project tests/MyAnimelist.NET.UnitTests/MyAnimelist.NET.UnitTests.csproj
+dotnet test --project tests/SoftThorn.MyAnimelistNET.UnitTests/SoftThorn.MyAnimelistNET.UnitTests.csproj
 ```
 
 ### Integration tests
@@ -204,13 +204,13 @@ dotnet test --project tests/MyAnimelist.NET.UnitTests/MyAnimelist.NET.UnitTests.
 1. Install the Playwright browsers once (after building the project):
 
    ```sh
-   pwsh tests/MyAnimelist.NET.IntegrationTests/bin/Debug/net10.0/playwright.ps1 install
+   pwsh tests/SoftThorn.MyAnimelistNET.IntegrationTests/bin/Debug/net10.0/playwright.ps1 install
    ```
 
 2. Add your credentials as [user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) (Debug builds) or as environment variables:
 
    ```sh
-   cd tests/MyAnimelist.NET.IntegrationTests
+   cd tests/SoftThorn.MyAnimelistNET.IntegrationTests
    dotnet user-secrets set "ClientConfiguration:ClientId"    "<client id>"
    dotnet user-secrets set "ClientConfiguration:RedirectUrl" "http://localhost:5000/callback/"
    dotnet user-secrets set "MalAuthSettings:UserName"        "<mal user name>"
@@ -222,10 +222,10 @@ dotnet test --project tests/MyAnimelist.NET.UnitTests/MyAnimelist.NET.UnitTests.
 3. Run the tests:
 
    ```sh
-   dotnet test --project tests/MyAnimelist.NET.IntegrationTests/MyAnimelist.NET.IntegrationTests.csproj
+   dotnet test --project tests/SoftThorn.MyAnimelistNET.IntegrationTests/SoftThorn.MyAnimelistNET.IntegrationTests.csproj
    ```
 
-To run both projects, use `dotnet test --solution MyAnimelist.NET.slnx` from the repository root. The solution has to be named because `Build.slnx` sits next to it. Add `--coverage` to collect code coverage.
+To run both projects, use `dotnet test --solution SoftThorn.MyAnimelistNET.slnx` from the repository root. The solution has to be named because `Build.slnx` sits next to it. Add `--coverage` to collect code coverage.
 
 > [!WARNING]
 > Use a dedicated test account. The tests sign in with these credentials and approve API access for your client.
@@ -237,8 +237,8 @@ The integration tests compare responses with [Verify](https://github.com/VerifyT
 Issues and pull requests are welcome. A few things to know:
 
 - **Don't edit `src/AutoGeneratedClient.cs` by hand.** NSwag generates it from `assets/`. Change the spec or the Liquid templates and regenerate with `./build.ps1 --target UpdateOpenApiSpec`.
-- **Fix spec errors in the build, not only in the JSON.** MyAnimeList's published spec doesn't always match the live API. `UpdateOpenApiSpec` re-downloads the spec and then patches it in `build/Tasks/UpdateOpenApiSpecTask.cs`. A fix made only in `assets/MyAnimelist.NET_OpenApiSpec.json` is lost on the next download.
-- **Put tests in the right project.** Tests that don't call MyAnimeList go in `MyAnimelist.NET.UnitTests`, which must never use the network.
+- **Fix spec errors in the build, not only in the JSON.** MyAnimeList's published spec doesn't always match the live API. `UpdateOpenApiSpec` re-downloads the spec and then patches it in `build/Tasks/UpdateOpenApiSpecTask.cs`. A fix made only in `assets/SoftThorn.MyAnimelistNET_OpenApiSpec.json` is lost on the next download.
+- **Put tests in the right project.** Tests that don't call MyAnimeList go in `SoftThorn.MyAnimelistNET.UnitTests`, which must never use the network.
 - **Use [conventional commits](https://www.conventionalcommits.org).** Release notes are generated from commit messages, grouped by type (`feat`, `fix`, `perf`, `docs`, `chore(deps)`, ...). Mark breaking changes with `!` after the type (`feat(auth)!: ...`) or a `BREAKING CHANGE: <what users have to change>` footer. To put a sentence into the release's highlights, add a `Release-Note: <sentence>` footer.
 - **Run the unit tests before you open a pull request.** If you can't run the integration tests, say so in the pull request, and the maintainer will run them.
 
