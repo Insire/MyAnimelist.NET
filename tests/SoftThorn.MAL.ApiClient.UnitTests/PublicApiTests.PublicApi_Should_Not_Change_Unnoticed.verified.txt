@@ -208,9 +208,8 @@
         [System.Text.Json.Serialization.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings=true)]
-        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<SoftThorn.MAL.ApiClient.Season>))]
         [System.Text.Json.Serialization.JsonPropertyName("season")]
-        public SoftThorn.MAL.ApiClient.Season Season { get; set; }
+        public string Season { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("year")]
         public int Year { get; set; }
     }
@@ -306,6 +305,7 @@
     }
     public sealed class ApiException : System.Exception
     {
+        public ApiException(int statusCode, string? response = null, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>? headers = null) { }
         public string? ErrorCode { get; }
         public string? ErrorMessage { get; }
         public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; }
@@ -1142,6 +1142,7 @@ namespace SoftThorn.MAL.ApiClient.Authentication
     }
     public interface ILoginClient
     {
+        System.Threading.Tasks.Task<bool> IsSignedInAsync(System.Threading.CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task SignOutAsync(System.Threading.CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task<bool> StartOAuthFlowAsync(System.IProgress<SoftThorn.MAL.ApiClient.Authentication.AuthProgress>? progressReporter = null, System.Threading.CancellationToken cancellationToken = default);
     }

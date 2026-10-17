@@ -327,6 +327,25 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         }
 
         [Fact]
+        public void AddMalApiClient_Should_Keep_The_Applications_User_Agent()
+        {
+            // the README shows this way for apps to name themselves next to the library
+            var services = new ServiceCollection();
+            services.ConfigureHttpClientDefaults(builder => builder.ConfigureHttpClient(client => client.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp/1.0")));
+            services.AddMalApiClient(new() { ClientId = "client-id", RedirectUrl = "http://localhost:5000/" });
+
+            using var provider = services.BuildServiceProvider();
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+
+            foreach (var name in new[] { MalApiService.HttpClientName, Authentication.TokenClient.HttpClientName })
+            {
+                var userAgent = httpClientFactory.CreateClient(name).DefaultRequestHeaders.UserAgent.ToString();
+
+                Assert.StartsWith("MyApp/1.0 SoftThorn.MAL.ApiClient/", userAgent);
+            }
+        }
+
+        [Fact]
         public void AddMalApiClient_Should_Resolve_IMalApiService()
         {
             // MalApiService is internal, so IMalApiService is registered through a typed client factory

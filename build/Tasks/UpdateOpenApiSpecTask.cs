@@ -491,6 +491,11 @@ namespace Build.Tasks
                 .OfType<JsonObject>()
                 .Single(parameter => (string?)parameter["name"] == "season");
             seasonParameter["schema"] = new JsonObject { ["$ref"] = "#/components/schemas/Season" };
+
+            // AnimeSeason.season itself is a response field, so it stays a string like the others, although MAL's spec gives it
+            // the enum; MalJsonOptions logs a warning for a value outside Season instead of failing the whole response
+            schemas["AnimeSeason"]!["properties"]!["season"] = new JsonObject { ["type"] = "string", ["nullable"] = false };
+            context.Information("Kept AnimeSeason.season a string");
         }
 
         // MAL's spec wraps many schemas in an allOf with a single inline object (the forum schemas), or with a $ref plus an

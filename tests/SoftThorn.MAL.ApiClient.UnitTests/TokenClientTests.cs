@@ -81,6 +81,22 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             Assert.Single(_endpoint.Requests);
         }
 
+        [Fact]
+        public async Task GetValidTokenAsync_Should_Store_Refreshed_Token_When_Caller_Cancels_During_Refresh()
+        {
+            // MAL has used up the old refresh token once it received it, so losing the new tokens would sign the user out
+            await _authCache.SaveAsync(CreateToken("old-access", "old-refresh", Now.AddMinutes(-5)), TestContext.Current.CancellationToken);
+            _endpoint.Delay = TimeSpan.FromMilliseconds(200);
+            using var cancellation = new CancellationTokenSource();
+
+            var refresh = _sut.GetValidTokenAsync(cancellation.Token);
+            await _endpoint.RequestReceived.Task.WaitAsync(TestContext.Current.CancellationToken);
+            await cancellation.CancelAsync();
+            await refresh;
+
+            Assert.Equal("new-refresh", (await _authCache.GetAsync(TestContext.Current.CancellationToken))?.RefreshToken);
+        }
+
         [Theory]
         [InlineData(HttpStatusCode.BadRequest)]
         [InlineData(HttpStatusCode.Unauthorized)]
@@ -165,6 +181,7 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             public List<string> Requests { get; } = [];
             public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
             public TimeSpan Delay { get; set; } = TimeSpan.Zero;
+            public TaskCompletionSource RequestReceived { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
             protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
@@ -174,6 +191,8 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
                 {
                     Requests.Add(body);
                 }
+
+                RequestReceived.TrySetResult();
 
                 await Task.Delay(Delay, cancellationToken);
 

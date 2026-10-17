@@ -32,7 +32,7 @@ namespace SoftThorn.MAL.ApiClient
         /// <returns><paramref name="services"/>, so calls can be chained.</returns>
         /// <exception cref="ArgumentException">
         /// <see cref="ClientConfiguration.ClientId"/> is empty, or <see cref="ClientConfiguration.RedirectUrl"/> isn't an absolute
-        /// <c>http</c> or <c>https</c> URL ending with <c>/</c>.
+        /// <c>http</c> URL ending with <c>/</c> (<c>https</c> is rejected, see <see cref="ClientConfiguration.RedirectUrl"/>).
         /// </exception>
         /// <exception cref="InvalidOperationException">The method was already called for <paramref name="services"/>.</exception>
         public static IServiceCollection AddMalApiClient(this IServiceCollection services, ClientConfiguration clientConfiguration)
@@ -59,6 +59,7 @@ namespace SoftThorn.MAL.ApiClient
                 .ConfigurePrimaryHttpMessageHandler(DisableRedirects)
                 .AddHttpMessageHandler<MalRetryHandler>();
             services.AddTransient<MalLoginHandler>();
+            services.AddSingleton<MalJsonOptions>();
             services.AddSingleton(clientConfiguration);
 
             // a factory instead of AddHttpClient<IMalApiService, MalApiService>, because typed clients need a public type and constructor
@@ -72,7 +73,8 @@ namespace SoftThorn.MAL.ApiClient
                 .AddHttpMessageHandler<MalRetryHandler>()
                 .AddTypedClient<IMalApiService>((httpClient, provider) => new MalApiService(
                     httpClient,
-                    provider.GetRequiredService<LoginClient>()));
+                    provider.GetRequiredService<LoginClient>(),
+                    provider.GetRequiredService<MalJsonOptions>()));
 
             return services;
         }
@@ -88,7 +90,19 @@ namespace SoftThorn.MAL.ApiClient
             if (!Uri.TryCreate(clientConfiguration.RedirectUrl, UriKind.Absolute, out var redirectUrl)
                 || (redirectUrl.Scheme != Uri.UriSchemeHttp && redirectUrl.Scheme != Uri.UriSchemeHttps))
             {
-                throw new ArgumentException($"{nameof(ClientConfiguration.RedirectUrl)} '{clientConfiguration.RedirectUrl}' isn't an absolute http or https URL.", nameof(clientConfiguration));
+                throw new ArgumentException($"{nameof(ClientConfiguration.RedirectUrl)} '{clientConfiguration.RedirectUrl}' isn't an absolute http URL.", nameof(clientConfiguration));
+            }
+
+            // HttpListener only answers https with a server certificate bound to the port (netsh http add sslcert on Windows),
+            // which the library doesn't set up, so the browser would fail after the sign-in and the login would wait forever
+            if (redirectUrl.Scheme == Uri.UriSchemeHttps)
+            {
+                throw new ArgumentException(
+                    $"{nameof(ClientConfiguration.RedirectUrl)} '{clientConfiguration.RedirectUrl}' uses https. The login receives the redirect with an HttpListener, "
+                    + "which can only answer https when a server certificate is bound to the port, so the browser couldn't connect after the sign-in. "
+                    + "Register and use an http URL on the local machine instead, for example http://localhost:5000/callback/. "
+                    + "The redirect doesn't leave the machine, and PKCE protects the authorization code.",
+                    nameof(clientConfiguration));
             }
 
             // HttpListener only accepts prefixes that end with a slash

@@ -23,6 +23,17 @@ namespace SoftThorn.MAL.ApiClient.Authentication
         Task<bool> StartOAuthFlowAsync(IProgress<AuthProgress>? progressReporter = null, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Checks whether a user is signed in, without opening the login page.
+        /// </summary>
+        /// <remarks>
+        /// When the cached access token has expired, this refreshes it first, so it can send a request to MyAnimeList.
+        /// Use it to decide whether to offer a sign-in, for example when the app starts with tokens from a persistent <see cref="IAuthCache"/>.
+        /// </remarks>
+        /// <param name="cancellationToken">Cancels the check.</param>
+        /// <returns><see langword="true"/> when a valid token is available, the same condition under which <see cref="StartOAuthFlowAsync"/> skips the login.</returns>
+        Task<bool> IsSignedInAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Signs the user out by removing the tokens from the <see cref="IAuthCache"/>.
         /// </summary>
         /// <remarks>

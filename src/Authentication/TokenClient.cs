@@ -72,19 +72,21 @@ namespace SoftThorn.MAL.ApiClient.Authentication
                     return token;
                 }
 
+                // not cancellable: once MAL has received the refresh token it is used up, so cancelling before the new
+                // tokens are stored would lose them and sign the user out. The caller's token only cancels the wait above.
                 var (refreshed, statusCode) = await RequestTokenAsync(
                 [
                     new KeyValuePair<string, string>("client_id", _clientId),
                     new KeyValuePair<string, string>("grant_type", "refresh_token"),
                     new KeyValuePair<string, string>("refresh_token", token.Value.RefreshToken)
-                ], cancellationToken);
+                ], CancellationToken.None);
 
                 // 400 (invalid_grant) or 401 (invalid_client): the refresh token is revoked or used up and will never work again.
                 // Without clearing it, every following request would send another refresh to MAL. Other failures (5xx) may pass.
                 if (refreshed is null && statusCode is HttpStatusCode.BadRequest or HttpStatusCode.Unauthorized)
                 {
                     LogRefreshRejected((int)statusCode);
-                    await _authCache.ClearAsync(cancellationToken);
+                    await _authCache.ClearAsync(CancellationToken.None);
                 }
                 else if (refreshed is null)
                 {

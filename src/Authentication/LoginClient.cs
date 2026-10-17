@@ -47,6 +47,10 @@ namespace SoftThorn.MAL.ApiClient.Authentication
         }
 
         /// <inheritdoc/>
+        public async Task<bool> IsSignedInAsync(CancellationToken cancellationToken = default)
+            => await _tokenClient.GetValidTokenAsync(cancellationToken) is not null;
+
+        /// <inheritdoc/>
         public Task SignOutAsync(CancellationToken cancellationToken = default) => _tokenClient.ClearAsync(cancellationToken);
 
         private async Task<bool> LoginAsync(IProgress<AuthProgress>? progressReporter, CancellationToken cancellationToken)

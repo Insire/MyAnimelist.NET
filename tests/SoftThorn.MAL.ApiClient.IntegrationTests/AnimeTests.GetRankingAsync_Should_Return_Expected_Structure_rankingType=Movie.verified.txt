@@ -35,7 +35,7 @@
         source: string,
         start_date: string,
         start_season: {
-          season: enum,
+          season: string,
           year: int
         },
         status: string,

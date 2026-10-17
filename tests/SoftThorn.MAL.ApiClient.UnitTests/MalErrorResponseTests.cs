@@ -34,5 +34,18 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             Assert.Equal("bad_request", exception.ErrorCode);
             Assert.Equal("limit", exception.ErrorMessage);
         }
+
+        [Fact]
+        public void ApiException_Public_Constructor_Should_Match_The_Clients_Exception()
+        {
+            // consumers throw it from mocks of the client interfaces
+            var exception = new ApiException(404, """{"message":"","error":"not_found"}""");
+
+            Assert.Equal(404, exception.StatusCode);
+            Assert.Equal("not_found", exception.ErrorCode);
+            Assert.Null(exception.ErrorMessage);
+            Assert.Empty(exception.Headers);
+            Assert.StartsWith("MyAnimeList answered with the error status 404.", exception.Message);
+        }
     }
 }

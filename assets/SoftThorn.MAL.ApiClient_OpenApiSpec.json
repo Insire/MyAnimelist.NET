@@ -1561,8 +1561,10 @@
             "description": "The year."
           },
           "season": {
-            "$ref": "#/components/schemas/Season",
-            "description": "The season: winter (January to March), spring, summer or fall."
+            "type": "string",
+            "nullable": false,
+            "description": "The season in lowercase: winter (January to March), spring, summer or fall, the values of Season.",
+            "x-remarks": "A string rather than Season, like the other response fields with a fixed set of values, so a value MyAnimeList adds later can't make the whole response fail. The library logs a warning when it reads a value that isn't one of Season's."
           }
         },
         "required": [

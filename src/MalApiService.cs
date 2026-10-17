@@ -20,14 +20,14 @@ namespace SoftThorn.MAL.ApiClient
 
         public ILoginClient Login { get; }
 
-        public MalApiService(HttpClient httpClient, ILoginClient loginClient)
+        public MalApiService(HttpClient httpClient, ILoginClient loginClient, MalJsonOptions jsonOptions)
         {
             Login = loginClient;
-            Catalog = new CatalogClient(httpClient);
-            Anime = new AnimeClient(httpClient);
-            Forum = new ForumClient(httpClient);
-            Manga = new MangaClient(httpClient);
-            Users = new UsersClient(httpClient);
+            Catalog = new CatalogClient(httpClient, jsonOptions.Options);
+            Anime = new AnimeClient(httpClient, jsonOptions.Options);
+            Forum = new ForumClient(httpClient, jsonOptions.Options);
+            Manga = new MangaClient(httpClient, jsonOptions.Options);
+            Users = new UsersClient(httpClient, jsonOptions.Options);
         }
     }
 }

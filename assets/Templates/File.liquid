@@ -182,6 +182,20 @@ namespace {{ Namespace }}
         /// </summary>
         public string? ErrorMessage { get; private set; }
 
+        /// <summary>
+        /// Creates the exception the API clients throw for an error status, for example to throw it from a mock of a client interface.
+        /// </summary>
+        /// <param name="statusCode">The HTTP status code, for example 404.</param>
+        /// <param name="response">
+        /// The response body. MyAnimeList's JSON error body, for example <c>{"message":"","error":"not_found"}</c>,
+        /// sets <see cref="ErrorCode"/> and <see cref="ErrorMessage"/>.
+        /// </param>
+        /// <param name="headers">The response headers, or <see langword="null"/> for none.</param>
+        public {{ exceptionClassName }}(int statusCode, string? response = null, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>? headers = null)
+            : this("MyAnimeList answered with the error status " + statusCode + ".", statusCode, response, headers ?? new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>(), null)
+        {
+        }
+
 {%-              if GenerateNullableReferenceTypes -%}
         internal {{ exceptionClassName }}(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException)
 {%-              else -%}

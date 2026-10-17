@@ -2899,12 +2899,14 @@ namespace SoftThorn.MAL.ApiClient
         public int Year { get; set; } = default!;
 
         /// <summary>
-        /// The season: winter (January to March), spring, summer or fall.
+        /// The season in lowercase: winter (January to March), spring, summer or fall, the values of Season.
         /// </summary>
+        /// <remarks>
+        /// A string rather than Season, like the other response fields with a fixed set of values, so a value MyAnimeList adds later can't make the whole response fail. The library logs a warning when it reads a value that isn't one of Season's.
+        /// </remarks>
         [System.Text.Json.Serialization.JsonPropertyName("season")]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<Season>))]
-        public Season Season { get; set; } = default!;
+        public string Season { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -5488,6 +5490,20 @@ namespace SoftThorn.MAL.ApiClient
         /// with an invalid value, or <see langword="null"/> when the body has none or it is empty.
         /// </summary>
         public string? ErrorMessage { get; private set; }
+
+        /// <summary>
+        /// Creates the exception the API clients throw for an error status, for example to throw it from a mock of a client interface.
+        /// </summary>
+        /// <param name="statusCode">The HTTP status code, for example 404.</param>
+        /// <param name="response">
+        /// The response body. MyAnimeList's JSON error body, for example <c>{"message":"","error":"not_found"}</c>,
+        /// sets <see cref="ErrorCode"/> and <see cref="ErrorMessage"/>.
+        /// </param>
+        /// <param name="headers">The response headers, or <see langword="null"/> for none.</param>
+        public ApiException(int statusCode, string? response = null, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>? headers = null)
+            : this("MyAnimeList answered with the error status " + statusCode + ".", statusCode, response, headers ?? new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>(), null)
+        {
+        }
 
         internal ApiException(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException)
             : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + ((response == null) ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)), innerException)

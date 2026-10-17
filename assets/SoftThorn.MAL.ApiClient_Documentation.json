@@ -319,7 +319,7 @@
     "MangaRecommendation.node": "The recommended manga.",
     "MangaRecommendation.num_recommendations": "How many users recommended it.",
     "AnimeSeason.year": "The year.",
-    "AnimeSeason.season": "The season: winter (January to March), spring, summer or fall.",
+    "AnimeSeason.season": "The season in lowercase: winter (January to March), spring, summer or fall, the values of Season.",
     "AnimeStatistics.num_list_users": "How many users have the anime on their list.",
     "AnimeStatistics.status": "How many users have the anime on their list, by list status.",
     "AnimeStatusStatistics.watching": "How many users are watching the anime.",
@@ -423,6 +423,7 @@
     "AnimeListStatus.finish_date": "A string rather than a date, for the same reason as the start date: MyAnimeList sends partial dates (YYYY-MM or YYYY) when the user left out the day or the month.",
     "MangaListStatus.start_date": "A string rather than a date, because users can leave out the day or the month, and MyAnimeList then sends only YYYY-MM or YYYY. A date type would reject those values or fill in a day the user never entered. Parse it yourself if you need a date, for example with DateOnly.TryParseExact for each of the three forms.",
     "MangaListStatus.finish_date": "A string rather than a date, for the same reason as the start date: MyAnimeList sends partial dates (YYYY-MM or YYYY) when the user left out the day or the month.",
-    "User.birthday": "A string rather than a date, because users can leave parts of their birthday out, and MyAnimeList then sends a partial date. A date type would reject those values or fill in parts the user never entered. Parse it yourself if you need a date."
+    "User.birthday": "A string rather than a date, because users can leave parts of their birthday out, and MyAnimeList then sends a partial date. A date type would reject those values or fill in parts the user never entered. Parse it yourself if you need a date.",
+    "AnimeSeason.season": "A string rather than Season, like the other response fields with a fixed set of values, so a value MyAnimeList adds later can't make the whole response fail. The library logs a warning when it reads a value that isn't one of Season's."
   }
 }
