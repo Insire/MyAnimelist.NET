@@ -16,6 +16,7 @@ Steps marked **Decision needed** wait for the repo owner's answer. Don't start t
    - `build/Directory.Packages.props`: packages for the Cake build project.
    - `build/Program.cs`: tools Cake downloads (`InstallTool(...)` URIs).
    - `.config/dotnet-tools.json`: local dotnet tools (`dotnet tool restore`).
+   - `build/Util/Constants.cs`: the Codecov CLI (`CodecovCliVersion` plus one SHA-256 per platform), which the build downloads itself because it has no NuGet package. See the standing note below.
 3. **Build both solutions with no warnings or errors:**
 
    ```sh
@@ -42,7 +43,8 @@ Steps marked **Decision needed** wait for the repo owner's answer. Don't start t
    - Update `CLAUDE.md` if a fact it records changed.
 8. **When all steps are done:**
    - Run `dotnet list SoftThorn.MAL.ApiClient.slnx package --outdated` and `dotnet list build/Build.csproj package --outdated` once more.
-   - Run `dotnet list SoftThorn.MAL.ApiClient.slnx package --vulnerable --include-transitive`.
+   - Run `dotnet list SoftThorn.MAL.ApiClient.slnx package --vulnerable --include-transitive` and `dotnet list build/Build.csproj package --vulnerable --include-transitive`.
+   - Compare `CodecovCliVersion` with the newest Codecov CLI version (see the standing note below).
    - Add a step for anything new these commands turn up.
    - If they turn up nothing, leave the file with just the workflow and a line saying "No pending updates as of YYYY-MM-DD".
 
@@ -59,7 +61,15 @@ No pending updates as of 2026-10-17. Both solutions have no outdated or vulnerab
   - Ask the owner before changing what is claimed.
 - **`System.Security.Cryptography.Pkcs` pin:** it's pinned to 10.0.13 in `build/Directory.Packages.props` (`vulnerable transitive dependencies`), because Cake.Frosting 6.3.0 resolves a vulnerable 10.0.12 (since the build project moved to net10.0 on 2026-10-17; before that it was 9.0.20 → 9.0.21).
   - Each round, remove the pin, run `dotnet list build/Build.csproj package --vulnerable --include-transitive`, and drop the pin for good once that comes back clean.
-- **Codecov uploader:** `CodecovUploader` 0.8.0 is the latest version, but Codecov deprecated it in favor of the Codecov CLI. Replacing it is a separate task.
-- **Old tool versions in `tools/`:** after a Cake tool version bump, `tools/` keeps the old versions too.
+- **Codecov CLI:** it has no NuGet package, so `UploadCodecovReportTask` downloads a pinned binary from `https://cli.codecov.io/<version>/<platform>/` (`CodecovCliVersion` and the per-platform SHA-256 constants in `build/Util/Constants.cs`).
+  - Find the newest version by comparing `https://cli.codecov.io/latest/linux/codecov.SHA256SUM` with the versioned folders. The GitHub releases of `getsentry/prevent-cli` lag behind (v11.2.8 there while cli.codecov.io had v11.3.1 on 2026-10-17).
+  - To update, bump the version and copy the hashes from `codecov.SHA256SUM` (linux, macos) and `codecov.exe.SHA256SUM` (windows) in that version's folders.
+    - Some platforms are missing for some versions (v11.3.1 has no `linux-arm64` or `alpine`), so check that every folder the task uses exists.
+  - The step's own check:
+    - Download the Windows binary and compare its hash with the constant.
+    - Run it on a Cobertura file with `upload-coverage --dry-run --disable-search --file <file> -C <sha> -B main -r Insire/SoftThorn.MAL.ApiClient --git-service github`. With `--dry-run` it sends nothing.
+    - Get a Cobertura file from the unit tests with `--coverage --coverage-output-format cobertura`.
+  - The real upload only runs on Azure, so watch the next pipeline build's `UploadCodecovReport` log.
+- **Old tool versions in `tools/`:** after a Cake tool version bump, `tools/` keeps the old versions too, and `tools/codecov-cli/` keeps one folder per CLI version. They're gitignored and can be deleted.
   - Check the Setup log lines (`nuget.exe (...)`, `dotnet-coverage (...)`) to confirm the new paths are the ones resolved.
   - `UpdateOpenApiSpecTask` picks NSwag's `net10.0` build explicitly.

@@ -21,5 +21,11 @@ namespace Build.Util
         public const string OpenApiSpecPath = "./assets/SoftThorn.MAL.ApiClient_OpenApiSpec.json";
         public const string NswagConfigFilePath = "./assets/SoftThorn.MAL.ApiClient_Config.nswag";
         public const string ProjectPath = "./src//SoftThorn.MAL.ApiClient.csproj";
+
+        // Codecov CLI binaries from https://cli.codecov.io/<version>/<platform>/, with the hashes from the codecov(.exe).SHA256SUM file next to each
+        public const string CodecovCliVersion = "v11.3.1";
+        public const string CodecovCliSha256Windows = "d43733506ed2561533a7182ed5c4c2b23711dda1f03cbe9d120bcc888ac4e10a";
+        public const string CodecovCliSha256Linux = "ca1d64196d2d34771084afe76ea657d581bf628e31d993ff8e52ea09cc88a56d";
+        public const string CodecovCliSha256MacOS = "ffb2b821551076b69d3267508b2d5dc10925c821c436521f2216f5ead62cb138";
     }
 }

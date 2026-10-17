@@ -6,11 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cake.Codecov" />
     <PackageReference Include="Cake.Frosting" />
     <PackageReference Include="Cake.GitVersioning" />
     <PackageReference Include="Cake.Incubator" />
-    <PackageReference Include="CodecovUploader" />
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="Jint" />
     <PackageReference Include="ReportGenerator" />
