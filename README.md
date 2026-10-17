@@ -1,6 +1,6 @@
 # MyAnimelist.NET
 
-![MyAnimelist.NET logo: an anime eye with curly braces as the pupil](https://raw.githubusercontent.com/Insire/MyAnimelist.NET/main/assets/Icon/icon.png)
+![MyAnimelist.NET logo: an anime eye with curly braces as the pupil](assets/Icon/icon.png)
 
 [![NuGet](https://img.shields.io/nuget/v/MyAnimelist.NET.svg)](https://www.nuget.org/packages/MyAnimelist.NET)
 [![codecov](https://codecov.io/gh/Insire/MyAnimelist.NET/branch/main/graph/badge.svg)](https://codecov.io/gh/Insire/MyAnimelist.NET)
