@@ -64,4 +64,4 @@ namespace Build
             DotnetExeName = Environment.Platform.IsWindows() ? "dotnet.exe" : "dotnet";
         }
     }
-}
+}

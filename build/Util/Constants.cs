@@ -22,4 +22,4 @@ namespace Build.Util
         public const string NswagConfigFilePath = "./assets/MyAnimelist.NET_Config.nswag";
         public const string ProjectPath = "./src//MyAnimelist.NET.csproj";
     }
-}
+}

@@ -77,6 +77,11 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
   - The Cake `Test` task uses the same options in Release. User secrets only load in Debug, so Release needs environment variables.
 - Full pipeline: `./build.ps1`. Regenerate the client: `./build.ps1 --target UpdateOpenApiSpec`
 - Environment: Windows, PowerShell. Python is **not** installed, so don't use it for scripting.
+- **Line endings:** the repository stores every file with **LF**. `core.autocrlf=true` checks files out as CRLF, and git converts them back when you add them.
+  - Never convert files to CRLF yourself, even though `.editorconfig` says `end_of_line = crlf`.
+  - On 2026-10-17, files converted with `sed 's/\r*$/\r/'` were committed as CRLF (through Fork). Git then showed the whole of `build/BuildContext.cs` and `build/Util/Constants.cs` as changed, and a follow-up commit had to restore LF.
+  - Before finishing, check that `git diff --numstat` shows only the lines you meant to change.
+  - To check how a committed file is stored, run `git show HEAD:<path> | file -`. If it reports CRLF, fix the working copy with `sed -i 's/\r$//' <path>`.
 
 ## Working agreements
 
