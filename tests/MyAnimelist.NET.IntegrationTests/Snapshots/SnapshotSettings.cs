@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace MyAnimelist.NET.IntegrationTests.Snapshots
 {
@@ -22,6 +23,9 @@ namespace MyAnimelist.NET.IntegrationTests.Snapshots
             typeof(MangaRecommendationAggregationEdgeBase),
         ];
 
+        // MAL's CDN serves the same picture as .jpg or .webp, changing between requests
+        private static readonly Regex _imageExtension = new(@"(?<path>cdn\.myanimelist\.net/\S+?)\.(jpg|jpeg|png|webp)\b", RegexOptions.Compiled);
+
         /// <summary>
         /// Snapshot the actual values of a response for an entity that doesn't change anymore,
         /// with the counters that keep moving scrubbed.
@@ -30,8 +34,16 @@ namespace MyAnimelist.NET.IntegrationTests.Snapshots
         {
             var settings = new VerifySettings();
             settings.ScrubMembers(IsVolatile);
+            settings.AddExtraSettings(serializer => serializer.Converters.Add(new ImageUriConverter()));
 
             return settings;
+        }
+
+        // line scrubbers don't reach Uri values, so normalize them while they are written
+        private sealed class ImageUriConverter : WriteOnlyJsonConverter<Uri>
+        {
+            public override void Write(VerifyJsonWriter writer, Uri value)
+                => writer.WriteValue(_imageExtension.Replace(value.ToString(), "${path}.{image}"));
         }
 
         // unmapped fields always stay visible, they are what these snapshots are meant to catch

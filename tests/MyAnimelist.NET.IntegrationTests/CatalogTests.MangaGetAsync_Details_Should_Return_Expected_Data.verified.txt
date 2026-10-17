@@ -1,44 +1,44 @@
 ﻿{
   Pictures: [
     {
-      Large: https://cdn.myanimelist.net/images/manga/3/258224l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/3/258224.jpg
+      Large: https://cdn.myanimelist.net/images/manga/3/258224l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/3/258224.{image}
     },
     {
-      Large: https://cdn.myanimelist.net/images/manga/2/305472l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/2/305472.jpg
+      Large: https://cdn.myanimelist.net/images/manga/2/305472l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/2/305472.{image}
     },
     {
-      Large: https://cdn.myanimelist.net/images/manga/1/305473l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/1/305473.jpg
+      Large: https://cdn.myanimelist.net/images/manga/1/305473l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/1/305473.{image}
     },
     {
-      Large: https://cdn.myanimelist.net/images/manga/1/305474l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/1/305474.jpg
+      Large: https://cdn.myanimelist.net/images/manga/1/305474l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/1/305474.{image}
     },
     {
-      Large: https://cdn.myanimelist.net/images/manga/1/305475l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/1/305475.jpg
+      Large: https://cdn.myanimelist.net/images/manga/1/305475l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/1/305475.{image}
     },
     {
-      Large: https://cdn.myanimelist.net/images/manga/2/305476l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/2/305476.jpg
+      Large: https://cdn.myanimelist.net/images/manga/2/305476l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/2/305476.{image}
     },
     {
-      Large: https://cdn.myanimelist.net/images/manga/3/305477l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/3/305477.jpg
+      Large: https://cdn.myanimelist.net/images/manga/3/305477l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/3/305477.{image}
     },
     {
-      Large: https://cdn.myanimelist.net/images/manga/2/305478l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/2/305478.jpg
+      Large: https://cdn.myanimelist.net/images/manga/2/305478l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/2/305478.{image}
     },
     {
-      Large: https://cdn.myanimelist.net/images/manga/1/305479l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/1/305479.jpg
+      Large: https://cdn.myanimelist.net/images/manga/1/305479l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/1/305479.{image}
     },
     {
-      Large: https://cdn.myanimelist.net/images/manga/3/305480l.jpg,
-      Medium: https://cdn.myanimelist.net/images/manga/3/305480.jpg
+      Large: https://cdn.myanimelist.net/images/manga/3/305480l.{image},
+      Medium: https://cdn.myanimelist.net/images/manga/3/305480.{image}
     }
   ],
   Background:
@@ -56,8 +56,8 @@ The series was published in English by VIZ Media under its VIZ Signature imprint
         Id: 10968,
         Title: Mou Hitotsu no Monster: The Investigative Report,
         Main_picture: {
-          Large: https://cdn.myanimelist.net/images/manga/3/14776l.jpg,
-          Medium: https://cdn.myanimelist.net/images/manga/3/14776.jpg
+          Large: https://cdn.myanimelist.net/images/manga/3/14776l.{image},
+          Medium: https://cdn.myanimelist.net/images/manga/3/14776.{image}
         }
       },
       Relation_type: side_story,
@@ -179,7 +179,7 @@ Nine years later, Tenma is the head of the surgical department and close to beco
   Id: 1,
   Title: Monster,
   Main_picture: {
-    Large: https://cdn.myanimelist.net/images/manga/3/258224l.jpg,
-    Medium: https://cdn.myanimelist.net/images/manga/3/258224.jpg
+    Large: https://cdn.myanimelist.net/images/manga/3/258224l.{image},
+    Medium: https://cdn.myanimelist.net/images/manga/3/258224.{image}
   }
 }
