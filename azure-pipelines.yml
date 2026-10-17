@@ -1,4 +1,5 @@
 # Runs the Cake "Default" target: tests with coverage, Codecov upload, release notes, pack, push to nuget.org, and tag.
+# Cake also publishes the test results, the packages and the release notes to this run (Azure logging commands), so there are no publish steps here.
 # Every build of main or a v<major>.<minor> branch is a public release (see version.json) and gets pushed.
 # The GitHub service connection used for the checkout needs write access to the repository, to push the v<version> tag.
 #
@@ -67,25 +68,3 @@ jobs:
           ClientConfiguration__RedirectUrl: $(MAL_REDIRECT_URL)
           MalAuthSettings__UserName: $(MAL_USERNAME)
           MalAuthSettings__Password: $(MAL_PASSWORD)
-
-      - task: PublishTestResults@2
-        displayName: Publish test results
-        condition: succeededOrFailed()
-        inputs:
-          testResultsFormat: VSTest
-          testResultsFiles: tmp_build/results/reports/cobertura/**/*.trx
-          failTaskOnMissingResultsFile: false
-
-      - task: PublishPipelineArtifact@1
-        displayName: Publish packages
-        condition: succeeded()
-        inputs:
-          targetPath: tmp_build/packages
-          artifact: packages
-
-      - task: PublishPipelineArtifact@1
-        displayName: Publish release notes
-        condition: succeeded()
-        inputs:
-          targetPath: tmp_build/results/release-notes.md
-          artifact: release-notes

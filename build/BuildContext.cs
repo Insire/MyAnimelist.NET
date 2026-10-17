@@ -19,6 +19,7 @@ namespace Build
         public DirectoryPath PackagesFolder { get; }
         public DirectoryPath CoberturaFolder { get; }
         public FilePath CoberturaResultFile { get; }
+        public DirectoryPath ReleaseNotesFolder { get; }
         public FilePath ReleaseNotesMarkdownFile { get; }
         public FilePath ReleaseNotesTextFile { get; }
 
@@ -41,8 +42,9 @@ namespace Build
             CoberturaFolder = this.MakeAbsolute(new DirectoryPath(Constants.CoberturaPath));
 
             CoberturaResultFile = CoberturaFolder.CombineWithFilePath("Cobertura.xml");
-            ReleaseNotesMarkdownFile = ResultsFolder.CombineWithFilePath("release-notes.md");
-            ReleaseNotesTextFile = ResultsFolder.CombineWithFilePath("release-notes.txt");
+            ReleaseNotesFolder = ResultsFolder.Combine("release-notes"); // published as the "release-notes" pipeline artifact
+            ReleaseNotesMarkdownFile = ReleaseNotesFolder.CombineWithFilePath("release-notes.md");
+            ReleaseNotesTextFile = ReleaseNotesFolder.CombineWithFilePath("release-notes.txt");
 
             this.Information($"Provider: {this.BuildSystem().Provider}");
             this.Information($"Platform: {Environment.Platform.Family} ({(Environment.Platform.Is64Bit ? "x64" : "x86")})");

@@ -40,12 +40,12 @@ namespace Build.Tasks
                 commits.Add(ReleaseNotes.Parse(fields[0], fields[1], fields[2]));
             }
 
-            context.EnsureDirectoryExists(context.ResultsFolder);
+            context.EnsureDirectoryExists(context.ReleaseNotesFolder);
             File.WriteAllText(context.ReleaseNotesMarkdownFile.FullPath, ReleaseNotes.ToMarkdown(version, DateTime.UtcNow, previousTag, commits, Constants.RepositoryUrl));
             File.WriteAllText(context.ReleaseNotesTextFile.FullPath, ReleaseNotes.ToText(version, previousTag, commits, Constants.RepositoryUrl));
 
             context.Information("Release notes for {0}: {1} commits since {2}, {3} breaking.", version, commits.Count, previousTag ?? "the first commit", commits.Count(c => c.IsBreaking));
-            context.Information("Written to {0}", context.ReleaseNotesMarkdownFile.FullPath);
+            context.Information("Written to {0} and {1}", context.ReleaseNotesMarkdownFile.FullPath, context.ReleaseNotesTextFile.FullPath);
 
             base.Run(context);
         }
