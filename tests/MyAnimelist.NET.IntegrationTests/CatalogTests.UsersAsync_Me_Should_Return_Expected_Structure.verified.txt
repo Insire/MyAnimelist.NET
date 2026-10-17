@@ -1,0 +1,26 @@
+﻿{
+  anime_statistics: {
+    mean_score: number,
+    num_days: number,
+    num_days_completed: number,
+    num_days_dropped: number,
+    num_days_on_hold: number,
+    num_days_watched: number,
+    num_days_watching: number,
+    num_episodes: int,
+    num_items: int,
+    num_items_completed: int,
+    num_items_dropped: int,
+    num_items_on_hold: int,
+    num_items_plan_to_watch: int,
+    num_items_watching: int,
+    num_times_rewatched: int
+  },
+  birthday: date,
+  id: int,
+  is_supporter: bool,
+  joined_at: date,
+  location: string,
+  name: string,
+  time_zone: string
+}

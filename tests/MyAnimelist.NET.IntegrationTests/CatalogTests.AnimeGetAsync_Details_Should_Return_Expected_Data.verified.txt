@@ -1,0 +1,239 @@
+﻿{
+  Pictures: [
+    {
+      Large: https://cdn.myanimelist.net/images/anime/7/3791l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/7/3791.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/12/19609l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/12/19609.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/4/19644l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/4/19644.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/4/22882l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/4/22882.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/12/22883l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/12/22883.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/6/22885l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/6/22885.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/11/53939l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/11/53939.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/2/78836l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/2/78836.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/12/81920l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/12/81920.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/1519/91488l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/1519/91488.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/1764/109632l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/1764/109632.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/1952/121242l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/1952/121242.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/1623/122582l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/1623/122582.jpg
+    },
+    {
+      Large: https://cdn.myanimelist.net/images/anime/1608/139122l.jpg,
+      Medium: https://cdn.myanimelist.net/images/anime/1608/139122.jpg
+    }
+  ],
+  Background:
+When Cowboy Bebop first aired in spring of 1998 on TV Tokyo, only episodes 2-3, 7-15, and 18 were broadcast, it was concluded with a recap special known as Yose Atsume Blues. This was due to anime censorship having increased following the big controversies over Evangelion, as a result most of the series was pulled from the air due to violent content. Satellite channel WOWOW picked up the series in the fall of that year and aired it in its entirety uncensored. Cowboy Bebop was not a ratings hit in Japan, but sold over 19,000 DVD units in the initial release run, and 81,000 overall. Protagonist Spike Spiegel won Best Male Character, and Megumi Hayashibara won Best Voice Actor for her role as Faye Valentine in the 1999 and 2000 Anime Grand Prix, respectively.
+
+Cowboy Bebop's biggest influence has been in the United States, where it premiered on Adult Swim in 2001 with many reruns since. The show's heavy Western influence struck a chord with American viewers, where it became a "gateway drug" to anime aimed at adult audiences.,
+  Related_anime: [
+    {
+      Node: {
+        Mean: {Scrubbed},
+        Rank: {Scrubbed},
+        Popularity: {Scrubbed},
+        Num_list_users: {Scrubbed},
+        Num_scoring_users: {Scrubbed},
+        Id: 5,
+        Title: Cowboy Bebop: Tengoku no Tobira,
+        Main_picture: {
+          Large: https://cdn.myanimelist.net/images/anime/1439/93480l.jpg,
+          Medium: https://cdn.myanimelist.net/images/anime/1439/93480.jpg
+        }
+      },
+      Relation_type: side_story,
+      Relation_type_formatted: Side story
+    },
+    {
+      Node: {
+        Mean: {Scrubbed},
+        Rank: {Scrubbed},
+        Popularity: {Scrubbed},
+        Num_list_users: {Scrubbed},
+        Num_scoring_users: {Scrubbed},
+        Id: 4037,
+        Title: Cowboy Bebop: Yose Atsume Blues,
+        Main_picture: {
+          Large: https://cdn.myanimelist.net/images/anime/10/54341l.webp,
+          Medium: https://cdn.myanimelist.net/images/anime/10/54341.webp
+        }
+      },
+      Relation_type: summary,
+      Relation_type_formatted: Summary
+    },
+    {
+      Node: {
+        Mean: {Scrubbed},
+        Rank: {Scrubbed},
+        Popularity: {Scrubbed},
+        Num_list_users: {Scrubbed},
+        Num_scoring_users: {Scrubbed},
+        Id: 17205,
+        Title: Cowboy Bebop: Ein no Natsuyasumi,
+        Main_picture: {
+          Large: https://cdn.myanimelist.net/images/anime/1565/127387l.jpg,
+          Medium: https://cdn.myanimelist.net/images/anime/1565/127387.jpg
+        }
+      },
+      Relation_type: side_story,
+      Relation_type_formatted: Side story
+    }
+  ],
+  Recommendations: [
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    },
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    },
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    },
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    },
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    },
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    },
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    },
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    },
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    },
+    {
+      Node: {Scrubbed},
+      Num_recommendations: {Scrubbed}
+    }
+  ],
+  Statistics: {
+    Num_list_users: {Scrubbed},
+    Status: {
+      Watching: {Scrubbed},
+      Completed: {Scrubbed},
+      On_hold: {Scrubbed},
+      Dropped: {Scrubbed},
+      Plan_to_watch: {Scrubbed}
+    }
+  },
+  Media_type: tv,
+  Status: finished_airing,
+  Num_episodes: 26,
+  Start_season: {
+    Year: 1998,
+    Season: spring
+  },
+  Broadcast: {
+    Day_of_the_week: saturday,
+    Start_time: 01:00
+  },
+  Source: original,
+  Average_episode_duration: 1440,
+  Rating: r,
+  Studios: [
+    {
+      Id: 14,
+      Name: Sunrise
+    }
+  ],
+  Alternative_titles: {
+    En: Cowboy Bebop,
+    Ja: カウボーイビバップ
+  },
+  Start_date: 1998-04-03,
+  End_date: 1999-04-24,
+  Synopsis:
+Crime is timeless. By the year 2071, humanity has expanded across the galaxy, filling the surface of other planets with settlements like those on Earth. These new societies are plagued by murder, drug use, and theft, and intergalactic outlaws are hunted by a growing number of tough bounty hunters.
+
+Spike Spiegel and Jet Black pursue criminals throughout space to make a humble living. Beneath his goofy and aloof demeanor, Spike is haunted by the weight of his violent past. Meanwhile, Jet manages his own troubled memories while taking care of Spike and the Bebop, their ship. The duo is joined by the beautiful con artist Faye Valentine, odd child Edward Wong Hau Pepelu Tivrusky IV, and Ein, a bioengineered Welsh corgi.
+
+While developing bonds and working to catch a colorful cast of criminals, the Bebop crew's lives are disrupted by a menace from Spike's past. As a rival's maniacal plot continues to unravel, Spike must choose between life with his newfound family or revenge for his old wounds.
+
+[Written by MAL Rewrite],
+  Mean: {Scrubbed},
+  Rank: {Scrubbed},
+  Popularity: {Scrubbed},
+  Num_list_users: {Scrubbed},
+  Num_scoring_users: {Scrubbed},
+  Nsfw: white,
+  Genres: [
+    {
+      Id: 1,
+      Name: Action
+    },
+    {
+      Id: 50,
+      Name: Adult Cast
+    },
+    {
+      Id: 46,
+      Name: Award Winning
+    },
+    {
+      Id: 24,
+      Name: Sci-Fi
+    },
+    {
+      Id: 29,
+      Name: Space
+    }
+  ],
+  Created_at: DateTimeOffset_1,
+  Updated_at: DateTimeOffset_2,
+  Id: 1,
+  Title: Cowboy Bebop,
+  Main_picture: {
+    Large: https://cdn.myanimelist.net/images/anime/4/19644l.jpg,
+    Medium: https://cdn.myanimelist.net/images/anime/4/19644.jpg
+  }
+}

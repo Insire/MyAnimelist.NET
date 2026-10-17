@@ -1,0 +1,138 @@
+﻿{
+  Categories: [
+    {
+      Title: MyAnimeList,
+      Boards: [
+        {
+          Id: 5,
+          Title: Updates & Announcements,
+          Description: Updates, changes, and additions to MAL.
+        },
+        {
+          Id: 14,
+          Title: MAL Guidelines & FAQ,
+          Description: Site rules, forum rules, database guidelines, review/recommendation guidelines, and other helpful information.
+        },
+        {
+          Id: 17,
+          Title: DB Modification Requests,
+          Description: Ask questions or submit changes (that you are unable to edit on the entry page) in the applicable board.,
+          Subboards: [
+            {
+              Id: 2,
+              Title: Anime DB
+            },
+            {
+              Id: 3,
+              Title: Character & People DB
+            },
+            {
+              Id: 5,
+              Title: Manga DB
+            }
+          ]
+        },
+        {
+          Id: 3,
+          Title: Support,
+          Description: Have a problem using the site or think you found a bug? Post here.
+        },
+        {
+          Id: 4,
+          Title: Suggestions,
+          Description: Have an idea or suggestion for the site? Share it here.
+        },
+        {
+          Id: 13,
+          Title: MAL Contests,
+          Description: Our season-long anime game and other user competitions can be found here.
+        }
+      ]
+    },
+    {
+      Title: Anime & Manga,
+      Boards: [
+        {
+          Id: 15,
+          Title: News Discussion,
+          Description: Current news in anime and manga.
+        },
+        {
+          Id: 16,
+          Title: Anime & Manga Recommendations,
+          Description: Ask the community for series recommendations or help other users looking for suggestions.
+        },
+        {
+          Id: 19,
+          Title: Series Discussion,
+          Description: Post in episode and chapter discussion threads or talk about specific anime and manga in their series' boards.,
+          Subboards: [
+            {
+              Id: 1,
+              Title: Anime Series
+            },
+            {
+              Id: 4,
+              Title: Manga Series
+            }
+          ]
+        },
+        {
+          Id: 1,
+          Title: Anime Discussion,
+          Description: General anime discussion that is not specific to any particular series.
+        },
+        {
+          Id: 2,
+          Title: Manga Discussion,
+          Description: General manga discussion that is not specific to any particular series.
+        }
+      ]
+    },
+    {
+      Title: General,
+      Boards: [
+        {
+          Id: 8,
+          Title: Introductions,
+          Description: New to MyAnimeList? Introduce yourself here.
+        },
+        {
+          Id: 7,
+          Title: Games, Computers & Tech Support,
+          Description: Discuss visual novels and other video games, or ask our community a computer related question.
+        },
+        {
+          Id: 10,
+          Title: Music & Entertainment,
+          Description: Asian music and live-action series, Western media and artists, best-selling novels, etc.
+        },
+        {
+          Id: 11,
+          Title: Casual Discussion,
+          Description: General interest topics that don't fall into one of the sub-categories above, such as community polls.
+        },
+        {
+          Id: 12,
+          Title: Creative Corner,
+          Description: Show your creations to get help or feedback from our community. Graphics, list designs, stories; anything goes.
+        },
+        {
+          Id: 9,
+          Title: Forum Games,
+          Description: Fun forum games are contained here.
+        }
+      ]
+    },
+    {
+      Title: Archive,
+      Boards: [
+        {
+          Id: 6,
+          Title: Current Events,
+          Description: World headlines, the latest in science, sports competitions, and other debate topics.
+        }
+      ]
+    }
+  ]
+}

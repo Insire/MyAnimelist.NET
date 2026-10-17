@@ -908,7 +908,7 @@
         "operationId": "users_user_id_get",
         "parameters": [
           {
-            "name": "user_id",
+            "name": "user_name",
             "in": "path",
             "schema": {
               "type": "string"
@@ -1518,11 +1518,7 @@
             "type": "object",
             "properties": {
               "data": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ForumTopicData"
-                },
-                "nullable": false
+                "$ref": "#/components/schemas/ForumTopicData"
               },
               "paging": {
                 "$ref": "#/components/schemas/ForumTopicPaging"
@@ -1548,11 +1544,7 @@
                 "nullable": false
               },
               "poll": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ForumTopicPoll"
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/ForumTopicPoll"
               }
             }
           }
@@ -1584,7 +1576,7 @@
                 "type": "string",
                 "nullable": false
               },
-              "close": {
+              "closed": {
                 "type": "boolean",
                 "nullable": false
               },

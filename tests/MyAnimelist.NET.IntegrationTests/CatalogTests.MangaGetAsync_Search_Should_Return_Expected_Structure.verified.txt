@@ -1,0 +1,55 @@
+﻿{
+  data: [
+    {
+      node: {
+        alternative_titles: {
+          en: string,
+          ja: string,
+          synonyms: [
+            string
+          ]
+        },
+        authors: [
+          {
+            node: {
+              first_name: string,
+              id: int,
+              last_name: string
+            },
+            role: string
+          }
+        ],
+        created_at: date,
+        end_date: string,
+        genres: [
+          {
+            id: int,
+            name: string
+          }
+        ],
+        id: int,
+        main_picture: {
+          large: uri,
+          medium: uri
+        },
+        mean: number,
+        media_type: string,
+        nsfw: string,
+        num_chapters: int,
+        num_list_users: int,
+        num_scoring_users: int,
+        num_volumes: int,
+        popularity: int,
+        rank: int,
+        start_date: string,
+        status: string,
+        synopsis: string,
+        title: string,
+        updated_at: date
+      }
+    }
+  ],
+  paging: {
+    next: string
+  }
+}

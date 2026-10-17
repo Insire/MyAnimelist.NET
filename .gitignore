@@ -406,3 +406,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 tmp_build/**
+
+# Verify
+*.received.*

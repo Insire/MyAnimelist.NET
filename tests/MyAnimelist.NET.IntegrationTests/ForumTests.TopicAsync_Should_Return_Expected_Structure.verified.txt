@@ -1,0 +1,34 @@
+﻿{
+  data: {
+    poll: {
+      closed: bool,
+      id: int,
+      options: [
+        {
+          id: int,
+          text: string,
+          votes: int
+        }
+      ],
+      question: string
+    },
+    posts: [
+      {
+        body: string,
+        created_at: date,
+        created_by: {
+          forum_avator: string,
+          id: int,
+          name: string
+        },
+        id: int,
+        number: int,
+        signature: string
+      }
+    ],
+    title: string
+  },
+  paging: {
+    next: string
+  }
+}

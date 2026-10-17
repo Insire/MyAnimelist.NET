@@ -386,10 +386,10 @@ namespace MyAnimelist.NET
             }
         }
 
-        public virtual async System.Threading.Tasks.Task<User> UsersAsync(string user_id, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<User> UsersAsync(string user_name, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (user_id == null)
-                throw new System.ArgumentNullException("user_id");
+            if (user_name == null)
+                throw new System.ArgumentNullException("user_name");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -404,6 +404,7 @@ namespace MyAnimelist.NET
                 
                     // Operation Path: "users/{user_name}"
                     urlBuilder_.Append("users/");
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(user_name, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('?');
                     if (fields != null)
                     {
@@ -2228,19 +2229,19 @@ namespace MyAnimelist.NET
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("pictures")]
-        public System.Collections.Generic.ICollection<Picture>? Pictures { get; } = default!;
+        public System.Collections.Generic.ICollection<Picture>? Pictures { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("background")]
         public string? Background { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("related_anime")]
-        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? Related_anime { get; } = default!;
+        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? Related_anime { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("related_manga")]
-        public System.Collections.Generic.ICollection<RelatedMangaEdge>? Related_manga { get; } = default!;
+        public System.Collections.Generic.ICollection<RelatedMangaEdge>? Related_manga { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("recommendations")]
-        public System.Collections.Generic.ICollection<AnimeRecommendationAggregationEdgeBase>? Recommendations { get; } = default!;
+        public System.Collections.Generic.ICollection<AnimeRecommendationAggregationEdgeBase>? Recommendations { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statistics")]
         public Statistics? Statistics { get; set; } = default!;
@@ -2279,7 +2280,7 @@ namespace MyAnimelist.NET
         public string? Rating { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("studios")]
-        public System.Collections.Generic.ICollection<AnimeStudio>? Studios { get; } = default!;
+        public System.Collections.Generic.ICollection<AnimeStudio>? Studios { get; set; } = default!;
 
     }
 
@@ -2317,7 +2318,7 @@ namespace MyAnimelist.NET
         public int? Rewatch_value { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("tags")]
-        public System.Collections.Generic.ICollection<string>? Tags { get; } = default!;
+        public System.Collections.Generic.ICollection<string>? Tags { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("comments")]
         public string? Comments { get; set; } = default!;
@@ -2651,22 +2652,22 @@ namespace MyAnimelist.NET
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("pictures")]
-        public System.Collections.Generic.ICollection<Picture>? Pictures { get; } = default!;
+        public System.Collections.Generic.ICollection<Picture>? Pictures { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("background")]
         public string? Background { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("related_anime")]
-        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? Related_anime { get; } = default!;
+        public System.Collections.Generic.ICollection<RelatedAnimeEdge>? Related_anime { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("related_manga")]
-        public System.Collections.Generic.ICollection<RelatedMangaEdge>? Related_manga { get; } = default!;
+        public System.Collections.Generic.ICollection<RelatedMangaEdge>? Related_manga { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("recommendations")]
-        public System.Collections.Generic.ICollection<MangaRecommendationAggregationEdgeBase>? Recommendations { get; } = default!;
+        public System.Collections.Generic.ICollection<MangaRecommendationAggregationEdgeBase>? Recommendations { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("serialization")]
-        public System.Collections.Generic.ICollection<MangaMagazineRelationEdge>? Serialization { get; } = default!;
+        public System.Collections.Generic.ICollection<MangaMagazineRelationEdge>? Serialization { get; set; } = default!;
 
     }
 
@@ -2690,7 +2691,7 @@ namespace MyAnimelist.NET
         public int? Num_chapters { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("authors")]
-        public System.Collections.Generic.ICollection<PersonRoleEdge>? Authors { get; } = default!;
+        public System.Collections.Generic.ICollection<PersonRoleEdge>? Authors { get; set; } = default!;
 
     }
 
@@ -2731,7 +2732,7 @@ namespace MyAnimelist.NET
         public int? Reread_value { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("tags")]
-        public System.Collections.Generic.ICollection<string>? Tags { get; } = default!;
+        public System.Collections.Generic.ICollection<string>? Tags { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("comments")]
         public string? Comments { get; set; } = default!;
@@ -3080,7 +3081,7 @@ namespace MyAnimelist.NET
         public string? Nsfw { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("genres")]
-        public System.Collections.Generic.ICollection<Genre>? Genres { get; } = default!;
+        public System.Collections.Generic.ICollection<Genre>? Genres { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("created_at")]
         public System.DateTimeOffset? Created_at { get; set; } = default!;
@@ -3317,7 +3318,7 @@ namespace MyAnimelist.NET
         public string? Description { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("subboards")]
-        public System.Collections.Generic.ICollection<ForumSubboard>? Subboards { get; } = default!;
+        public System.Collections.Generic.ICollection<ForumSubboard>? Subboards { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3335,7 +3336,7 @@ namespace MyAnimelist.NET
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("categories")]
-        public System.Collections.Generic.ICollection<ForumCategory>? Categories { get; } = default!;
+        public System.Collections.Generic.ICollection<ForumCategory>? Categories { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3356,7 +3357,7 @@ namespace MyAnimelist.NET
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("boards")]
-        public System.Collections.Generic.ICollection<ForumBoard>? Boards { get; } = default!;
+        public System.Collections.Generic.ICollection<ForumBoard>? Boards { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3374,7 +3375,7 @@ namespace MyAnimelist.NET
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("data")]
-        public System.Collections.Generic.ICollection<ForumTopicData>? Data { get; } = default!;
+        public ForumTopicData? Data { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("paging")]
         public ForumTopicPaging? Paging { get; set; } = default!;
@@ -3398,10 +3399,10 @@ namespace MyAnimelist.NET
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("posts")]
-        public System.Collections.Generic.ICollection<ForumTopicPost>? Posts { get; } = default!;
+        public System.Collections.Generic.ICollection<ForumTopicPost>? Posts { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("poll")]
-        public System.Collections.Generic.ICollection<ForumTopicPoll>? Poll { get; set; } = default!;
+        public ForumTopicPoll? Poll { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3424,11 +3425,11 @@ namespace MyAnimelist.NET
         [System.Text.Json.Serialization.JsonPropertyName("question")]
         public string? Question { get; set; } = default!;
 
-        [System.Text.Json.Serialization.JsonPropertyName("close")]
-        public bool? Close { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonPropertyName("closed")]
+        public bool? Closed { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("options")]
-        public System.Collections.Generic.ICollection<ForumTopicPollOption>? Options { get; } = default!;
+        public System.Collections.Generic.ICollection<ForumTopicPollOption>? Options { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -3479,7 +3480,7 @@ namespace MyAnimelist.NET
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("data")]
-        public System.Collections.Generic.ICollection<ForumTopicsData>? Data { get; } = default!;
+        public System.Collections.Generic.ICollection<ForumTopicsData>? Data { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("paging")]
         public ForumTopicPaging? Paging { get; set; } = default!;

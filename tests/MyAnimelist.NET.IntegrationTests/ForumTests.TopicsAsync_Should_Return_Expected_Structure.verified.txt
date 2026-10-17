@@ -1,0 +1,23 @@
+﻿{
+  data: [
+    {
+      created_at: date,
+      created_by: {
+        id: int,
+        name: string
+      },
+      id: int,
+      is_locked: bool,
+      last_post_created_at: date,
+      last_post_created_by: {
+        id: int,
+        name: string
+      },
+      number_of_posts: int,
+      title: string
+    }
+  ],
+  paging: {
+    next: string
+  }
+}
