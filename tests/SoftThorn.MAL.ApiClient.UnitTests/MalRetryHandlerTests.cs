@@ -134,6 +134,19 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             }
         }
 
+        [Theory]
+        [InlineData(typeof(MalRetryHandler))]
+        [InlineData(typeof(Authentication.MalLoginHandler))]
+        public void AddMalApiClient_Should_Register_Message_Handlers_As_Transient(Type handlerType)
+        {
+            // a reused DelegatingHandler throws once IHttpClientFactory rebuilds the handler chain after its lifetime
+            var services = new ServiceCollection();
+            services.AddMalApiClient(new() { ClientId = "client-id", RedirectUrl = "http://localhost:5000/" });
+
+            var descriptor = Assert.Single(services, service => service.ServiceType == handlerType);
+            Assert.Equal(ServiceLifetime.Transient, descriptor.Lifetime);
+        }
+
         private static HttpResponseMessage TooManyRequests(RetryConditionHeaderValue retryAfter)
         {
             var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests);

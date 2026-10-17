@@ -49,7 +49,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
             _services
                 .AddSingleton<AuthTestProgressCollector>()
                 .AddSingleton<IBrowserLoginHandler>(this)
-                .AddSingleton<HttpLoggingHandler>()
+                .AddTransient<HttpLoggingHandler>()
                 .AddHttpClient<MalApiService>(client => client.BaseAddress = new Uri(RegistrationExtensions.API_URI))
                 .AddHttpMessageHandler<HttpLoggingHandler>();
 

@@ -16,10 +16,12 @@ namespace SoftThorn.MAL.ApiClient
             services.TryAddSingleton<IBrowserLoginHandler, BrowserLoginHandler>();
             services.TryAddSingleton(TimeProvider.System);
             services.TryAddSingleton<TokenClient>();
+            // IHttpClientFactory rebuilds handler chains every few minutes and sets InnerHandler on each handler,
+            // which throws for a handler that was already used, so handlers must be transient
             services.AddTransient<MalRetryHandler>();
             services.AddHttpClient(TokenClient.HttpClientName, AddUserAgent)
                 .AddHttpMessageHandler<MalRetryHandler>();
-            services.AddSingleton<MalLoginHandler>();
+            services.AddTransient<MalLoginHandler>();
             services.AddSingleton<MalApiService>();
             services.AddSingleton(clientConfiguration);
 

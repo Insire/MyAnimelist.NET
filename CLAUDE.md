@@ -196,6 +196,7 @@ Resolved on 2026-10-16:
 Resolved on 2026-10-17:
 
 - all NuGet packages and tools are updated (see `package-updates.md`)
+- `MalLoginHandler` (and the tests' `HttpLoggingHandler`) were registered as singletons. `IHttpClientFactory` rebuilds handler chains after their 2-minute lifetime and sets `InnerHandler` again, which throws for a handler that was already used, so long-running apps would have failed. All `DelegatingHandler`s are now transient, and a unit test checks this.
 - the Cake `Test` task now depends on `NuGetRestore`. Before, the clean deleted `obj/` and `dotnet test --no-restore` silently found no test projects.
 - `UpdateOpenApiSpecTask` now uses NSwag's net10.0 build. Before, it resolved the net9.0 one, which rejects the `Net100` config.
 - The new snapshot integration tests found these bugs, now fixed:
