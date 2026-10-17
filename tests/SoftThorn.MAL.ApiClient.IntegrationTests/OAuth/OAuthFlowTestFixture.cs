@@ -13,6 +13,9 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
 {
     public sealed class OAuthFlowTestFixture : PageTest, IAsyncLifetime, IBrowserLoginHandler
     {
+        // a login takes a few seconds; Playwright gives each browser step 30s on its own
+        private static readonly TimeSpan LoginTimeout = TimeSpan.FromMinutes(2);
+
         private readonly ServiceCollection _services;
         private readonly ServiceProvider _serviceProvider;
         private readonly MalAuthSettings _malAuthSettings;
@@ -110,12 +113,23 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.OAuth
             var sut = GetMalApiService();
 
             _logger.LogInformation("Logging in to MAL");
+
+            // the login waits for MAL to redirect the browser to the listener; if that never happens (e.g. MAL shows the browser
+            // a check instead of the consent page), it would wait forever, since the run's token isn't cancelled before the job times out
+            using var loginTimeout = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+            loginTimeout.CancelAfter(LoginTimeout);
             try
             {
-                await sut.Login.StartOAuthFlowAsync(progress, TestContext.Current.CancellationToken);
+                await sut.Login.StartOAuthFlowAsync(progress, loginTimeout.Token);
             }
             catch (Exception exception) when (!TestContext.Current.CancellationToken.IsCancellationRequested)
             {
+                if (exception is OperationCanceledException && loginTimeout.IsCancellationRequested)
+                {
+                    // the page the browser got stuck on is the clue: a login form, a bot check, the consent page or an error from MAL
+                    exception = new TimeoutException($"The login didn't finish within {LoginTimeout}. The browser was on {Page.Url} (\"{await Page.TitleAsync()}\").", exception);
+                }
+
                 // not thrown here, or every test would fail with it: OAuthFlowTests, which runs first, reports it and the other tests are skipped
                 _logger.LogError(exception, "The login failed");
                 _loginFailure = ExceptionDispatchInfo.Capture(exception);

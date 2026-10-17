@@ -34,6 +34,10 @@ namespace Build.Tasks
                     .AppendSwitchQuoted("--filter-trait", "TestCategory=Integration-Test")
                     .Append("--coverage") // writes *.coverage files, merged by ConvertCoverageTask
                     .Append("--report-xunit-trx")
+                    // MAL sometimes stops answering for a while; aborting well before the Azure job's 30 minutes still writes the trx, which PublishTestResults uploads
+                    .Append($"--timeout {Constants.TestSessionTimeout}")
+                    // prints each test with its duration and output (the integration tests' HTTP log) when it finishes, so a slow run shows where the time goes
+                    .Append("--output Detailed")
                 );
 
             var exitCode = context.StartProcess(context.Tools.Resolve(context.DotnetExeName), settings);

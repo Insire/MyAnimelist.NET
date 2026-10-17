@@ -8,6 +8,9 @@ namespace Build.Util
         public const string SolutionPath = "./SoftThorn.MAL.ApiClient.slnx";
         public const string UnitTestProjectPath = "./tests/SoftThorn.MAL.ApiClient.UnitTests/SoftThorn.MAL.ApiClient.UnitTests.csproj";
 
+        // a normal run takes under a minute; leaves room in the Azure job's 30 minutes for setup, coverage, pack and the publish tasks
+        public const string TestSessionTimeout = "15m";
+
         // env vars the integration tests need on Azure (locally they come from user secrets), mapped in azure-pipelines.yml
         public static readonly string[] IntegrationTestSecrets =
         [
