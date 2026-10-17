@@ -299,6 +299,8 @@
     "AnimeListStatusPatch.rewatch_value": "How much the user would like to watch the anime again, from 0 (not set) to 5.",
     "AnimeListStatusPatch.tags": "The new tags of the entry. They replace the existing ones. MyAnimeList receives them separated by commas, so a tag can't contain a comma.",
     "AnimeListStatusPatch.comments": "The new comments on the entry. They replace the existing ones.",
+    "AnimeListStatusPatch.start_date": "When the user started the anime: YYYY-MM-DD, or only YYYY-MM or YYYY. An empty string removes the date.",
+    "AnimeListStatusPatch.finish_date": "When the user finished the anime, in the same form as the start date. An empty string removes the date.",
     "MangaListStatusPatch.status": "The new list status: reading, completed, on_hold, dropped or plan_to_read.",
     "MangaListStatusPatch.is_rereading": "Whether the user is reading the manga again.",
     "MangaListStatusPatch.score": "The new score, from 1 to 10, or 0 to remove the score.",
@@ -309,6 +311,8 @@
     "MangaListStatusPatch.reread_value": "How much the user would like to read the manga again, from 0 (not set) to 5.",
     "MangaListStatusPatch.tags": "The new tags of the entry. They replace the existing ones. MyAnimeList receives them separated by commas, so a tag can't contain a comma.",
     "MangaListStatusPatch.comments": "The new comments on the entry. They replace the existing ones.",
+    "MangaListStatusPatch.start_date": "When the user started the manga: YYYY-MM-DD, or only YYYY-MM or YYYY. An empty string removes the date.",
+    "MangaListStatusPatch.finish_date": "When the user finished the manga, in the same form as the start date. An empty string removes the date.",
 
     "AnimeRecommendation.node": "The recommended anime.",
     "AnimeRecommendation.num_recommendations": "How many users recommended it.",

@@ -164,11 +164,11 @@ namespace Build.Tasks
 
         // MAL's spec marks the search term as optional, has no nsfw parameter, and gives limit and offset few bounds. Checked live
         // on 2026-10-17: searches without q or with fewer than 3 characters fail with 400; nsfw=true adds entries rated "gray"
-        // to searches and seasonal anime (the rankings include them anyway); larger limits than these, limit=0 and offset=-1
-        // fail with 400. NSwag doesn't check the bounds, they only document the spec.
+        // to searches, seasonal anime and user lists (the rankings include them anyway; the suggestions showed no difference);
+        // larger limits than these, limit=0 and offset=-1 fail with 400. NSwag doesn't check the bounds, they only document the spec.
         private static readonly string[] SearchPaths = ["/anime", "/manga"];
 
-        private static readonly string[] NsfwPaths = ["/anime", "/manga", "/anime/season/{year}/{season}"];
+        private static readonly string[] NsfwPaths = ["/anime", "/manga", "/anime/season/{year}/{season}", "/users/{user_name}/animelist", "/users/{user_name}/mangalist"];
 
         private static readonly Dictionary<string, int> LimitMaximums = new()
         {
@@ -632,6 +632,8 @@ namespace Build.Tasks
 
         // MAL's spec makes the PATCH bodies optional and types their tags as one string, while responses have an array of tags.
         // The live API takes the tags comma-separated, which is how MalFormUrlEncoder sends an array.
+        // The bodies also lack start_date and finish_date, which the live API accepts (checked 2026-10-17): full or partial dates
+        // (YYYY-MM-DD, YYYY-MM, YYYY), an empty value removes the date, anything else gets 400. Strings, like in the responses.
         // x-name names the body parameter (NSwag calls it "body" otherwise), and x-position puts it after the id.
         private static void FixListStatusPatches(BuildContext context, JsonNode spec)
         {
@@ -646,14 +648,20 @@ namespace Build.Tasks
                 // a required body would come before the id, which has no position
                 requestBody["x-position"] = 1;
 
-                schemas[name]!["properties"]!["tags"] = new JsonObject
+                var properties = schemas[name]!["properties"]!.AsObject();
+                properties["tags"] = new JsonObject
                 {
                     ["type"] = "array",
                     ["items"] = new JsonObject { ["type"] = "string" },
                 };
+
+                foreach (var date in (string[])["start_date", "finish_date"])
+                {
+                    properties[date] ??= new JsonObject { ["type"] = "string" };
+                }
             }
 
-            context.Information("Made the list status bodies required and their tags arrays");
+            context.Information("Made the list status bodies required, their tags arrays, and added their dates");
         }
 
         // MAL's spec has no required properties at all (it marks fields with "nullable: false" instead, which doesn't mean they

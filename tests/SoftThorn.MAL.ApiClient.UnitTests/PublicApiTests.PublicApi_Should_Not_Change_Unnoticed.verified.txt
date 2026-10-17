@@ -127,6 +127,8 @@
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("comments")]
         public string? Comments { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
+        public string? FinishDate { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("is_rewatching")]
         public bool? IsRewatching { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("num_watched_episodes")]
@@ -139,6 +141,8 @@
         public int? RewatchValue { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("score")]
         public int? Score { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
+        public string? StartDate { get; set; }
         [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<SoftThorn.MAL.ApiClient.AnimeWatchStatus>?))]
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public SoftThorn.MAL.ApiClient.AnimeWatchStatus? Status { get; set; }
@@ -565,8 +569,8 @@
     }
     public interface IUsersClient
     {
-        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.UserAnimeList> GetAnimeListAsync(string userName, SoftThorn.MAL.ApiClient.AnimeWatchStatus? status = default, SoftThorn.MAL.ApiClient.UserAnimeListSort? sort = default, int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
-        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.UserMangaList> GetMangaListAsync(string userName, SoftThorn.MAL.ApiClient.MangaReadStatus? status = default, SoftThorn.MAL.ApiClient.UserMangaListSort? sort = default, int? limit = default, int? offset = default, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.UserAnimeList> GetAnimeListAsync(string userName, SoftThorn.MAL.ApiClient.AnimeWatchStatus? status = default, SoftThorn.MAL.ApiClient.UserAnimeListSort? sort = default, int? limit = default, int? offset = default, string? fields = null, bool? nsfw = default, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.UserMangaList> GetMangaListAsync(string userName, SoftThorn.MAL.ApiClient.MangaReadStatus? status = default, SoftThorn.MAL.ApiClient.UserMangaListSort? sort = default, int? limit = default, int? offset = default, string? fields = null, bool? nsfw = default, System.Threading.CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task<SoftThorn.MAL.ApiClient.User> GetUserAsync(string userName, string? fields = null, System.Threading.CancellationToken cancellationToken = default);
     }
     public sealed class Magazine
@@ -692,6 +696,8 @@
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("comments")]
         public string? Comments { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
+        public string? FinishDate { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("is_rereading")]
         public bool? IsRereading { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("num_chapters_read")]
@@ -706,6 +712,8 @@
         public int? RereadValue { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("score")]
         public int? Score { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
+        public string? StartDate { get; set; }
         [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<SoftThorn.MAL.ApiClient.MangaReadStatus>?))]
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         public SoftThorn.MAL.ApiClient.MangaReadStatus? Status { get; set; }

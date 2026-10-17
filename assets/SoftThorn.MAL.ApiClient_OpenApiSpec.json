@@ -1105,6 +1105,15 @@
             },
             "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
+          },
+          {
+            "name": "nsfw",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-originalName": "nsfw",
+            "description": "Set to true to include entries that MyAnimeList rates as not safe for work. Without it, they are left out."
           }
         ],
         "security": [
@@ -1201,6 +1210,15 @@
             },
             "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
+          },
+          {
+            "name": "nsfw",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-originalName": "nsfw",
+            "description": "Set to true to include entries that MyAnimeList rates as not safe for work. Without it, they are left out."
           }
         ],
         "security": [
@@ -2981,6 +2999,14 @@
           "comments": {
             "type": "string",
             "description": "The new comments on the entry. They replace the existing ones."
+          },
+          "start_date": {
+            "type": "string",
+            "description": "When the user started the anime: YYYY-MM-DD, or only YYYY-MM or YYYY. An empty string removes the date."
+          },
+          "finish_date": {
+            "type": "string",
+            "description": "When the user finished the anime, in the same form as the start date. An empty string removes the date."
           }
         },
         "description": "The fields of an anime list entry to change. Fields that aren't set are left as they are."
@@ -3030,6 +3056,14 @@
           "comments": {
             "type": "string",
             "description": "The new comments on the entry. They replace the existing ones."
+          },
+          "start_date": {
+            "type": "string",
+            "description": "When the user started the manga: YYYY-MM-DD, or only YYYY-MM or YYYY. An empty string removes the date."
+          },
+          "finish_date": {
+            "type": "string",
+            "description": "When the user finished the manga, in the same form as the start date. An empty string removes the date."
           }
         },
         "description": "The fields of a manga list entry to change. Fields that aren't set are left as they are."

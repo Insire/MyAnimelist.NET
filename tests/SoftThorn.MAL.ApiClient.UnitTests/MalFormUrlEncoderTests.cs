@@ -29,6 +29,15 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         }
 
         [Fact]
+        public void Encode_Should_Keep_Empty_Strings()
+        {
+            // an empty date is how MAL removes it, so it must not be left out like an unset one
+            var fields = MalFormUrlEncoder.Encode(new AnimeListStatusPatch { StartDate = "2017-10", FinishDate = "" }, Options);
+
+            Assert.Equal([new("start_date", "2017-10"), new("finish_date", "")], fields);
+        }
+
+        [Fact]
         public async Task Encode_Should_Produce_Url_Encoded_Content()
         {
             // the enum member is sent as MAL's value (JsonStringEnumMemberName), not as its C# name

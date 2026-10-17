@@ -2150,9 +2150,10 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="limit">How many entries to return, from 1 to 1000.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <param name="nsfw">Set to true to include entries that MyAnimeList rates as not safe for work. Without it, they are left out.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<UserAnimeList> GetAnimeListAsync(string userName, AnimeWatchStatus? status = null, UserAnimeListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<UserAnimeList> GetAnimeListAsync(string userName, AnimeWatchStatus? status = null, UserAnimeListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, bool? nsfw = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// Returns a page of a user's manga list.
@@ -2163,9 +2164,10 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="limit">How many entries to return, from 1 to 1000.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <param name="nsfw">Set to true to include entries that MyAnimeList rates as not safe for work. Without it, they are left out.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        System.Threading.Tasks.Task<UserMangaList> GetMangaListAsync(string userName, MangaReadStatus? status = null, UserMangaListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<UserMangaList> GetMangaListAsync(string userName, MangaReadStatus? status = null, UserMangaListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, bool? nsfw = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -2295,9 +2297,10 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="limit">How many entries to return, from 1 to 1000.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <param name="nsfw">Set to true to include entries that MyAnimeList rates as not safe for work. Without it, they are left out.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<UserAnimeList> GetAnimeListAsync(string userName, AnimeWatchStatus? status = null, UserAnimeListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<UserAnimeList> GetAnimeListAsync(string userName, AnimeWatchStatus? status = null, UserAnimeListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, bool? nsfw = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (userName == null)
                 throw new System.ArgumentNullException("userName");
@@ -2337,6 +2340,10 @@ namespace SoftThorn.MAL.ApiClient
                     if (fields != null)
                     {
                         urlBuilder_.Append(System.Uri.EscapeDataString("fields")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(fields, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (nsfw != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("nsfw")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(nsfw, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
                     urlBuilder_.Length--;
 
@@ -2401,9 +2408,10 @@ namespace SoftThorn.MAL.ApiClient
         /// <param name="limit">How many entries to return, from 1 to 1000.</param>
         /// <param name="offset">How many entries to skip, for paging. The response's paging links contain the next offset.</param>
         /// <param name="fields">A comma-separated list of the fields to return, for example "id,title,mean". Fields of nested objects go in braces, for example "my_list_status{priority,tags}". Without it MyAnimeList returns only a few basic fields.</param>
+        /// <param name="nsfw">Set to true to include entries that MyAnimeList rates as not safe for work. Without it, they are left out.</param>
         /// <exception cref="ApiException">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
         /// <param name="cancellationToken">Cancels the request.</param>
-        public async System.Threading.Tasks.Task<UserMangaList> GetMangaListAsync(string userName, MangaReadStatus? status = null, UserMangaListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<UserMangaList> GetMangaListAsync(string userName, MangaReadStatus? status = null, UserMangaListSort? sort = null, int? limit = null, int? offset = null, string? fields = null, bool? nsfw = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (userName == null)
                 throw new System.ArgumentNullException("userName");
@@ -2443,6 +2451,10 @@ namespace SoftThorn.MAL.ApiClient
                     if (fields != null)
                     {
                         urlBuilder_.Append(System.Uri.EscapeDataString("fields")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(fields, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (nsfw != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("nsfw")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(nsfw, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
                     urlBuilder_.Length--;
 
@@ -4870,6 +4882,18 @@ namespace SoftThorn.MAL.ApiClient
         [System.Text.Json.Serialization.JsonPropertyName("comments")]
         public string? Comments { get; set; } = default!;
 
+        /// <summary>
+        /// When the user started the anime: YYYY-MM-DD, or only YYYY-MM or YYYY. An empty string removes the date.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
+        public string? StartDate { get; set; } = default!;
+
+        /// <summary>
+        /// When the user finished the anime, in the same form as the start date. An empty string removes the date.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
+        public string? FinishDate { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
         /// <summary>
@@ -4951,6 +4975,18 @@ namespace SoftThorn.MAL.ApiClient
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("comments")]
         public string? Comments { get; set; } = default!;
+
+        /// <summary>
+        /// When the user started the manga: YYYY-MM-DD, or only YYYY-MM or YYYY. An empty string removes the date.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("start_date")]
+        public string? StartDate { get; set; } = default!;
+
+        /// <summary>
+        /// When the user finished the manga, in the same form as the start date. An empty string removes the date.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("finish_date")]
+        public string? FinishDate { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 

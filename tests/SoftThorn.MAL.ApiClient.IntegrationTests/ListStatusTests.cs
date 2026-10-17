@@ -34,6 +34,9 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                     RewatchValue = 0,
                     Tags = Tags,
                     Comments = Comments,
+                    StartDate = "2017-10-05",
+                    // a partial date, which MAL keeps as it is
+                    FinishDate = "2018",
                 }, cancellationToken);
 
                 // Assert
@@ -44,6 +47,8 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Assert.Equal(1, added.Priority);
                 Assert.Equal(Tags, added.Tags!.Order(StringComparer.Ordinal));
                 Assert.Equal(Comments, added.Comments);
+                Assert.Equal("2017-10-05", added.StartDate);
+                Assert.Equal("2018", added.FinishDate);
 
                 // Act: update only the score, the rest has to stay
                 var updated = await sut.Anime.UpdateListStatusAsync(TestAccount.TargetAnimeId, new AnimeListStatusPatch { Score = 9 }, cancellationToken);
@@ -52,6 +57,14 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Assert.Equal(9, updated.Score);
                 Assert.Equal("watching", updated.Status);
                 Assert.Equal(3, updated.NumEpisodesWatched);
+                Assert.Equal("2017-10-05", updated.StartDate);
+
+                // Act: an empty date removes it
+                updated = await sut.Anime.UpdateListStatusAsync(TestAccount.TargetAnimeId, new AnimeListStatusPatch { FinishDate = "" }, cancellationToken);
+
+                // Assert
+                Assert.Null(updated.FinishDate);
+                Assert.Equal("2017-10-05", updated.StartDate);
 
                 var details = await sut.Catalog.GetAnimeAsync(TestAccount.TargetAnimeId, fields: "my_list_status", cancellationToken: cancellationToken);
                 Assert.Equal(9, details.MyListStatus?.Score);
@@ -123,6 +136,8 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                     RereadValue = 0,
                     Tags = Tags,
                     Comments = Comments,
+                    StartDate = "2019-03",
+                    FinishDate = "2019-04-30",
                 }, cancellationToken);
 
                 // Assert
@@ -134,6 +149,8 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Assert.Equal(1, added.Priority);
                 Assert.Equal(Tags, added.Tags!.Order(StringComparer.Ordinal));
                 Assert.Equal(Comments, added.Comments);
+                Assert.Equal("2019-03", added.StartDate);
+                Assert.Equal("2019-04-30", added.FinishDate);
 
                 // Act: update only the score, the rest has to stay
                 var updated = await sut.Manga.UpdateListStatusAsync(TestAccount.TargetMangaId, new MangaListStatusPatch { Score = 9 }, cancellationToken);

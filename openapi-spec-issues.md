@@ -8,12 +8,12 @@ Each issue has an ID (P for paths and parameters, R for responses, S for schemas
 
 | Status | Meaning | Issues |
 | --- | --- | --- |
-| Fixed in the build | `UpdateOpenApiSpec` ([UpdateOpenApiSpecTask.cs](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/build/Tasks/UpdateOpenApiSpecTask.cs)) corrects the spec before NSwag generates the client. The step that does it is named in brackets. | 21 |
+| Fixed in the build | `UpdateOpenApiSpec` ([UpdateOpenApiSpecTask.cs](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/build/Tasks/UpdateOpenApiSpecTask.cs)) corrects the spec before NSwag generates the client. The step that does it is named in brackets. | 23 |
 | Worked around | The spec stays as it is, and the library handles the difference elsewhere. | 7 |
 | Open | The library inherits the problem. | 1 |
 | Harmless | Wrong or inconsistent, but it doesn't affect the generated client. | 8 |
 
-"Live" means checked against the API on 2026-10-17, either by the integration tests or by direct requests with a Client ID and no signed-in user.
+"Live" means checked against the API on 2026-10-17, either by the integration tests or by direct requests, with a Client ID and no signed-in user unless an issue says otherwise.
 
 ## Paths and parameters
 
@@ -25,12 +25,14 @@ Each issue has an ID (P for paths and parameters, R for responses, S for schemas
 | P4 | The search term is marked optional | `q` on `GET /anime` and `GET /manga` isn't marked as required. Live, MyAnimeList answers `400` (`invalid q`) without it, and also for the two-letter term `ab`. A three-letter term works. | Fixed in the build (`FixQueryParameters`). The search methods take `string q`. |
 | P5 | Limits without bounds | Only the forum endpoints give `limit` a maximum, and no endpoint gives `limit` or `offset` a minimum. Live, MyAnimeList answers `400` with the parameter's name as the message for `limit=501` on the ranking and seasonal endpoints, `limit=1001` on the user lists, `limit=101` on forum topics (which matches the spec), and `limit=0` or `offset=-1` anywhere. Anime and manga searches accept `limit=101`. | Fixed in the build (`FixQueryParameters`). NSwag doesn't check bounds, so the library still passes any value through, but the parameter documentation names the maximum. |
 | P6 | Fixed sets of values typed as plain strings | `ranking_type`, the `sort` parameters of the season, user list and forum topic endpoints, the `status` filter of the user lists, and `status` in the list status PATCH bodies only accept a fixed set of values, but are plain strings. So is the `season` path parameter, although the response schema `AnimeSeason.season` has an enum with the same values. Live, an unknown ranking type gets a `400`, unknown sorts are ignored, and `season=autumn` gets a `404`. | Fixed in the build (`AddEnums`). Response fields stay strings, so a value MyAnimeList adds later can't break deserialization. |
-| P7 | Profiles of other users | `GET /users/{user_name}` takes a user name in its path, but MyAnimeList's reference says only `@me` is supported. Not checked live, because the endpoint needs a signed-in user. | Open. `IUsersClient.GetUserAsync` takes any string, and its documentation says to pass `@me`. |
+| P7 | Profiles of other users | `GET /users/{user_name}` takes a user name in its path, but MyAnimeList's reference says only `@me` is supported. Live, with a signed-in user, `@me` works, while the signed-in user's own name, another existing user's name and a name that doesn't exist all get `404` (`not_found`). The user lists, by contrast, do accept other users' names (see P14). | Open. `IUsersClient.GetUserAsync` takes any string, and its documentation says to pass `@me`. |
 | P8 | Generated-looking operation ids | The operation ids repeat the path (`users_user_id_animelist_get`), name a parameter that doesn't exist (`user_id`), and end in `_put` on the two PATCH operations. | Fixed in the build (`SetOperationIds`). |
 | P9 | Request bodies not marked as required | The list status PATCHes don't set `requestBody.required`, although an update without a body makes no sense. | Fixed in the build (`FixListStatusPatches`). `UpdateListStatusAsync` takes a required `listStatus` after the id. |
 | P10 | Different field names in request and response | The anime PATCH body names the watched-episode count `num_watched_episodes`, while the list status in responses calls it `num_episodes_watched`. Both are what the live API uses. | Fixed in the build (`SetPropertyNames`). Both C# properties are called `NumEpisodesWatched`, and the JSON names stay MyAnimeList's. |
 | P11 | Tags have different types in request and response | `tags` is a string in the PATCH bodies and an array of strings in the list status responses. Live, MyAnimeList splits the string at commas. | Fixed in the build (`FixListStatusPatches`). The PATCH bodies take a list of tags, which the library sends comma-separated, so a tag can't contain a comma. |
 | P12 | Path-level parameters on two paths only | Only the `my_list_status` paths declare their id at path level. Every other path declares its parameters per operation. | Harmless. |
+| P13 | List status PATCHes have no dates | The anime and manga PATCH bodies don't declare `start_date` and `finish_date`, although the list status in responses has both. Live, with a signed-in user, both PATCHes accept them: full dates (`2017-10-05`), partial dates (`2017-10`, `2018`, sent back unchanged), and an empty value, which removes the date. Anything else gets a `400` (`invalid start_date`). | Fixed in the build (`FixListStatusPatches`). `AnimeListStatusPatch` and `MangaListStatusPatch` have `StartDate` and `FinishDate` as strings, like the list status in responses. An empty string removes the date, and `null` leaves it as it is. |
+| P14 | User lists have no `nsfw` parameter | Like P3, but for `GET /users/{user_name}/animelist` and `/mangalist`. Live, with a signed-in user, the anime list of another user (`Xinil`, `limit=1000`) had 366 entries rated `white` without `nsfw`, and the same 366 plus 33 `gray` with `nsfw=true`. The manga list went from 60 `white` to 60 `white` plus 16 `gray`. | Fixed in the build (`FixQueryParameters`). `GetAnimeListAsync` and `GetMangaListAsync` take `bool? nsfw`. |
 
 ## Responses
 
@@ -74,10 +76,8 @@ Each issue has an ID (P for paths and parameters, R for responses, S for schemas
 
 ## Not checked yet
 
-These came up during the review but haven't been tested against the live API:
+These came up during the review but couldn't be settled against the live API:
 
 | Question | Why it's open |
 | --- | --- |
-| Do the list status PATCHes accept `start_date` and `finish_date`? | The spec doesn't declare them in the request bodies, so the library can't send them. |
-| Does `GET /users/{user_name}` really reject names other than `@me` (see P7)? | The endpoint needs a signed-in user, and the tests only use `@me`. |
-| Does `nsfw` change the user lists or the suggestions? | The test account's lists have no entry that isn't rated `white`, and the suggestions need a signed-in user, so the library doesn't offer `nsfw` there. |
+| Does `nsfw` change the suggestions? | For the test account, 100 suggestions were all rated `white`, with and without `nsfw=true`. That doesn't show whether MyAnimeList ignores the parameter there or just suggested nothing else to this account, so the library doesn't offer `nsfw` there. |
