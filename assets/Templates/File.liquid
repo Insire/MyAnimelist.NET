@@ -170,6 +170,18 @@ namespace {{ Namespace }}
         /// </summary>
         public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
 
+        /// <summary>
+        /// MyAnimeList's error code from the response body, for example <c>bad_request</c>, <c>not_found</c> or <c>invalid_token</c>,
+        /// or <see langword="null"/> when the body has none.
+        /// </summary>
+        public string? ErrorCode { get; private set; }
+
+        /// <summary>
+        /// MyAnimeList's description of the error from the response body, for example <c>invalid q</c> or the name of a parameter
+        /// with an invalid value, or <see langword="null"/> when the body has none or it is empty.
+        /// </summary>
+        public string? ErrorMessage { get; private set; }
+
 {%-              if GenerateNullableReferenceTypes -%}
         internal {{ exceptionClassName }}(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException)
 {%-              else -%}
@@ -180,6 +192,7 @@ namespace {{ Namespace }}
             StatusCode = statusCode;
             Response = response;
             Headers = headers;
+            (ErrorCode, ErrorMessage) = MalErrorResponse.Parse(response);
         }
 
         /// <inheritdoc/>

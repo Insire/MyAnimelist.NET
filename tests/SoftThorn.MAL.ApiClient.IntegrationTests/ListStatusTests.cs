@@ -9,6 +9,9 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
     {
         private const string Comments = "Added by the SoftThorn.MAL.ApiClient integration tests";
 
+        // two tags, sorted, because the library sends them comma-separated and MAL has to split them
+        private static readonly string[] Tags = ["integration-test", "list-status-test"];
+
         [Fact]
         public async Task AnimeListStatus_Should_Be_Added_Updated_And_Removed()
         {
@@ -24,12 +27,12 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 {
                     Status = AnimeWatchStatus.Watching,
                     Score = 7,
-                    NumWatchedEpisodes = 3,
+                    NumEpisodesWatched = 3,
                     IsRewatching = false,
                     Priority = 1,
                     NumTimesRewatched = 0,
                     RewatchValue = 0,
-                    Tags = "integration-test",
+                    Tags = Tags,
                     Comments = Comments,
                 }, cancellationToken);
 
@@ -39,7 +42,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Assert.Equal(3, added.NumEpisodesWatched);
                 Assert.False(added.IsRewatching);
                 Assert.Equal(1, added.Priority);
-                Assert.Equal(["integration-test"], added.Tags!);
+                Assert.Equal(Tags, added.Tags!.Order(StringComparer.Ordinal));
                 Assert.Equal(Comments, added.Comments);
 
                 // Act: update only the score, the rest has to stay
@@ -118,7 +121,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                     Priority = 1,
                     NumTimesReread = 0,
                     RereadValue = 0,
-                    Tags = "integration-test",
+                    Tags = Tags,
                     Comments = Comments,
                 }, cancellationToken);
 
@@ -129,7 +132,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Assert.Equal(20, added.NumChaptersRead);
                 Assert.False(added.IsRereading);
                 Assert.Equal(1, added.Priority);
-                Assert.Equal(["integration-test"], added.Tags!);
+                Assert.Equal(Tags, added.Tags!.Order(StringComparer.Ordinal));
                 Assert.Equal(Comments, added.Comments);
 
                 // Act: update only the score, the rest has to stay

@@ -7,6 +7,20 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
     public sealed class UsersTests(OAuthFlowTestFixture fixture)
     {
         [Fact]
+        public async Task GetUserAsync_Me_Should_Return_Expected_Structure()
+        {
+            // Arrange
+            var sut = fixture.GetMalApiService();
+
+            // Act
+            var response = await sut.Users.GetUserAsync("@me", fields: MalFields.User, cancellationToken: TestContext.Current.CancellationToken);
+
+            // Assert: only the structure, so the test account's details stay out of the repository
+            Assert.NotEqual(0, response.Id);
+            await Verify(ModelShape.Of(response));
+        }
+
+        [Fact]
         public async Task GetAnimeListAsync_Me_Should_Return_Expected_Structure()
         {
             // Arrange

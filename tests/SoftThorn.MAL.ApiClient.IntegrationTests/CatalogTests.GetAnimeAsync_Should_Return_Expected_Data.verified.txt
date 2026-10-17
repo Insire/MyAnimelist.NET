@@ -166,6 +166,40 @@ Cowboy Bebop's biggest influence has been in the United States, where it premier
       PlanToWatch: {Scrubbed}
     }
   },
+  OpeningThemes: [
+    {
+      Id: 25957,
+      AnimeId: 1,
+      Text: "Tank!" by The Seatbelts (eps 1-25)
+    }
+  ],
+  EndingThemes: [
+    {
+      Id: 310,
+      AnimeId: 1,
+      Text: #1: "The Real Folk Blues" by The Seatbelts feat. Mai Yamane (eps 1-12, 14-25)
+    },
+    {
+      Id: 311,
+      AnimeId: 1,
+      Text: #2: "Space Lion" by The Seatbelts (ep 13)
+    },
+    {
+      Id: 312,
+      AnimeId: 1,
+      Text: #3: "Blue" by The Seatbelts feat. Mai Yamane (ep 26)
+    }
+  ],
+  Videos: [
+    {
+      Id: 3065,
+      Title: PV 1 English dub version,
+      Url: https://youtu.be/gY5nDXOtv_o,
+      CreatedAt: 1453126096000,
+      UpdatedAt: 1457702231000,
+      Thumbnail: https://i.ytimg.com/vi/gY5nDXOtv_o/mqdefault.jpg
+    }
+  ],
   MediaType: tv,
   Status: finished_airing,
   NumEpisodes: 26,

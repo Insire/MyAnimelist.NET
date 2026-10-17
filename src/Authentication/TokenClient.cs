@@ -86,6 +86,11 @@ namespace SoftThorn.MAL.ApiClient.Authentication
                     LogRefreshRejected((int)statusCode);
                     await _authCache.ClearAsync(cancellationToken);
                 }
+                else if (refreshed is null)
+                {
+                    // MalLoginHandler then sends the Client ID, which endpoints that need a user reject with 401
+                    LogRefreshFailed((int)statusCode);
+                }
 
                 return refreshed;
             }
@@ -113,6 +118,9 @@ namespace SoftThorn.MAL.ApiClient.Authentication
 
         [LoggerMessage(Level = LogLevel.Warning, Message = "MyAnimeList rejected the refresh token with {StatusCode}; the tokens were removed, so the user has to sign in again")]
         private partial void LogRefreshRejected(int statusCode);
+
+        [LoggerMessage(Level = LogLevel.Warning, Message = "Refreshing the access token failed with {StatusCode}; the tokens were kept for the next attempt, and until then requests are sent with the Client ID, so endpoints that need a signed-in user fail")]
+        private partial void LogRefreshFailed(int statusCode);
 
         // tokens without an expiry date (e.g. from a custom cache that doesn't store it) are used as they are
         private bool IsExpired(AuthResponse token)

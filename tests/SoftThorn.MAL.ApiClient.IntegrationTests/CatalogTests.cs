@@ -81,17 +81,49 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
         }
 
         [Fact]
-        public async Task GetUserAsync_Me_Should_Return_Expected_Structure()
+        public async Task SearchAnimeAsync_Should_Return_Paging_Links()
         {
             // Arrange
             var sut = fixture.GetMalApiService();
 
             // Act
-            var response = await sut.Catalog.GetUserAsync("@me", fields: MalFields.User, cancellationToken: TestContext.Current.CancellationToken);
+            var response = await sut.Catalog.SearchAnimeAsync("one", limit: 2, offset: 1, fields: "title", cancellationToken: TestContext.Current.CancellationToken);
 
-            // Assert: only the structure, so the test account's details stay out of the repository
-            Assert.NotNull(response.Id);
-            await Verify(ModelShape.Of(response));
+            // Assert
+            Assert.NotEmpty(response.Data);
+            Assert.NotNull(response.Paging.Next);
+            Assert.NotNull(response.Paging.Previous);
+        }
+
+        [Fact]
+        public async Task SearchAnimeAsync_Should_Include_Nsfw_Entries_Only_When_Asked()
+        {
+            // Arrange: MAL leaves out entries it rates gray or black unless nsfw=true; this search has both kinds
+            var sut = fixture.GetMalApiService();
+            var cancellationToken = TestContext.Current.CancellationToken;
+
+            // Act
+            var safe = await sut.Catalog.SearchAnimeAsync("kanojo", limit: 100, fields: "nsfw", cancellationToken: cancellationToken);
+            var all = await sut.Catalog.SearchAnimeAsync("kanojo", limit: 100, fields: "nsfw", nsfw: true, cancellationToken: cancellationToken);
+
+            // Assert
+            Assert.All(safe.Data, entry => Assert.Equal("white", entry.Node.Nsfw));
+            Assert.Contains(all.Data, entry => entry.Node.Nsfw != "white");
+        }
+
+        [Fact]
+        public async Task SearchAnimeAsync_Should_Throw_ApiException_With_MyAnimeLists_Error()
+        {
+            // Arrange
+            var sut = fixture.GetMalApiService();
+
+            // Act: MAL rejects search terms shorter than 3 characters
+            var exception = await Assert.ThrowsAsync<ApiException>(() => sut.Catalog.SearchAnimeAsync("ab", cancellationToken: TestContext.Current.CancellationToken));
+
+            // Assert
+            Assert.Equal(400, exception.StatusCode);
+            Assert.Equal("bad_request", exception.ErrorCode);
+            Assert.Equal("invalid q", exception.ErrorMessage);
         }
     }
 }

@@ -25,9 +25,9 @@ namespace SoftThorn.MAL.ApiClient
 
         /// <summary>
         /// The fields of <see cref="Anime"/>, plus the ones only <see cref="ICatalogClient.GetAnimeAsync"/> returns:
-        /// pictures, background, related works, recommendations and statistics.
+        /// pictures, background, related works, recommendations, statistics, theme songs and videos.
         /// </summary>
-        public const string AnimeDetails = Anime + ",pictures,background,related_anime,related_manga,recommendations,statistics";
+        public const string AnimeDetails = Anime + ",pictures,background,related_anime,related_manga,recommendations,statistics,opening_themes,ending_themes,videos";
 
         /// <summary>
         /// The fields of a manga in searches, rankings and user lists, including the signed-in user's list entry (<c>my_list_status</c>).
@@ -51,7 +51,7 @@ namespace SoftThorn.MAL.ApiClient
         public const string UserMangaList = Manga + ",list_status" + MangaListStatusFields;
 
         /// <summary>
-        /// The fields for <see cref="ICatalogClient.GetUserAsync"/>.
+        /// The fields for <see cref="IUsersClient.GetUserAsync"/>.
         /// </summary>
         public const string User = "id,name,picture,gender,birthday,location,joined_at,anime_statistics,time_zone,is_supporter";
     }

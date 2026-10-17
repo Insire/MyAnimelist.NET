@@ -113,8 +113,13 @@
 {%-   endif -%}
     {%- template Class.Property.Annotations %}
 {%-   comment -%} NJsonSchema keeps MAL's underscores (Num_watched_episodes); the JSON name stays in JsonPropertyName {%- endcomment -%}
-{%-   assign propertyNameParts = property.PropertyName | split: "_" -%}
-{%-   capture propertyName -%}{%- for propertyNamePart in propertyNameParts -%}{{ propertyNamePart | capitalize }}{%- endfor -%}{%- endcapture -%}
+{%-   comment -%} x-csharp-name overrides the name where MAL's JSON name doesn't make a good one (UpdateOpenApiSpecTask.PropertyNames) {%- endcomment -%}
+{%-   if property.ExtensionData["x-csharp-name"] -%}
+{%-     assign propertyName = property.ExtensionData["x-csharp-name"] -%}
+{%-   else -%}
+{%-     assign propertyNameParts = property.PropertyName | split: "_" -%}
+{%-     capture propertyName -%}{%- for propertyNamePart in propertyNameParts -%}{{ propertyNamePart | capitalize }}{%- endfor -%}{%- endcapture -%}
+{%-   endif -%}
     public {% if UseRequiredKeyword and property.IsRequired %}required {% endif %}{{ property.Type }} {{ propertyName }}{% if RenderInpc == false and RenderPrism == false %} { get; {% if property.HasSetter and RenderRecord == false %}{{ WriteAccessor }}; {% elsif RenderRecord and GenerateNativeRecords %}init; {% endif %}}{% if property.HasDefaultValue and RenderRecord == false and UseRequiredKeyword == false %} = {{ property.DefaultValue }};{% elsif GenerateNullableReferenceTypes and RenderRecord == false and UseRequiredKeyword == false %} = default!;{% endif %}
 {%- else -%}
     {

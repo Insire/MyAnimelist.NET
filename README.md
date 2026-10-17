@@ -106,17 +106,21 @@ await mal.Anime.UpdateListStatusAsync(52991, new AnimeListStatusPatch { Status =
 | Property | Client | What it covers |
 | --- | --- | --- |
 | `Login` | `ILoginClient` | OAuth2 sign-in (`StartOAuthFlowAsync`) and sign-out (`SignOutAsync`) |
-| `Catalog` | `ICatalogClient` | Anime and manga search (`SearchAnimeAsync`, `SearchMangaAsync`) and details (`GetAnimeAsync`, `GetMangaAsync`), user profiles (`GetUserAsync`) |
+| `Catalog` | `ICatalogClient` | Anime and manga search (`SearchAnimeAsync`, `SearchMangaAsync`) and details (`GetAnimeAsync`, `GetMangaAsync`) |
 | `Anime` | `IAnimeClient` | Anime ranking (`GetRankingAsync`), seasonal anime (`GetSeasonalAsync`), suggestions (`GetSuggestionsAsync`), and the signed-in user's anime list entries (`UpdateListStatusAsync`, `DeleteListStatusAsync`) |
 | `Manga` | `IMangaClient` | Manga ranking (`GetRankingAsync`) and the signed-in user's manga list entries (`UpdateListStatusAsync`, `DeleteListStatusAsync`) |
 | `Forum` | `IForumClient` | Forum boards (`GetBoardsAsync`), topic search (`GetTopicsAsync`) and a topic's posts (`GetTopicAsync`) |
-| `Users` | `IUsersClient` | A user's anime list and manga list (`GetAnimeListAsync`, `GetMangaListAsync`) |
+| `Users` | `IUsersClient` | The signed-in user's profile (`GetUserAsync("@me")`, MyAnimeList supports no other name), and a user's anime list and manga list (`GetAnimeListAsync`, `GetMangaListAsync`) |
 
 Most methods take an optional `fields` parameter, a comma-separated list of the fields you want returned (for example `"title,mean,genres"`). Without it, MyAnimeList only returns each entry's id, title and picture. `MalFields` has values that request every field the models map, such as `MalFields.Anime` and `MalFields.AnimeDetails`. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the available fields and values.
 
+Fields MyAnimeList always sends, such as ids, titles and each list entry's `Node`, aren't nullable. All others are, because MyAnimeList only sends the fields you request. Collections are `IReadOnlyList<T>`.
+
+Searches and seasonal anime leave out entries that MyAnimeList rates as not safe for work. Pass `nsfw: true` to include them.
+
 Parameters and request fields that take a fixed set of values are enums (`AnimeRankingType`, `Season`, `AnimeWatchStatus`, ...). In responses, those fields stay strings (`"watching"`), so a value MyAnimeList adds later doesn't break deserialization. Dates the user enters (list start and finish dates, birthdays) are strings too, because MyAnimeList sends partial dates such as `2017-10` or `2017` there.
 
-When a request fails, the client throws an `ApiException`.
+When a request fails, the client throws an `ApiException`. Besides the HTTP status code and the response body, it carries MyAnimeList's error code and message, for example `bad_request` and `invalid q` (`ErrorCode`, `ErrorMessage`).
 
 ## Customization
 
@@ -177,6 +181,7 @@ You are also responsible for what your users do with your app (4(d)).
 - **PKCE uses `code_challenge_method=plain`**, because that is the only method MyAnimeList supports.
 - **No retry on `401 Unauthorized`.** Tokens are refreshed shortly before they expire. If MyAnimeList revokes an access token earlier, requests that need a signed-in user fail until the user signs in again. A rejected refresh token removes the tokens, so `StartOAuthFlowAsync` opens the login page again.
 - **Not Native AOT or trimming compatible.** The clients use reflection-based `System.Text.Json`, which is off by default in Native AOT apps, so requests would fail at runtime there. Adding support would need source-generated JSON metadata for every model, so it isn't planned for now.
+- **Built on an imperfect spec.** MyAnimeList's OpenAPI spec doesn't always match the live API. The build corrects most differences, for example by adding the missing `nsfw` parameter and by marking the fields MyAnimeList always sends as required. A few remain, such as limits that the library doesn't check before sending. [openapi-spec-issues.md](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/openapi-spec-issues.md) lists every issue we found and what the library does about it.
 - **Brief XML documentation.** MyAnimeList's agreement doesn't allow copying its API documentation, so the generated clients and models carry short descriptions written for this library. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the details of each endpoint and field.
 - **Sealed implementations.** Only interfaces are public: `IMalApiService` and the client interfaces it returns. To test code that uses the API, mock `IMalApiService` or the client interfaces.
 
@@ -217,7 +222,7 @@ The full build pipeline (clean, version stamping, tests, coverage report, packin
 | Target | What it does |
 | --- | --- |
 | `Default` | Clean, update assembly info, run tests with coverage, pack, and push packages (to nuget.org only on Azure Pipelines) |
-| `ReleaseNotes` | Write release notes for the commits since the last `v*` tag to `tmp_build/results/release-notes.md` (and a plain-text version for the package) |
+| `ReleaseNotes` | Write release notes for the commits since the last `v*` tag to `tmp_build/results/release-notes/release-notes.md` (and a plain-text version for the package) |
 | `UpdateOpenApiSpec` | Download the latest OpenAPI spec from MyAnimeList's API reference page, strip its documentation, and regenerate `src/AutoGeneratedClient.cs` with NSwag. Add `--skip-download` to regenerate from the committed spec instead |
 
 Packages are written to `tmp_build/packages`. CI runs on Azure Pipelines in a Linux container (Microsoft's Playwright .NET image), see [azure-pipelines.yml](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/azure-pipelines.yml). Versions come from [Nerdbank.GitVersioning](https://github.com/dotnet/Nerdbank.GitVersioning) (see [version.json](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/version.json) and [versioning.md](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/versioning.md)).
@@ -277,7 +282,7 @@ The integration tests compare responses with [Verify](https://github.com/VerifyT
 Issues and pull requests are welcome. A few things to know:
 
 - **Don't edit `src/AutoGeneratedClient.cs` by hand.** NSwag generates it from `assets/`. Change the spec or the Liquid templates and regenerate with `./build.ps1 --target UpdateOpenApiSpec`.
-- **Fix spec errors in the build, not only in the JSON.** MyAnimeList's published spec doesn't always match the live API. `UpdateOpenApiSpec` re-downloads the spec and then patches it in `build/Tasks/UpdateOpenApiSpecTask.cs`. A fix made only in `assets/SoftThorn.MAL.ApiClient_OpenApiSpec.json` is lost on the next download.
+- **Fix spec errors in the build, not only in the JSON.** MyAnimeList's published spec doesn't always match the live API. `UpdateOpenApiSpec` re-downloads the spec and then patches it in `build/Tasks/UpdateOpenApiSpecTask.cs`. A fix made only in `assets/SoftThorn.MAL.ApiClient_OpenApiSpec.json` is lost on the next download. Add what you find to [openapi-spec-issues.md](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/openapi-spec-issues.md).
 - **Don't add MyAnimeList's documentation text.** The task strips descriptions, summaries and examples from the spec, because MyAnimeList's agreement doesn't allow copying its API documentation. Write your own wording for docs and comments, and link to the official reference.
 - **Download the spec only when you need to.** `UpdateOpenApiSpec` reads the spec out of MyAnimeList's API reference page, so it's run by hand, never in CI. Use `--skip-download` when you only change the fixes or the templates.
 - **Put tests in the right project.** Tests that don't call MyAnimeList go in `SoftThorn.MAL.ApiClient.UnitTests`, which must never use the network.

@@ -39,7 +39,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
             // Arrange
             var sut = fixture.GetMalApiService();
             var topics = await sut.Forum.GetTopicsAsync(q: "cowboy bebop", limit: 1, cancellationToken: TestContext.Current.CancellationToken);
-            var topicId = Assert.Single(topics.Data!).Id!.Value;
+            var topicId = Assert.Single(topics.Data).Id;
 
             // Act
             var response = await sut.Forum.GetTopicAsync(topicId, limit: 5, cancellationToken: TestContext.Current.CancellationToken);

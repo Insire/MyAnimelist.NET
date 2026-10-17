@@ -1,4 +1,5 @@
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -10,9 +11,12 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.Snapshots
     /// collections collapse into the merged shape of their elements and null members are left out.
     /// Unlike the raw values this stays stable while the live data changes, but still shows when a field
     /// stops deserializing (it disappears) or when MAL returns a field our models don't map (it shows up under AdditionalProperties).
+    /// A required member (UpdateOpenApiSpecTask.RequiredProperties) that is null shows up as <see cref="MissingRequired"/>.
     /// </summary>
     internal static class ModelShape
     {
+        public const string MissingRequired = "MISSING, although required";
+
         /// <summary>
         /// Members whose presence depends on the test account's lists rather than on the model:
         /// MAL only sends <c>my_list_status</c> for works on the account's list, which the list status tests change.
@@ -107,7 +111,15 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.Snapshots
                             }
 
                             var name = property.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name ?? property.Name;
-                            Add(result, name, Of(property.GetValue(value)));
+                            var shape = Of(property.GetValue(value));
+
+                            // required members are non-nullable, but nothing enforces that while deserializing (value types read as 0)
+                            if (shape is null && property.IsDefined(typeof(RequiredAttribute)))
+                            {
+                                shape = MissingRequired;
+                            }
+
+                            Add(result, name, shape);
                         }
 
                         return result;

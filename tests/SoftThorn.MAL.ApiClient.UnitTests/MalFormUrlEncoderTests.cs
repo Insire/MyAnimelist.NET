@@ -8,9 +8,10 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         private static readonly JsonSerializerOptions Options = new(JsonSerializerDefaults.Web);
 
         [Fact]
-        public void Encode_Should_Write_Numbers_Booleans_And_Strings_As_Form_Values()
+        public void Encode_Should_Write_Numbers_Booleans_Strings_And_Arrays_As_Form_Values()
         {
-            var body = new AnimeListStatusPatch { Status = AnimeWatchStatus.Watching, Score = 7, IsRewatching = false, Tags = "a,b" };
+            // MAL takes the tags comma-separated
+            var body = new AnimeListStatusPatch { Status = AnimeWatchStatus.Watching, Score = 7, IsRewatching = false, Tags = ["a", "b"] };
 
             var fields = MalFormUrlEncoder.Encode(body, Options);
 

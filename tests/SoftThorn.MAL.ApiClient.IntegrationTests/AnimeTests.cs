@@ -26,6 +26,21 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
         }
 
         [Fact]
+        public async Task GetRankingAsync_Should_Return_Paging_Links()
+        {
+            // Arrange
+            var sut = fixture.GetMalApiService();
+
+            // Act
+            var response = await sut.Anime.GetRankingAsync(AnimeRankingType.All, limit: 2, offset: 1, fields: "title", cancellationToken: TestContext.Current.CancellationToken);
+
+            // Assert
+            Assert.NotEmpty(response.Data);
+            Assert.NotNull(response.Paging.Next);
+            Assert.NotNull(response.Paging.Previous);
+        }
+
+        [Fact]
         public async Task GetRankingAsync_Should_Accept_Every_Ranking_Type()
         {
             // Arrange: MAL answers 400 for a ranking type it doesn't know, so this checks every value the enum sends

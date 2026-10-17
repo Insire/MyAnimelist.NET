@@ -15,19 +15,21 @@
           {
             "name": "q",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 3
             },
             "x-originalName": "q",
-            "description": "The text to search for in the titles."
+            "description": "The text to search for in the titles, at least 3 characters."
           },
           {
             "name": "limit",
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1
             },
             "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
@@ -37,7 +39,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
@@ -50,6 +53,15 @@
             },
             "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
+          },
+          {
+            "name": "nsfw",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-originalName": "nsfw",
+            "description": "Set to true to include entries that MyAnimeList rates as not safe for work. Without it, they are left out."
           }
         ],
         "security": [
@@ -159,7 +171,10 @@
                 "$ref": "#/components/schemas/AnimeListStatusPatch"
               }
             }
-          }
+          },
+          "required": true,
+          "x-name": "listStatus",
+          "x-position": 1
         },
         "security": [
           {
@@ -234,17 +249,20 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1,
+              "maximum": 500
             },
             "x-originalName": "limit",
-            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
+            "description": "How many entries to return, from 1 to 500."
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
@@ -328,17 +346,20 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1,
+              "maximum": 500
             },
             "x-originalName": "limit",
-            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
+            "description": "How many entries to return, from 1 to 500."
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
@@ -351,6 +372,15 @@
             },
             "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
+          },
+          {
+            "name": "nsfw",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-originalName": "nsfw",
+            "description": "Set to true to include entries that MyAnimeList rates as not safe for work. Without it, they are left out."
           }
         ],
         "security": [
@@ -393,7 +423,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1
             },
             "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
@@ -403,7 +434,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
@@ -498,17 +530,19 @@
             "schema": {
               "type": "integer",
               "maximum": 100,
-              "default": 100
+              "default": 100,
+              "minimum": 1
             },
             "x-originalName": "limit",
-            "description": "How many posts to return."
+            "description": "How many posts to return, from 1 to 100."
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many posts to skip, for paging."
@@ -573,17 +607,19 @@
             "schema": {
               "type": "integer",
               "maximum": 100,
-              "default": 100
+              "default": 100,
+              "minimum": 1
             },
             "x-originalName": "limit",
-            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
+            "description": "How many entries to return, from 1 to 100."
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
@@ -642,7 +678,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/ForumTopics"
+                  "$ref": "#/components/schemas/ForumTopicList"
                 }
               },
               "application/json": {}
@@ -663,19 +699,21 @@
           {
             "name": "q",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 3
             },
             "x-originalName": "q",
-            "description": "The text to search for in the titles."
+            "description": "The text to search for in the titles, at least 3 characters."
           },
           {
             "name": "limit",
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1
             },
             "x-originalName": "limit",
             "description": "How many entries to return. MyAnimeList caps the value per endpoint."
@@ -685,7 +723,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
@@ -698,6 +737,15 @@
             },
             "x-originalName": "fields",
             "description": "A comma-separated list of the fields to return, for example \"id,title,mean\". Fields of nested objects go in braces, for example \"my_list_status{priority,tags}\". Without it MyAnimeList returns only a few basic fields."
+          },
+          {
+            "name": "nsfw",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-originalName": "nsfw",
+            "description": "Set to true to include entries that MyAnimeList rates as not safe for work. Without it, they are left out."
           }
         ],
         "security": [
@@ -807,7 +855,10 @@
                 "$ref": "#/components/schemas/MangaListStatusPatch"
               }
             }
-          }
+          },
+          "required": true,
+          "x-name": "listStatus",
+          "x-position": 1
         },
         "security": [
           {
@@ -882,17 +933,20 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1,
+              "maximum": 500
             },
             "x-originalName": "limit",
-            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
+            "description": "How many entries to return, from 1 to 500."
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
@@ -940,7 +994,7 @@
         "tags": [
           "user"
         ],
-        "operationId": "Catalog_GetUser",
+        "operationId": "Users_GetUser",
         "parameters": [
           {
             "name": "user_name",
@@ -1025,17 +1079,20 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
             },
             "x-originalName": "limit",
-            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
+            "description": "How many entries to return, from 1 to 1000."
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
@@ -1118,17 +1175,20 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
             },
             "x-originalName": "limit",
-            "description": "How many entries to return. MyAnimeList caps the value per endpoint."
+            "description": "How many entries to return, from 1 to 1000."
           },
           {
             "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             },
             "x-originalName": "offset",
             "description": "How many entries to skip, for paging. The response's paging links contain the next offset."
@@ -1237,7 +1297,7 @@
               "recommendations": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/AnimeRecommendationAggregationEdgeBase"
+                  "$ref": "#/components/schemas/AnimeRecommendation"
                 },
                 "nullable": false,
                 "description": "Anime that users recommend to fans of this one."
@@ -1245,6 +1305,27 @@
               "statistics": {
                 "$ref": "#/components/schemas/AnimeStatistics",
                 "description": "How many users have the anime on their list, by list status."
+              },
+              "opening_themes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AnimeTheme"
+                },
+                "description": "The anime's opening theme songs."
+              },
+              "ending_themes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AnimeTheme"
+                },
+                "description": "The anime's ending theme songs."
+              },
+              "videos": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AnimeVideo"
+                },
+                "description": "Promotional videos of the anime, such as trailers."
               }
             }
           }
@@ -1425,9 +1506,16 @@
             "description": "When the entry was last changed."
           }
         },
+        "required": [
+          "status",
+          "score",
+          "num_episodes_watched",
+          "is_rewatching",
+          "updated_at"
+        ],
         "description": "An entry of an anime on a user's list."
       },
-      "AnimeRecommendationAggregationEdgeBase": {
+      "AnimeRecommendation": {
         "type": "object",
         "properties": {
           "node": {
@@ -1440,6 +1528,10 @@
             "description": "How many users recommended it."
           }
         },
+        "required": [
+          "node",
+          "num_recommendations"
+        ],
         "description": "An anime that users recommend together with another one."
       },
       "AnimeSeason": {
@@ -1455,6 +1547,10 @@
             "description": "The season: winter (January to March), spring, summer or fall."
           }
         },
+        "required": [
+          "year",
+          "season"
+        ],
         "description": "A season of a year."
       },
       "AnimeStatistics": {
@@ -1470,6 +1566,10 @@
             "description": "How many users have the anime on their list, by list status."
           }
         },
+        "required": [
+          "num_list_users",
+          "status"
+        ],
         "description": "How many users have an anime on their list, by list status."
       },
       "AnimeStudio": {
@@ -1486,6 +1586,10 @@
             "description": "The studio's name."
           }
         },
+        "required": [
+          "id",
+          "name"
+        ],
         "description": "An animation studio."
       },
       "Date": {
@@ -1519,6 +1623,12 @@
             "description": "The board's subboards."
           }
         },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "subboards"
+        ],
         "description": "A forum board."
       },
       "ForumBoards": {
@@ -1533,6 +1643,9 @@
             "description": "The categories of boards."
           }
         },
+        "required": [
+          "categories"
+        ],
         "description": "The forum's categories with their boards."
       },
       "ForumCategory": {
@@ -1552,6 +1665,10 @@
             "description": "The boards in the category."
           }
         },
+        "required": [
+          "title",
+          "boards"
+        ],
         "description": "A category of forum boards."
       },
       "ForumSubboard": {
@@ -1568,23 +1685,31 @@
             "description": "The subboard's title."
           }
         },
+        "required": [
+          "id",
+          "title"
+        ],
         "description": "A subboard of a forum board."
       },
       "ForumTopic": {
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ForumTopicData",
+            "$ref": "#/components/schemas/ForumTopicDetails",
             "description": "The topic with the posts on this page."
           },
           "paging": {
-            "$ref": "#/components/schemas/ForumTopicPaging",
+            "$ref": "#/components/schemas/Paging",
             "description": "The links to the previous and next page of posts."
           }
         },
+        "required": [
+          "data",
+          "paging"
+        ],
         "description": "A page of a forum topic's posts."
       },
-      "ForumTopicData": {
+      "ForumTopicDetails": {
         "type": "object",
         "properties": {
           "title": {
@@ -1605,23 +1730,11 @@
             "description": "The topic's poll, when it has one."
           }
         },
+        "required": [
+          "title",
+          "posts"
+        ],
         "description": "A forum topic with a page of its posts."
-      },
-      "ForumTopicPaging": {
-        "type": "object",
-        "properties": {
-          "previous": {
-            "type": "string",
-            "nullable": true,
-            "description": "The address of the previous page, or missing on the first page."
-          },
-          "next": {
-            "type": "string",
-            "nullable": true,
-            "description": "The address of the next page, or missing on the last page."
-          }
-        },
-        "description": "The links to the previous and next page of posts."
       },
       "ForumTopicPoll": {
         "type": "object",
@@ -1650,6 +1763,12 @@
             "description": "The options to vote for."
           }
         },
+        "required": [
+          "id",
+          "question",
+          "closed",
+          "options"
+        ],
         "description": "The poll of a forum topic."
       },
       "ForumTopicPollOption": {
@@ -1671,6 +1790,11 @@
             "description": "How many users voted for the option."
           }
         },
+        "required": [
+          "id",
+          "text",
+          "votes"
+        ],
         "description": "An option of a forum poll."
       },
       "ForumTopicPost": {
@@ -1693,7 +1817,7 @@
             "description": "When the post was written."
           },
           "created_by": {
-            "$ref": "#/components/schemas/ForumTopicPostCreatedBy",
+            "$ref": "#/components/schemas/ForumPostAuthor",
             "description": "The post's author."
           },
           "body": {
@@ -1707,9 +1831,17 @@
             "description": "The author's forum signature, with BBCode markup."
           }
         },
+        "required": [
+          "id",
+          "number",
+          "created_at",
+          "created_by",
+          "body",
+          "signature"
+        ],
         "description": "A post in a forum topic."
       },
-      "ForumTopicPostCreatedBy": {
+      "ForumPostAuthor": {
         "type": "object",
         "properties": {
           "id": {
@@ -1725,30 +1857,40 @@
           "forum_avator": {
             "type": "string",
             "nullable": false,
+            "x-csharp-name": "ForumAvatar",
             "description": "The address of the author's forum avatar. The JSON name keeps MyAnimeList's spelling."
           }
         },
+        "required": [
+          "id",
+          "name",
+          "forum_avator"
+        ],
         "description": "The author of a forum post."
       },
-      "ForumTopics": {
+      "ForumTopicList": {
         "type": "object",
         "properties": {
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ForumTopicsData"
+              "$ref": "#/components/schemas/ForumTopicSummary"
             },
             "nullable": false,
             "description": "The topics on this page."
           },
           "paging": {
-            "$ref": "#/components/schemas/ForumTopicPaging",
+            "$ref": "#/components/schemas/Paging",
             "description": "The links to the previous and next page."
           }
         },
+        "required": [
+          "data",
+          "paging"
+        ],
         "description": "A page of forum topics."
       },
-      "ForumTopicsCreatedBy": {
+      "ForumUser": {
         "type": "object",
         "properties": {
           "id": {
@@ -1762,9 +1904,13 @@
             "description": "The user name."
           }
         },
+        "required": [
+          "id",
+          "name"
+        ],
         "description": "A user who started a topic or wrote a post."
       },
-      "ForumTopicsData": {
+      "ForumTopicSummary": {
         "type": "object",
         "properties": {
           "id": {
@@ -1784,7 +1930,7 @@
             "description": "When the topic was started."
           },
           "created_by": {
-            "$ref": "#/components/schemas/ForumTopicsCreatedBy",
+            "$ref": "#/components/schemas/ForumUser",
             "description": "The user who started the topic."
           },
           "number_of_posts": {
@@ -1799,7 +1945,7 @@
             "description": "When the latest post was written."
           },
           "last_post_created_by": {
-            "$ref": "#/components/schemas/ForumTopicsCreatedBy",
+            "$ref": "#/components/schemas/ForumUser",
             "description": "The user who wrote the latest post."
           },
           "is_locked": {
@@ -1808,6 +1954,16 @@
             "description": "Whether the topic is closed for new posts."
           }
         },
+        "required": [
+          "id",
+          "title",
+          "created_at",
+          "created_by",
+          "number_of_posts",
+          "last_post_created_at",
+          "last_post_created_by",
+          "is_locked"
+        ],
         "description": "A forum topic in a search result."
       },
       "Genre": {
@@ -1824,6 +1980,10 @@
             "description": "The genre's English name."
           }
         },
+        "required": [
+          "id",
+          "name"
+        ],
         "description": "A genre."
       },
       "List": {
@@ -1851,6 +2011,10 @@
             "description": "The magazine's name."
           }
         },
+        "required": [
+          "id",
+          "name"
+        ],
         "description": "A magazine that publishes manga."
       },
       "MangaForDetails": {
@@ -1893,7 +2057,7 @@
               "recommendations": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/MangaRecommendationAggregationEdgeBase"
+                  "$ref": "#/components/schemas/MangaRecommendation"
                 },
                 "nullable": false,
                 "description": "Manga that users recommend to fans of this one."
@@ -2072,6 +2236,14 @@
             "description": "When the entry was last changed."
           }
         },
+        "required": [
+          "status",
+          "score",
+          "num_volumes_read",
+          "num_chapters_read",
+          "is_rereading",
+          "updated_at"
+        ],
         "description": "An entry of a manga on a user's list."
       },
       "MangaMagazineRelationEdge": {
@@ -2087,9 +2259,12 @@
             "description": "The kind of serialization. Usually empty."
           }
         },
+        "required": [
+          "node"
+        ],
         "description": "A magazine in which a manga was serialized."
       },
-      "MangaRecommendationAggregationEdgeBase": {
+      "MangaRecommendation": {
         "type": "object",
         "properties": {
           "node": {
@@ -2102,6 +2277,10 @@
             "description": "How many users recommended it."
           }
         },
+        "required": [
+          "node",
+          "num_recommendations"
+        ],
         "description": "A manga that users recommend together with another one."
       },
       "PersonBase": {
@@ -2123,6 +2302,11 @@
             "description": "The person's last name."
           }
         },
+        "required": [
+          "id",
+          "first_name",
+          "last_name"
+        ],
         "description": "A person, for example an author."
       },
       "PersonRoleEdge": {
@@ -2138,6 +2322,10 @@
             "description": "The person's role in the work, in English, for example Story or Art."
           }
         },
+        "required": [
+          "node",
+          "role"
+        ],
         "description": "A person and their role in a work."
       },
       "Picture": {
@@ -2156,6 +2344,9 @@
             "description": "The address of the medium-sized picture."
           }
         },
+        "required": [
+          "medium"
+        ],
         "description": "The addresses of a picture in two sizes."
       },
       "RankingInfo": {
@@ -2172,6 +2363,9 @@
             "description": "The place in the ranking's previous version, when MyAnimeList sends it."
           }
         },
+        "required": [
+          "rank"
+        ],
         "description": "A place in a ranking."
       },
       "RelatedAnimeEdge": {
@@ -2192,6 +2386,11 @@
             "description": "The relation as English text, for example Sequel."
           }
         },
+        "required": [
+          "node",
+          "relation_type",
+          "relation_type_formatted"
+        ],
         "description": "An anime related to another anime or manga."
       },
       "RelatedMangaEdge": {
@@ -2212,6 +2411,11 @@
             "description": "The relation as English text, for example Sequel."
           }
         },
+        "required": [
+          "node",
+          "relation_type",
+          "relation_type_formatted"
+        ],
         "description": "A manga related to another anime or manga."
       },
       "User": {
@@ -2295,6 +2499,9 @@
             "description": "The user's list entry for the anime. Only present when the request's fields include list_status."
           }
         },
+        "required": [
+          "node"
+        ],
         "description": "An anime on a user's list, with its list entry."
       },
       "UserBase": {
@@ -2319,6 +2526,10 @@
           }
         },
         "x-base-class": true,
+        "required": [
+          "id",
+          "name"
+        ],
         "description": "A user."
       },
       "UserMangaList": {
@@ -2353,6 +2564,9 @@
             "description": "The user's list entry for the manga. Only present when the request's fields include list_status."
           }
         },
+        "required": [
+          "node"
+        ],
         "description": "A manga on a user's list, with its list entry."
       },
       "WorkBase": {
@@ -2374,6 +2588,10 @@
           }
         },
         "x-base-class": true,
+        "required": [
+          "id",
+          "title"
+        ],
         "description": "An anime or manga, with the fields that every response has."
       },
       "WorkForList": {
@@ -2468,6 +2686,9 @@
             "description": "The anime."
           }
         },
+        "required": [
+          "node"
+        ],
         "description": "An anime in a search result or a season."
       },
       "AnimeRankingEdge": {
@@ -2482,6 +2703,10 @@
             "description": "The anime's place in the ranking."
           }
         },
+        "required": [
+          "node",
+          "ranking"
+        ],
         "description": "An anime in a ranking, with its place."
       },
       "MangaListEdge": {
@@ -2492,6 +2717,9 @@
             "description": "The manga."
           }
         },
+        "required": [
+          "node"
+        ],
         "description": "A manga in a search result."
       },
       "MangaRankingEdge": {
@@ -2506,6 +2734,10 @@
             "description": "The manga's place in the ranking."
           }
         },
+        "required": [
+          "node",
+          "ranking"
+        ],
         "description": "A manga in a ranking, with its place."
       },
       "Paging": {
@@ -2545,6 +2777,11 @@
           }
         },
         "nullable": true,
+        "required": [
+          "synonyms",
+          "en",
+          "ja"
+        ],
         "description": "The titles of an anime or manga in other languages, and its other names."
       },
       "Broadcast": {
@@ -2562,6 +2799,9 @@
           }
         },
         "nullable": true,
+        "required": [
+          "day_of_the_week"
+        ],
         "description": "When new episodes of an anime are broadcast in Japan."
       },
       "Season": {
@@ -2600,6 +2840,13 @@
           }
         },
         "nullable": false,
+        "required": [
+          "watching",
+          "completed",
+          "on_hold",
+          "dropped",
+          "plan_to_watch"
+        ],
         "description": "How many users have an anime on their list with each list status."
       },
       "UserAnimeStatistics": {
@@ -2709,6 +2956,7 @@
           },
           "num_watched_episodes": {
             "type": "integer",
+            "x-csharp-name": "NumEpisodesWatched",
             "description": "How many episodes the user has watched."
           },
           "priority": {
@@ -2724,8 +2972,11 @@
             "description": "How much the user would like to watch the anime again, from 0 (not set) to 5."
           },
           "tags": {
-            "type": "string",
-            "description": "The new tags of the entry, separated by commas. They replace the existing ones."
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The new tags of the entry. They replace the existing ones. MyAnimeList receives them separated by commas, so a tag can't contain a comma."
           },
           "comments": {
             "type": "string",
@@ -2770,8 +3021,11 @@
             "description": "How much the user would like to read the manga again, from 0 (not set) to 5."
           },
           "tags": {
-            "type": "string",
-            "description": "The new tags of the entry, separated by commas. They replace the existing ones."
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The new tags of the entry. They replace the existing ones. MyAnimeList receives them separated by commas, so a tag can't contain a comma."
           },
           "comments": {
             "type": "string",
@@ -2923,6 +3177,71 @@
           "MangaStartDate"
         ],
         "description": "The order of the entries of a user's manga list."
+      },
+      "AnimeTheme": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The theme song's ID."
+          },
+          "anime_id": {
+            "type": "integer",
+            "description": "The ID of the anime the song belongs to."
+          },
+          "text": {
+            "type": "string",
+            "description": "The song's title and artist, often with the episodes it plays in, as one text."
+          }
+        },
+        "required": [
+          "id",
+          "anime_id",
+          "text"
+        ],
+        "description": "An opening or ending theme song of an anime."
+      },
+      "AnimeVideo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The video's ID."
+          },
+          "title": {
+            "type": "string",
+            "description": "The video's title."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The address of the video, for example on YouTube."
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "When the video was added to MyAnimeList, as a Unix time in milliseconds."
+          },
+          "updated_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "When the video's entry was last changed, as a Unix time in milliseconds."
+          },
+          "thumbnail": {
+            "type": "string",
+            "format": "uri",
+            "description": "The address of the video's thumbnail picture."
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "url",
+          "created_at",
+          "updated_at",
+          "thumbnail"
+        ],
+        "description": "A promotional video of an anime, such as a trailer."
       }
     }
   }

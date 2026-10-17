@@ -57,5 +57,9 @@
   ],
   paging: {
     next: string
+  },
+  season: {
+    season: enum,
+    year: int
   }
 }

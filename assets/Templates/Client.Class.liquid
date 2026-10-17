@@ -448,7 +448,7 @@
 {%         endif -%}
                     {
                         var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                        throw new {{ ExceptionClass }}("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        throw new {{ ExceptionClass }}("MyAnimeList answered with the error status " + status_ + ".", status_, responseData_, headers_, null);
                     }
 {%     endif -%}
                 }

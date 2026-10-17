@@ -32,12 +32,19 @@ namespace Build.Tasks
             FixPathParameterNames(context, spec);
             FixForumTopic(context, spec);
             AddUserListFields(context, spec);
+            FixQueryParameters(context, spec);
+            AddAnimeDetailsFields(context, spec);
             MakeDatesStrings(context, spec);
             FlattenSingleAllOf(context, spec);
+            RenameSchemas(context, spec);
             SetOperationIds(context, spec);
             SetParameterVariableNames(context, spec);
             PromoteInlineSchemas(context, spec);
+            UnifyPaging(context, spec);
+            FixListStatusPatches(context, spec);
             AddEnums(context, spec);
+            SetRequiredProperties(context, spec);
+            SetPropertyNames(context, spec);
             MarkBaseClasses(context, spec);
             RemoveDocumentation(context, spec);
             AddDocumentation(context, spec);
@@ -155,6 +162,115 @@ namespace Build.Tasks
             }
         }
 
+        // MAL's spec marks the search term as optional, has no nsfw parameter, and gives limit and offset few bounds. Checked live
+        // on 2026-10-17: searches without q or with fewer than 3 characters fail with 400; nsfw=true adds entries rated "gray"
+        // to searches and seasonal anime (the rankings include them anyway); larger limits than these, limit=0 and offset=-1
+        // fail with 400. NSwag doesn't check the bounds, they only document the spec.
+        private static readonly string[] SearchPaths = ["/anime", "/manga"];
+
+        private static readonly string[] NsfwPaths = ["/anime", "/manga", "/anime/season/{year}/{season}"];
+
+        private static readonly Dictionary<string, int> LimitMaximums = new()
+        {
+            ["/anime/ranking"] = 500,
+            ["/manga/ranking"] = 500,
+            ["/anime/season/{year}/{season}"] = 500,
+            ["/users/{user_name}/animelist"] = 1000,
+            ["/users/{user_name}/mangalist"] = 1000,
+            ["/forum/topics"] = 100,
+            ["/forum/topic/{topic_id}"] = 100,
+        };
+
+        private static void FixQueryParameters(BuildContext context, JsonNode spec)
+        {
+            foreach (var (path, pathItem) in spec["paths"]!.AsObject())
+            {
+                if (pathItem?["get"]?["parameters"] is not JsonArray parameters)
+                {
+                    continue;
+                }
+
+                var byName = parameters.OfType<JsonObject>().ToDictionary(parameter => (string)parameter["name"]!);
+
+                if (SearchPaths.Contains(path) && byName.TryGetValue("q", out var q))
+                {
+                    q["required"] = true;
+                    q["schema"]!["minLength"] = 3;
+                }
+
+                if (NsfwPaths.Contains(path) && !byName.ContainsKey("nsfw"))
+                {
+                    context.Information($"Adding the nsfw parameter to '{path}'");
+                    parameters.Add(new JsonObject
+                    {
+                        ["name"] = "nsfw",
+                        ["in"] = "query",
+                        ["schema"] = new JsonObject { ["type"] = "boolean" },
+                    });
+                }
+
+                if (byName.TryGetValue("limit", out var limit))
+                {
+                    limit["schema"]!["minimum"] = 1;
+                    if (LimitMaximums.TryGetValue(path, out var maximum))
+                    {
+                        limit["schema"]!["maximum"] = maximum;
+                    }
+                }
+
+                if (byName.TryGetValue("offset", out var offset))
+                {
+                    offset["schema"]!["minimum"] = 0;
+                }
+            }
+
+            context.Information("Fixed the search term, nsfw, limit and offset parameters");
+        }
+
+        // MAL sends these fields of anime details when they are requested, but its spec doesn't declare them (checked live on
+        // 2026-10-17). The video timestamps are Unix times in milliseconds, unlike every other timestamp of the API.
+        private static void AddAnimeDetailsFields(BuildContext context, JsonNode spec)
+        {
+            var schemas = spec["components"]!["schemas"]!.AsObject();
+
+            schemas["AnimeTheme"] = new JsonObject
+            {
+                ["type"] = "object",
+                ["properties"] = new JsonObject
+                {
+                    ["id"] = new JsonObject { ["type"] = "integer" },
+                    ["anime_id"] = new JsonObject { ["type"] = "integer" },
+                    ["text"] = new JsonObject { ["type"] = "string" },
+                },
+            };
+
+            schemas["AnimeVideo"] = new JsonObject
+            {
+                ["type"] = "object",
+                ["properties"] = new JsonObject
+                {
+                    ["id"] = new JsonObject { ["type"] = "integer" },
+                    ["title"] = new JsonObject { ["type"] = "string" },
+                    ["url"] = new JsonObject { ["type"] = "string", ["format"] = "uri" },
+                    ["created_at"] = new JsonObject { ["type"] = "integer", ["format"] = "int64" },
+                    ["updated_at"] = new JsonObject { ["type"] = "integer", ["format"] = "int64" },
+                    ["thumbnail"] = new JsonObject { ["type"] = "string", ["format"] = "uri" },
+                },
+            };
+
+            var properties = FindPropertyOwner(schemas["AnimeForDetails"]!.AsObject(), "pictures")!["properties"]!.AsObject();
+            foreach (var (name, schema) in new[] { ("opening_themes", "AnimeTheme"), ("ending_themes", "AnimeTheme"), ("videos", "AnimeVideo") })
+            {
+                properties[name] = new JsonObject
+                {
+                    ["type"] = "array",
+                    ["items"] = new JsonObject { ["$ref"] = $"#/components/schemas/{schema}" },
+                };
+            }
+
+            context.Information("Added opening_themes, ending_themes and videos to AnimeForDetails");
+        }
+
         // MAL's spec declares some dates as "format: date" (list status start/finish dates, birthdays), which NSwag turns into
         // DateTimeOffset read with a culture-dependent DateTimeOffset.Parse. MAL sends partial dates ("2017-10", "2017") there,
         // which that rejects or rounds to the first of the month, so keep them as the strings MAL sends, like WorkForList.start_date.
@@ -194,6 +310,35 @@ namespace Build.Tasks
             }
         }
 
+        // MAL's schema names leak its internals ("AggregationEdgeBase") or only differ by an "s" ("ForumTopicsData", "ForumTopicData")
+        private static readonly (string From, string To)[] SchemaNames =
+        [
+            ("AnimeRecommendationAggregationEdgeBase", "AnimeRecommendation"),
+            ("MangaRecommendationAggregationEdgeBase", "MangaRecommendation"),
+            ("ForumTopics", "ForumTopicList"),
+            ("ForumTopicsData", "ForumTopicSummary"),
+            ("ForumTopicsCreatedBy", "ForumUser"),
+            ("ForumTopicData", "ForumTopicDetails"),
+            ("ForumTopicPostCreatedBy", "ForumPostAuthor"),
+        ];
+
+        private static void RenameSchemas(BuildContext context, JsonNode spec)
+        {
+            var schemas = spec["components"]!["schemas"]!.AsObject();
+
+            foreach (var (from, to) in SchemaNames)
+            {
+                // already renamed when the committed spec is reused (--skip-download)
+                if (schemas.IndexOf(from) is var index and >= 0)
+                {
+                    context.Information($"Renaming the schema '{from}' to '{to}'");
+                    schemas.Remove(from, out var schema);
+                    schemas.Insert(index, to, schema);
+                    ReplaceReferences(spec, from, to);
+                }
+            }
+        }
+
         // The operationIds name the generated clients and methods ("Catalog_SearchAnime" becomes ICatalogClient.SearchAnimeAsync,
         // see operationGenerationMode in the .nswag config). MAL's own ids ("anime_anime_id_my_list_status_put") would give names
         // like My_list_statusPatchAsync. An operation missing here fails the task, so a new endpoint gets a deliberate name.
@@ -203,7 +348,7 @@ namespace Build.Tasks
             ["GET /anime/{anime_id}"] = "Catalog_GetAnime",
             ["GET /manga"] = "Catalog_SearchManga",
             ["GET /manga/{manga_id}"] = "Catalog_GetManga",
-            ["GET /users/{user_name}"] = "Catalog_GetUser",
+            ["GET /users/{user_name}"] = "Users_GetUser",
             ["PATCH /anime/{anime_id}/my_list_status"] = "Anime_UpdateListStatus",
             ["DELETE /anime/{anime_id}/my_list_status"] = "Anime_DeleteListStatus",
             ["GET /anime/ranking"] = "Anime_GetRanking",
@@ -428,12 +573,7 @@ namespace Build.Tasks
                 var isItems = segments[1].EndsWith("[]", StringComparison.Ordinal);
                 var propertyName = segments[1].TrimEnd('[', ']');
 
-                // the property may sit in one of the schema's allOf parts
-                var schema = schemas[segments[0]]!.AsObject();
-                var owner = new[] { schema }
-                    .Concat(schema["allOf"]?.AsArray().OfType<JsonObject>() ?? [])
-                    .Select(part => part["properties"] as JsonObject)
-                    .FirstOrDefault(properties => properties?.ContainsKey(propertyName) == true)
+                var owner = FindPropertyOwner(schemas[segments[0]]!.AsObject(), propertyName)?["properties"]!.AsObject()
                     ?? throw new InvalidOperationException($"'{path}' isn't in the spec");
 
                 var parent = isItems ? owner[propertyName]!["items"]!.AsObject() : null;
@@ -478,6 +618,151 @@ namespace Build.Tasks
             ("PATCH /anime/{anime_id}/my_list_status", "AnimeListStatusPatch"),
             ("PATCH /manga/{manga_id}/my_list_status", "MangaListStatusPatch"),
         ];
+
+        // the forum's ForumTopicPaging has the same fields as the lists' paging, which PromoteInlineSchemas named Paging
+        private static void UnifyPaging(BuildContext context, JsonNode spec)
+        {
+            var schemas = spec["components"]!["schemas"]!.AsObject();
+            if (schemas.Remove("ForumTopicPaging"))
+            {
+                context.Information("Replacing ForumTopicPaging with Paging");
+                ReplaceReferences(spec, "ForumTopicPaging", "Paging");
+            }
+        }
+
+        // MAL's spec makes the PATCH bodies optional and types their tags as one string, while responses have an array of tags.
+        // The live API takes the tags comma-separated, which is how MalFormUrlEncoder sends an array.
+        // x-name names the body parameter (NSwag calls it "body" otherwise), and x-position puts it after the id.
+        private static void FixListStatusPatches(BuildContext context, JsonNode spec)
+        {
+            var schemas = spec["components"]!["schemas"]!.AsObject();
+
+            foreach (var (operation, name) in RequestBodySchemas)
+            {
+                var (method, path) = (operation.Split(' ')[0].ToLowerInvariant(), operation.Split(' ')[1]);
+                var requestBody = spec["paths"]![path]![method]!["requestBody"]!;
+                requestBody["required"] = true;
+                requestBody["x-name"] = "listStatus";
+                // a required body would come before the id, which has no position
+                requestBody["x-position"] = 1;
+
+                schemas[name]!["properties"]!["tags"] = new JsonObject
+                {
+                    ["type"] = "array",
+                    ["items"] = new JsonObject { ["type"] = "string" },
+                };
+            }
+
+            context.Information("Made the list status bodies required and their tags arrays");
+        }
+
+        // MAL's spec has no required properties at all (it marks fields with "nullable: false" instead, which doesn't mean they
+        // are always sent), so every generated property would be nullable. These are the properties MAL always sends, whatever
+        // "fields" asks for (checked live on 2026-10-17). They become non-nullable, but nothing checks them while deserializing,
+        // so a field MAL stops sending can't make a whole response fail.
+        private static readonly Dictionary<string, string[]> RequiredProperties = new()
+        {
+            ["WorkBase"] = ["id", "title"],
+            ["Picture"] = ["medium"],
+            ["Genre"] = ["id", "name"],
+            ["AnimeStudio"] = ["id", "name"],
+            ["Magazine"] = ["id", "name"],
+            ["PersonBase"] = ["id", "first_name", "last_name"],
+            ["PersonRoleEdge"] = ["node", "role"],
+            // role is missing on every manga checked, although the spec marks it "nullable: false"
+            ["MangaMagazineRelationEdge"] = ["node"],
+            ["AlternativeTitles"] = ["synonyms", "en", "ja"],
+            ["AnimeSeason"] = ["year", "season"],
+            ["Broadcast"] = ["day_of_the_week"],
+            ["RankingInfo"] = ["rank"],
+            ["AnimeListEdge"] = ["node"],
+            ["MangaListEdge"] = ["node"],
+            ["AnimeRankingEdge"] = ["node", "ranking"],
+            ["MangaRankingEdge"] = ["node", "ranking"],
+            ["UserAnimeListEdge"] = ["node"],
+            ["UserMangaListEdge"] = ["node"],
+            ["RelatedAnimeEdge"] = ["node", "relation_type", "relation_type_formatted"],
+            ["RelatedMangaEdge"] = ["node", "relation_type", "relation_type_formatted"],
+            ["AnimeRecommendation"] = ["node", "num_recommendations"],
+            ["MangaRecommendation"] = ["node", "num_recommendations"],
+            ["AnimeStatistics"] = ["num_list_users", "status"],
+            ["AnimeStatusStatistics"] = ["watching", "completed", "on_hold", "dropped", "plan_to_watch"],
+            ["AnimeListStatus"] = ["status", "score", "num_episodes_watched", "is_rewatching", "updated_at"],
+            ["MangaListStatus"] = ["status", "score", "num_volumes_read", "num_chapters_read", "is_rereading", "updated_at"],
+            ["AnimeTheme"] = ["id", "anime_id", "text"],
+            ["AnimeVideo"] = ["id", "title", "url", "created_at", "updated_at", "thumbnail"],
+            ["UserBase"] = ["id", "name"],
+            ["ForumBoards"] = ["categories"],
+            ["ForumCategory"] = ["title", "boards"],
+            ["ForumBoard"] = ["id", "title", "description", "subboards"],
+            ["ForumSubboard"] = ["id", "title"],
+            ["ForumTopic"] = ["data", "paging"],
+            ["ForumTopicDetails"] = ["title", "posts"],
+            ["ForumTopicPoll"] = ["id", "question", "closed", "options"],
+            ["ForumTopicPollOption"] = ["id", "text", "votes"],
+            ["ForumTopicPost"] = ["id", "number", "created_at", "created_by", "body", "signature"],
+            ["ForumPostAuthor"] = ["id", "name", "forum_avator"],
+            ["ForumTopicList"] = ["data", "paging"],
+            ["ForumTopicSummary"] = ["id", "title", "created_at", "created_by", "number_of_posts", "last_post_created_at", "last_post_created_by", "is_locked"],
+            ["ForumUser"] = ["id", "name"],
+        };
+
+        private static void SetRequiredProperties(BuildContext context, JsonNode spec)
+        {
+            var schemas = spec["components"]!["schemas"]!.AsObject();
+
+            // rebuilt from the table on every run, so a removed entry doesn't linger in the committed spec
+            foreach (var (_, schema) in schemas)
+            {
+                schema!.AsObject().Remove("required");
+                foreach (var part in schema["allOf"]?.AsArray().OfType<JsonObject>() ?? [])
+                {
+                    part.Remove("required");
+                }
+            }
+
+            foreach (var (name, properties) in RequiredProperties)
+            {
+                var schema = schemas[name]?.AsObject() ?? throw new InvalidOperationException($"The schema '{name}' isn't in the spec");
+                foreach (var property in properties)
+                {
+                    var owner = FindPropertyOwner(schema, property) ?? throw new InvalidOperationException($"'{name}.{property}' isn't in the spec");
+                    if (owner["required"] is not JsonArray required)
+                    {
+                        owner["required"] = required = [];
+                    }
+
+                    required.Add(property);
+                }
+            }
+
+            context.Information($"Marked the required properties of {RequiredProperties.Count} schemas");
+        }
+
+        // C# names that differ from the PascalCase form of the JSON name, read by Class.liquid; the JSON names stay MAL's.
+        // forum_avator is MAL's spelling, and the PATCH body calls the episode count num_watched_episodes while responses call
+        // it num_episodes_watched.
+        private const string CSharpNameExtension = "x-csharp-name";
+
+        private static readonly (string Path, string Name)[] PropertyNames =
+        [
+            ("ForumPostAuthor.forum_avator", "ForumAvatar"),
+            ("AnimeListStatusPatch.num_watched_episodes", "NumEpisodesWatched"),
+        ];
+
+        private static void SetPropertyNames(BuildContext context, JsonNode spec)
+        {
+            var schemas = spec["components"]!["schemas"]!.AsObject();
+
+            foreach (var (path, name) in PropertyNames)
+            {
+                var (schemaName, propertyName) = (path.Split('.')[0], path.Split('.')[1]);
+                var owner = FindPropertyOwner(schemas[schemaName]!.AsObject(), propertyName) ?? throw new InvalidOperationException($"'{path}' isn't in the spec");
+                owner["properties"]![propertyName]![CSharpNameExtension] = name;
+            }
+
+            context.Information($"Set {PropertyNames.Length} C# property names");
+        }
 
         // The schemas that others extend through allOf; Class.liquid seals every other class, and these can't be sealed
         private const string BaseClassExtension = "x-base-class";
@@ -721,6 +1006,39 @@ namespace Build.Tasks
             }
 
             return removed;
+        }
+
+        // the schema itself or the allOf part whose "properties" declare the property
+        private static JsonObject? FindPropertyOwner(JsonObject schema, string propertyName)
+            => new[] { schema }
+                .Concat(schema["allOf"]?.AsArray().OfType<JsonObject>() ?? [])
+                .FirstOrDefault(part => part["properties"] is JsonObject properties && properties.ContainsKey(propertyName));
+
+        private static void ReplaceReferences(JsonNode? node, string from, string to)
+        {
+            switch (node)
+            {
+                case JsonObject jsonObject:
+                    if ((string?)jsonObject["$ref"] == $"#/components/schemas/{from}")
+                    {
+                        jsonObject["$ref"] = $"#/components/schemas/{to}";
+                    }
+
+                    foreach (var (_, child) in jsonObject)
+                    {
+                        ReplaceReferences(child, from, to);
+                    }
+
+                    break;
+
+                case JsonArray jsonArray:
+                    foreach (var child in jsonArray)
+                    {
+                        ReplaceReferences(child, from, to);
+                    }
+
+                    break;
+            }
         }
 
         private static void ReplaceArrayWithItem(BuildContext context, JsonNode? properties, string name)

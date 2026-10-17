@@ -19,8 +19,8 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.Snapshots
         private static readonly HashSet<Type> _volatileTypes =
         [
             typeof(AnimeStatusStatistics),
-            typeof(AnimeRecommendationAggregationEdgeBase),
-            typeof(MangaRecommendationAggregationEdgeBase),
+            typeof(AnimeRecommendation),
+            typeof(MangaRecommendation),
         ];
 
         // MAL's CDN serves the same picture as .jpg or .webp, changing between requests

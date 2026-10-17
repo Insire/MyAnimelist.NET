@@ -25,7 +25,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Status = AnimeWatchStatus.Completed,
                 Score = 8,
                 Priority = 1,
-                Tags = "integration-test",
+                Tags = ["integration-test"],
                 Comments = SeedComments,
             }, cancellationToken);
 
@@ -35,7 +35,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
                 Score = 8,
                 NumChaptersRead = 10,
                 Priority = 1,
-                Tags = "integration-test",
+                Tags = ["integration-test"],
                 Comments = SeedComments,
             }, cancellationToken);
         }

@@ -17,7 +17,7 @@ namespace SoftThorn.MAL.ApiClient
     public interface IMalApiService
     {
         /// <summary>
-        /// Anime and manga search and details, and user profiles.
+        /// Anime and manga search and details.
         /// </summary>
         ICatalogClient Catalog { get; }
 
@@ -37,7 +37,7 @@ namespace SoftThorn.MAL.ApiClient
         IMangaClient Manga { get; }
 
         /// <summary>
-        /// A user's anime list and manga list.
+        /// The signed-in user's profile, and a user's anime list and manga list.
         /// </summary>
         IUsersClient Users { get; }
 
