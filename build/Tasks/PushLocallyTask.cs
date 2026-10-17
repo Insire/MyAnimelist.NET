@@ -24,7 +24,7 @@ namespace Build.Tasks
                     .AppendSwitchQuoted("-source", Constants.LocalNugetDirectory)
                     .AppendQuoted(path.FullPath));
 
-                context.StartProcess(context.Tools.Resolve("nuget.exe"), settings);
+                context.RunProcess(context.Tools.Resolve("nuget.exe"), settings);
             }
 
             base.Run(context);
@@ -53,6 +53,12 @@ namespace Build.Tasks
             if (context.GetFiles(System.IO.Path.Combine(context.PackagesFolder.FullPath, "*.nupkg")).Count == 0)
             {
                 context.Log.Information($"Skipped {nameof(PushLocallyTask)}, since there is no nupkg file in {context.PackagesFolder.FullPath}");
+                return false;
+            }
+
+            if (context.TestsAreFailing)
+            {
+                context.Log.Information($"Skipped {nameof(PushLocallyTask)}, since we got failing tests.");
                 return false;
             }
 

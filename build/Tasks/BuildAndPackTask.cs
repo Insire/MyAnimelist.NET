@@ -34,7 +34,7 @@ namespace Build.Tasks
                     .Append("-p:EmbedUntrackedSources=true")
                 );
 
-            context.StartProcess(context.Tools.Resolve(context.DotnetExeName), settings);
+            context.RunProcess(context.Tools.Resolve(context.DotnetExeName), settings);
 
             base.Run(context);
         }

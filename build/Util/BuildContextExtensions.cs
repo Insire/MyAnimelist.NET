@@ -1,6 +1,8 @@
+using Cake.Common;
 using Cake.Common.IO;
 using Cake.Common.Solution;
 using Cake.Common.Tools.ReportGenerator;
+using Cake.Core;
 using Cake.Core.IO;
 using Cake.Incubator.Project;
 using System.Linq;
@@ -9,6 +11,18 @@ namespace Build.Util
 {
     internal static class BuildContextExtensions
     {
+        /// <summary>
+        /// Starts a process and fails the task when it exits with a non-zero exit code.
+        /// </summary>
+        public static void RunProcess(this BuildContext context, FilePath fileName, ProcessSettings settings)
+        {
+            var exitCode = context.StartProcess(fileName, settings);
+            if (exitCode != 0)
+            {
+                throw new CakeException(exitCode, $"{fileName.GetFilename()} failed with exit code {exitCode}.");
+            }
+        }
+
         public static void MergeReports(this BuildContext context, FilePathCollection files, ReportGeneratorReportType type, string subFolder)
         {
             context.ReportGeneratorSettings.ReportTypes = new[]

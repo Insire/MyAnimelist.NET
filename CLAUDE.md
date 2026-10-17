@@ -81,7 +81,10 @@ MyAnimelist.NET: a .NET 10 client library for the MyAnimeList API v2 (`https://a
 - Verified on 2026-10-17: the Cake targets `HtmlReport`, `BuildAndPack` and `UpdateOpenApiSpec`. `Default` was not run, because it pushes the package to `E:\Drop\NuGet`.
   - Release tests need the secrets as environment variables (`ClientConfiguration__ClientId` and so on). You can export them from `dotnet user-secrets list` in the integration test project.
 - `tmp_build/results/reports/cobertura/Cobertura.xml` actually contains Microsoft's XML coverage format (`dotnet-coverage merge -f xml`), not Cobertura. ReportGenerator reads it fine.
-- `context.StartProcess` exit codes are mostly ignored by the Cake tasks, so a failing tool can still show "Succeeded". `UpdateOpenApiSpecTask` now throws on a non-zero NSwag exit code; the other tasks don't yet.
+- Cake process calls go through `context.RunProcess(...)` (`build/Util/BuildContextExtensions.cs`), which throws on a non-zero exit code. Don't call `StartProcess` directly.
+  - The only exception is `TestTask`. A test failure sets `context.TestsAreFailing` and the build keeps going, so the coverage reports still get generated.
+  - The pushes and the Codecov upload skip when that flag is set, and `BuildLifetime.Teardown` then fails the build. Cake exits with 127 in that case.
+- `BuildLifetime.Setup` sets `IsPublicRelease = Branch == "master"`, but the default branch is `main`. So `main` builds are never treated as public releases, which affects the package version suffix. This isn't fixed yet.
 
 Resolved on 2026-10-16:
 

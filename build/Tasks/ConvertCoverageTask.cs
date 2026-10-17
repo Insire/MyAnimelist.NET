@@ -22,7 +22,7 @@ namespace Build.Tasks
                    .AppendSwitchQuoted("--output", ":", context.CoberturaResultFile.FullPath)
                );
 
-            context.StartProcess("dotnet", settings);
+            context.RunProcess(context.Tools.Resolve(context.DotnetExeName), settings);
         }
 
         public override bool ShouldRun(BuildContext context)

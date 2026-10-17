@@ -45,6 +45,10 @@ namespace Build
 
         public override void Teardown(BuildContext context, ITeardownContext info)
         {
+            if (context.TestsAreFailing)
+            {
+                throw new CakeException(1, "The build failed, because tests failed.");
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using Build.Util;
 using Cake.Common;
+using Cake.Common.Diagnostics;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
@@ -30,7 +31,13 @@ namespace Build.Tasks
                     .Append("--report-xunit-trx")
                 );
 
-            context.StartProcess(context.Tools.Resolve(context.DotnetExeName), settings);
+            var exitCode = context.StartProcess(context.Tools.Resolve(context.DotnetExeName), settings);
+            if (exitCode != 0)
+            {
+                // keep going so the coverage reports are still generated; uploads and pushes check this flag, and teardown fails the build
+                context.TestsAreFailing = true;
+                context.Error($"Tests failed with exit code {exitCode}.");
+            }
         }
     }
 }

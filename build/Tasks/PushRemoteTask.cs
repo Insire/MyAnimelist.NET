@@ -1,3 +1,4 @@
+using Build.Util;
 using Cake.Common;
 using Cake.Common.Build;
 using Cake.Common.IO;
@@ -26,7 +27,7 @@ namespace Build.Tasks
                         .AppendSwitch("-Verbosity", "detailed")
                     );
 
-                context.StartProcess(context.Tools.Resolve("nuget.exe"), settings);
+                context.RunProcess(context.Tools.Resolve("nuget.exe"), settings);
             }
 
             base.Run(context);

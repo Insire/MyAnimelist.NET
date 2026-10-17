@@ -50,11 +50,7 @@ namespace Build.Tasks
                     .AppendQuoted(Constants.NswagConfigFilePath)
                 );
 
-            var exitCode = context.StartProcess(dotnetExe.FullPath, settings);
-            if (exitCode != 0)
-            {
-                throw new CakeException($"NSwag failed with exit code {exitCode}.");
-            }
+            context.RunProcess(dotnetExe, settings);
         }
     }
 }
