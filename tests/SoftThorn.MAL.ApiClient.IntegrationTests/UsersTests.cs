@@ -3,37 +3,50 @@ using SoftThorn.MAL.ApiClient.IntegrationTests.Snapshots;
 
 namespace SoftThorn.MAL.ApiClient.IntegrationTests
 {
-    // the list endpoints have no fields parameter, so MAL only returns id, title and main_picture of each node
     [Trait(Traits.CategoryTraitName, Traits.IntegrationTestTraitValue)]
     public sealed class UsersTests(OAuthFlowTestFixture fixture)
     {
         [Fact]
-        public async Task AnimelistAsync_Me_Should_Return_Expected_Structure()
+        public async Task GetUserAsync_Me_Should_Return_Expected_Structure()
         {
             // Arrange
             var sut = fixture.GetMalApiService();
-            await TestAccount.EnsureSeededAsync(sut, TestContext.Current.CancellationToken);
 
             // Act
-            var response = await sut.Users.AnimelistAsync("@me", sort: "anime_title", limit: 5, cancellationToken: TestContext.Current.CancellationToken);
+            var response = await sut.Users.GetUserAsync("@me", fields: MalFields.User, cancellationToken: TestContext.Current.CancellationToken);
 
-            // Assert
-            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedAnimeId);
+            // Assert: only the structure, so the test account's details stay out of the repository
+            Assert.NotEqual(0, response.Id);
             await Verify(ModelShape.Of(response));
         }
 
         [Fact]
-        public async Task MangalistAsync_Me_Should_Return_Expected_Structure()
+        public async Task GetAnimeListAsync_Me_Should_Return_Expected_Structure()
         {
             // Arrange
             var sut = fixture.GetMalApiService();
             await TestAccount.EnsureSeededAsync(sut, TestContext.Current.CancellationToken);
 
             // Act
-            var response = await sut.Users.MangalistAsync("@me", sort: "manga_title", limit: 5, cancellationToken: TestContext.Current.CancellationToken);
+            var response = await sut.Users.GetAnimeListAsync("@me", sort: UserAnimeListSort.AnimeTitle, limit: 5, fields: MalFields.UserAnimeList, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedMangaId);
+            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedAnimeId && entry.ListStatus?.Status != null);
+            await Verify(ModelShape.Of(response));
+        }
+
+        [Fact]
+        public async Task GetMangaListAsync_Me_Should_Return_Expected_Structure()
+        {
+            // Arrange
+            var sut = fixture.GetMalApiService();
+            await TestAccount.EnsureSeededAsync(sut, TestContext.Current.CancellationToken);
+
+            // Act
+            var response = await sut.Users.GetMangaListAsync("@me", sort: UserMangaListSort.MangaTitle, limit: 5, fields: MalFields.UserMangaList, cancellationToken: TestContext.Current.CancellationToken);
+
+            // Assert
+            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedMangaId && entry.ListStatus?.Status != null);
             await Verify(ModelShape.Of(response));
         }
     }

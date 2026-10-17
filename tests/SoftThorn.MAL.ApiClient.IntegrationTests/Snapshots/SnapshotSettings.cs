@@ -11,16 +11,16 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.Snapshots
             nameof(WorkForList.Mean),
             nameof(WorkForList.Rank),
             nameof(WorkForList.Popularity),
-            nameof(WorkForList.Num_list_users),
-            nameof(WorkForList.Num_scoring_users),
+            nameof(WorkForList.NumListUsers),
+            nameof(WorkForList.NumScoringUsers),
         ];
 
         // every member of these types keeps changing (statistics.status counters, the recommended works and their counts)
         private static readonly HashSet<Type> _volatileTypes =
         [
-            typeof(Status),
-            typeof(AnimeRecommendationAggregationEdgeBase),
-            typeof(MangaRecommendationAggregationEdgeBase),
+            typeof(AnimeStatusStatistics),
+            typeof(AnimeRecommendation),
+            typeof(MangaRecommendation),
         ];
 
         // MAL's CDN serves the same picture as .jpg or .webp, changing between requests
@@ -48,7 +48,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.Snapshots
 
         // unmapped fields always stay visible, they are what these snapshots are meant to catch
         private static bool IsVolatile(MemberInfo member)
-            => member.Name != nameof(Status.AdditionalProperties)
+            => member.Name != nameof(AnimeStatusStatistics.AdditionalProperties)
             && (_volatileMembers.Contains(member.Name) || (member.DeclaringType is not null && _volatileTypes.Contains(member.DeclaringType)));
     }
 }

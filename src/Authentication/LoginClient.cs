@@ -4,7 +4,8 @@ using System.Text;
 
 namespace SoftThorn.MAL.ApiClient.Authentication
 {
-    public sealed class LoginClient
+    // the implementation behind ILoginClient
+    internal sealed class LoginClient : ILoginClient
     {
         private const string ResponseString = "<html><head><title>Auth Success</title></head><body><h1>Authentication successful!</h1><p>You can close this browser tab/window and return to the application.</p><script>window.close();</script></body></html>";
         private const string FailedResponseString = "<html><head><title>Auth Failed</title></head><body><h1>Authentication failed.</h1><p>You can close this browser tab/window and return to the application.</p></body></html>";
@@ -12,6 +13,9 @@ namespace SoftThorn.MAL.ApiClient.Authentication
         private readonly TokenClient _tokenClient;
         private readonly string _clientId;
         private readonly string _redirectUri;
+
+        // a singleton, so concurrent logins wait for each other instead of failing to listen on the same redirect URL
+        private readonly SemaphoreSlim _loginLock = new(1, 1);
 
         public LoginClient(ClientConfiguration clientConfiguration, IBrowserLoginHandler loginHandler, TokenClient tokenClient)
         {
@@ -21,18 +25,36 @@ namespace SoftThorn.MAL.ApiClient.Authentication
             _redirectUri = clientConfiguration.RedirectUrl;
         }
 
-        /// <summary>
-        /// Signs the user in, unless a valid token is already cached or an expired one can be refreshed.
-        /// </summary>
-        /// <returns><see langword="true"/> when a valid token is available afterwards.</returns>
+        /// <inheritdoc/>
         public async Task<bool> StartOAuthFlowAsync(IProgress<AuthProgress>? progressReporter = null, CancellationToken cancellationToken = default)
         {
-            var response = await _tokenClient.GetValidTokenAsync(cancellationToken);
-            if (response is not null)
+            await _loginLock.WaitAsync(cancellationToken);
+            try
             {
-                return true;
-            }
+                // also covers a login that finished while this call was waiting
+                var response = await _tokenClient.GetValidTokenAsync(cancellationToken);
+                if (response is not null)
+                {
+                    return true;
+                }
 
+                return await LoginAsync(progressReporter, cancellationToken);
+            }
+            finally
+            {
+                _loginLock.Release();
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> IsSignedInAsync(CancellationToken cancellationToken = default)
+            => await _tokenClient.GetValidTokenAsync(cancellationToken) is not null;
+
+        /// <inheritdoc/>
+        public Task SignOutAsync(CancellationToken cancellationToken = default) => _tokenClient.ClearAsync(cancellationToken);
+
+        private async Task<bool> LoginAsync(IProgress<AuthProgress>? progressReporter, CancellationToken cancellationToken)
+        {
             var codeVerifier = GenerateCodeVerifier(progressReporter);
             var state = Guid.NewGuid().ToString("N");
 
@@ -44,7 +66,7 @@ namespace SoftThorn.MAL.ApiClient.Authentication
             // the login handler (e.g. browser automation) may only complete once the redirect was answered,
             // so wait for the redirect and the handler concurrently and surface handler failures instead of hanging
             var contextTask = httpListener.GetContextAsync().WaitAsync(cancellationToken);
-            var loginTask = OpenBrowser(codeVerifier, state, progressReporter).AsTask();
+            var loginTask = OpenBrowser(codeVerifier, state, progressReporter, cancellationToken).AsTask();
 
             progressReporter?.Report(new AuthProgress("Waiting for authentication in browser...", 0.5));
 
@@ -83,18 +105,18 @@ namespace SoftThorn.MAL.ApiClient.Authentication
             return isValid ? query["code"] : null;
         }
 
-        private ValueTask OpenBrowser(string codeVerifier, string state, IProgress<AuthProgress>? progressReporter = null)
+        private ValueTask OpenBrowser(string codeVerifier, string state, IProgress<AuthProgress>? progressReporter, CancellationToken cancellationToken)
         {
             progressReporter?.Report(new AuthProgress("Redirecting to MyAnimeList...", 0.3));
 
             var authUrl = TokenClient.BaseUri + "authorize?response_type=code" +
-                             $"&client_id={_clientId}" +
+                             $"&client_id={Uri.EscapeDataString(_clientId)}" +
                              $"&code_challenge={codeVerifier}" +
                              $"&code_challenge_method=plain" +
                              $"&redirect_uri={Uri.EscapeDataString(_redirectUri)}" +
                              $"&state={state}";
 
-            return _loginHandler.Handle(authUrl);
+            return _loginHandler.HandleAsync(authUrl, cancellationToken);
         }
 
         private static string GenerateCodeVerifier(IProgress<AuthProgress>? progressReporter = null)

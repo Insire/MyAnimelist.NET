@@ -2,28 +2,32 @@
 
 namespace SoftThorn.MAL.ApiClient
 {
-    public sealed class MalApiService
+    // the implementation behind IMalApiService, which is all that consumers see
+    internal sealed class MalApiService : IMalApiService
     {
-        public Client Catalog { get; }
+        // the name of the HttpClient that the API clients use, as IHttpClientFactory's typed clients name it
+        internal const string HttpClientName = nameof(MalApiService);
 
-        public AnimeClient Anime { get; }
+        public ICatalogClient Catalog { get; }
 
-        public ForumClient Forum { get; }
+        public IAnimeClient Anime { get; }
 
-        public MangaClient Manga { get; }
+        public IForumClient Forum { get; }
 
-        public UsersClient Users { get; }
+        public IMangaClient Manga { get; }
 
-        public LoginClient Login { get; }
+        public IUsersClient Users { get; }
 
-        public MalApiService(HttpClient httpClient, ClientConfiguration clientConfiguration, IBrowserLoginHandler loginHandler, TokenClient tokenClient)
+        public ILoginClient Login { get; }
+
+        public MalApiService(HttpClient httpClient, ILoginClient loginClient, MalJsonOptions jsonOptions)
         {
-            Login = new LoginClient(clientConfiguration, loginHandler, tokenClient);
-            Catalog = new Client(httpClient);
-            Anime = new AnimeClient(httpClient);
-            Forum = new ForumClient(httpClient);
-            Manga = new MangaClient(httpClient);
-            Users = new UsersClient(httpClient);
+            Login = loginClient;
+            Catalog = new CatalogClient(httpClient, jsonOptions.Options);
+            Anime = new AnimeClient(httpClient, jsonOptions.Options);
+            Forum = new ForumClient(httpClient, jsonOptions.Options);
+            Manga = new MangaClient(httpClient, jsonOptions.Options);
+            Users = new UsersClient(httpClient, jsonOptions.Options);
         }
     }
 }

@@ -8,10 +8,8 @@ using Cake.Core;
 using Cake.Core.Diagnostics;
 using Cake.Core.IO;
 using Cake.Frosting;
-using System;
-using System.IO;
+using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 
 namespace Build.Tasks
 {
@@ -39,6 +37,17 @@ namespace Build.Tasks
                     .AppendSwitch("--git-service", "github")
                 );
 
+            // Azure builds a pull request on its merge commit (refs/pull/<n>/merge), which doesn't exist on GitHub,
+            // so report the PR's own head commit, number and branch, which Codecov compares against the base branch
+            var pullRequest = context.AzurePipelines().Environment.PullRequest;
+            if (pullRequest.IsPullRequest)
+            {
+                settings.Arguments
+                    .AppendSwitch("--sha", context.EnvironmentVariable("SYSTEM_PULLREQUEST_SOURCECOMMITID"))
+                    .AppendSwitch("--pr", pullRequest.Number.ToString(CultureInfo.InvariantCulture))
+                    .AppendSwitchQuoted("--branch", pullRequest.SourceBranch.Replace("refs/heads/", ""));
+            }
+
             // a Codecov outage shouldn't stop the release, which runs after this task
             var exitCode = context.StartProcess(cli, settings);
             if (exitCode != 0)
@@ -63,15 +72,22 @@ namespace Build.Tasks
                 return false;
             }
 
-            if (string.IsNullOrEmpty(context.Environment.GetEnvironmentVariable("CODECOV_TOKEN")))
+            if (context.GetSecretEnvironmentVariable("CODECOV_TOKEN") is null)
             {
-                context.Log.Information($"Skipped {nameof(UploadCodecovReportTask)}, since environment variable CODECOV_TOKEN missing or empty.");
+                context.Log.Information($"Skipped {nameof(UploadCodecovReportTask)}, since environment variable CODECOV_TOKEN missing, empty or unresolved (builds of forks get no secrets).");
                 return false;
             }
 
             if (context.TestsAreFailing)
             {
                 context.Log.Information($"Skipped {nameof(UploadCodecovReportTask)}, since we got failing tests.");
+                return false;
+            }
+
+            if (context.IntegrationTestsSkipped)
+            {
+                // coverage of the unit tests alone would show up on Codecov as a drop
+                context.Log.Information($"Skipped {nameof(UploadCodecovReportTask)}, since the integration tests were skipped.");
                 return false;
             }
 
@@ -112,12 +128,12 @@ namespace Build.Tasks
             var (folder, fileName, expectedSha256) = GetPlatform()!.Value;
             var path = context.MakeAbsolute(new DirectoryPath("./tools/codecov-cli").Combine(Constants.CodecovCliVersion).CombineWithFilePath(fileName));
 
-            if (!context.FileExists(path) || GetSha256(path) != expectedSha256)
+            if (!context.FileExists(path) || BuildContextExtensions.GetSha256(path) != expectedSha256)
             {
                 context.EnsureDirectoryExists(path.GetDirectory());
                 context.DownloadFile($"https://cli.codecov.io/{Constants.CodecovCliVersion}/{folder}/{fileName}", path);
 
-                var actualSha256 = GetSha256(path);
+                var actualSha256 = BuildContextExtensions.GetSha256(path);
                 if (actualSha256 != expectedSha256)
                 {
                     context.DeleteFile(path);
@@ -131,12 +147,6 @@ namespace Build.Tasks
             }
 
             return path;
-        }
-
-        private static string GetSha256(FilePath path)
-        {
-            using var stream = File.OpenRead(path.FullPath);
-            return Convert.ToHexStringLower(SHA256.HashData(stream));
         }
     }
 }

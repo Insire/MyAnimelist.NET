@@ -5,12 +5,32 @@ using Cake.Common.Tools.ReportGenerator;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Incubator.Project;
-using System.Linq;
+using System.Security.Cryptography;
+using System.Xml.Linq;
 
 namespace Build.Util
 {
     internal static class BuildContextExtensions
     {
+        /// <summary>
+        /// Returns the SHA-256 of a file as lowercase hex, for checking downloads against a pinned hash.
+        /// </summary>
+        public static string GetSha256(FilePath path)
+        {
+            using var stream = File.OpenRead(path.FullPath);
+            return Convert.ToHexStringLower(SHA256.HashData(stream));
+        }
+
+        /// <summary>
+        /// Returns a secret from the environment, or null when it is empty or unresolved.
+        /// Azure leaves the macro text "$(NAME)" in a mapped env var when the secret isn't available, e.g. in builds of forks.
+        /// </summary>
+        public static string? GetSecretEnvironmentVariable(this BuildContext context, string name)
+        {
+            var value = context.EnvironmentVariable(name);
+            return string.IsNullOrEmpty(value) || value.StartsWith("$(", StringComparison.Ordinal) ? null : value;
+        }
+
         /// <summary>
         /// Starts a process and fails the task when it exits with a non-zero exit code.
         /// </summary>
@@ -43,6 +63,18 @@ namespace Build.Util
         public static void RunGitOrThrow(this BuildContext context, string arguments)
         {
             context.RunProcess("git", new ProcessSettings().UseWorkingDirectory(".").WithArguments(builder => builder.Append(arguments)));
+        }
+
+        /// <summary>
+        /// Returns a property from Directory.Build.props, the single source of the package and assembly metadata.
+        /// </summary>
+        public static string GetDirectoryBuildProperty(this BuildContext context, string name)
+        {
+            var document = XDocument.Load(context.MakeAbsolute(new FilePath(Constants.DirectoryBuildPropsPath)).FullPath);
+
+            // every element is in MSBuild's namespace, so match the local name only
+            return document.Descendants().FirstOrDefault(element => element.Name.LocalName == name)?.Value
+                ?? throw new CakeException($"{Constants.DirectoryBuildPropsPath} has no {name} property.");
         }
 
         public static void MergeReports(this BuildContext context, FilePathCollection files, ReportGeneratorReportType type, string subFolder)

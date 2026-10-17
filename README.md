@@ -1,6 +1,6 @@
 # SoftThorn.MAL.ApiClient
 
-![SoftThorn.MAL.ApiClient icon: an anime eye with curly braces as the pupil](assets/Icon/icon.png)
+![SoftThorn.MAL.ApiClient icon: an anime eye with curly braces as the pupil](https://raw.githubusercontent.com/Insire/SoftThorn.MAL.ApiClient/main/assets/Icon/icon.png)
 
 [![NuGet](https://img.shields.io/nuget/v/SoftThorn.MAL.ApiClient.svg)](https://www.nuget.org/packages/SoftThorn.MAL.ApiClient)
 [![codecov](https://codecov.io/gh/Insire/SoftThorn.MAL.ApiClient/branch/main/graph/badge.svg)](https://codecov.io/gh/Insire/SoftThorn.MAL.ApiClient)
@@ -29,7 +29,7 @@ dotnet add package SoftThorn.MAL.ApiClient
 - **Rate-limit friendly:** requests rejected with `429 Too Many Requests` or `503 Service Unavailable` are retried up to 3 times with jittered exponential backoff, honoring `Retry-After`. Reads and deletes that get no answer within 20 seconds are retried the same way.
 - **Identifies itself** with a `User-Agent` header naming the library
 - **OAuth2 login** with PKCE: a browser window opens, the user signs in, and the library catches the redirect on a local `HttpListener`
-- **Automatic authorization:** once signed in, every request gets the `Bearer` token
+- **Automatic authorization:** once signed in, every request gets the `Bearer` token. Before that, requests send the Client ID (`X-MAL-CLIENT-ID`), which is enough for public data such as searches, details and rankings
 - **Replaceable pieces:** swap in your own token storage (`IAuthCache`) or your own way of opening the login page (`IBrowserLoginHandler`)
 - **Progress reporting** during login through `IProgress<AuthProgress>`, so you can show progress in a UI
 
@@ -60,11 +60,11 @@ services.AddMalApiClient(new ClientConfiguration
 });
 
 var provider = services.BuildServiceProvider();
-var mal = provider.GetRequiredService<MalApiService>();
+var mal = provider.GetRequiredService<IMalApiService>();
 ```
 
 > [!NOTE]
-> `HttpListener` uses `RedirectUrl` as its listening prefix, so the URL must end with `/`.
+> `HttpListener` uses `RedirectUrl` as its listening prefix, so the URL must end with `/`. It must also be `http`: the listener can only answer `https` with a server certificate bound to the port, which the library doesn't set up. That's fine for a redirect that never leaves the machine, and PKCE protects the authorization code. `AddMalApiClient` checks this and throws an `ArgumentException` for an empty Client ID or a redirect URL that isn't an absolute `http` URL ending with `/`.
 
 ### 3. Sign in
 
@@ -74,42 +74,53 @@ var progress = new Progress<AuthProgress>(p => Console.WriteLine($"{p.Progress:P
 var signedIn = await mal.Login.StartOAuthFlowAsync(progress);
 ```
 
-The default `BrowserLoginHandler` opens the login page in the user's default browser. After the user approves access, the token is stored in the `IAuthCache`. Expired access tokens are refreshed automatically with the refresh token before the next request. If a valid token is already cached, or an expired one can be refreshed, `StartOAuthFlowAsync` returns `true` without opening the browser. It returns `false` if the user denies access or the token exchange fails.
+By default the login page opens in the user's default browser. After the user approves access, the token is stored in the `IAuthCache`. Expired access tokens are refreshed automatically with the refresh token before the next request. If a valid token is already cached, or an expired one can be refreshed, `StartOAuthFlowAsync` returns `true` without opening the browser. It returns `false` if the user denies access or the token exchange fails. If MyAnimeList rejects the refresh token, the tokens are removed and the user has to sign in again. `SignOutAsync` removes the tokens on request. `IsSignedInAsync` tells you whether a user is signed in without opening the login page, for example to decide at startup whether to show a sign-in button.
+
+Signing in is only needed for the user's own data (their lists, list updates, suggestions, `@me`). Public data works without it.
 
 ### 4. Call the API
 
 ```csharp
 // Search for anime
-var results = await mal.Catalog.AnimeGetAsync("frieren", limit: 5, fields: "title,mean");
+var results = await mal.Catalog.SearchAnimeAsync("frieren", limit: 5, fields: "title,mean");
 
-foreach (var entry in results.Data ?? [])
+foreach (var entry in results.Data)
 {
     Console.WriteLine(entry.Node.Title);
 }
 
 // Top-ranked anime
-var ranking = await mal.Anime.RankingAsync(ranking_type: "all", limit: 10);
+var ranking = await mal.Anime.GetRankingAsync(AnimeRankingType.All, limit: 10);
 
-// A user's anime list
-var list = await mal.Users.AnimelistAsync("@me", status: "watching");
+// A user's anime list, with each entry's list status (score, episodes watched, ...)
+var list = await mal.Users.GetAnimeListAsync("@me", status: AnimeWatchStatus.Watching, fields: MalFields.UserAnimeList);
+
+// Add an anime to the signed-in user's list, or change its entry; only the fields you set are sent
+await mal.Anime.UpdateListStatusAsync(52991, new AnimeListStatusPatch { Status = AnimeWatchStatus.Completed, Score = 10 });
 ```
 
 ## API overview
 
-`MalApiService` (namespace `SoftThorn.MAL.ApiClient`) groups the endpoints into these clients. The sign-in types (`LoginClient`, `ClientConfiguration`, `IAuthCache`, `AuthResponse`, `IBrowserLoginHandler`, `AuthProgress`) are in `SoftThorn.MAL.ApiClient.Authentication`.
+`IMalApiService` (namespace `SoftThorn.MAL.ApiClient`) groups the endpoints into these clients. The sign-in types (`ILoginClient`, `ClientConfiguration`, `IAuthCache`, `AuthResponse`, `IBrowserLoginHandler`, `AuthProgress`) are in `SoftThorn.MAL.ApiClient.Authentication`.
 
 | Property | Client | What it covers |
 | --- | --- | --- |
-| `Login` | `LoginClient` | OAuth2 sign-in (`StartOAuthFlowAsync`) |
-| `Catalog` | `Client` | Anime search and details (`AnimeGetAsync`), manga search and details (`MangaGetAsync`), user profile (`UsersAsync`) |
-| `Anime` | `AnimeClient` | Anime ranking, seasonal anime, suggestions, and updating your anime list status |
-| `Manga` | `MangaClient` | Manga ranking and updating your manga list status |
-| `Forum` | `ForumClient` | Forum boards, topics, and topic details |
-| `Users` | `UsersClient` | A user's anime list and manga list |
+| `Login` | `ILoginClient` | OAuth2 sign-in (`StartOAuthFlowAsync`), sign-in check (`IsSignedInAsync`) and sign-out (`SignOutAsync`) |
+| `Catalog` | `ICatalogClient` | Anime and manga search (`SearchAnimeAsync`, `SearchMangaAsync`) and details (`GetAnimeAsync`, `GetMangaAsync`) |
+| `Anime` | `IAnimeClient` | Anime ranking (`GetRankingAsync`), seasonal anime (`GetSeasonalAsync`), suggestions (`GetSuggestionsAsync`), and the signed-in user's anime list entries (`UpdateListStatusAsync`, `DeleteListStatusAsync`) |
+| `Manga` | `IMangaClient` | Manga ranking (`GetRankingAsync`) and the signed-in user's manga list entries (`UpdateListStatusAsync`, `DeleteListStatusAsync`) |
+| `Forum` | `IForumClient` | Forum boards (`GetBoardsAsync`), topic search (`GetTopicsAsync`) and a topic's posts (`GetTopicAsync`) |
+| `Users` | `IUsersClient` | The signed-in user's profile (`GetUserAsync("@me")`, MyAnimeList supports no other name), and a user's anime list and manga list (`GetAnimeListAsync`, `GetMangaListAsync`) |
 
-Most methods take an optional `fields` parameter, a comma-separated list of the fields you want returned (for example `"title,mean,genres"`). See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the available fields and values.
+Most methods take an optional `fields` parameter, a comma-separated list of the fields you want returned (for example `"title,mean,genres"`). Without it, MyAnimeList only returns each entry's id, title and picture. `MalFields` has values that request every field the models map, such as `MalFields.Anime` and `MalFields.AnimeDetails`. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the available fields and values.
 
-When a request fails, the client throws an `ApiException`.
+Fields MyAnimeList always sends, such as ids, titles and each list entry's `Node`, aren't nullable. All others are, because MyAnimeList only sends the fields you request. Collections are `IReadOnlyList<T>`.
+
+Searches and seasonal anime leave out entries that MyAnimeList rates as not safe for work. Pass `nsfw: true` to include them.
+
+Parameters and request fields that take a fixed set of values are enums (`AnimeRankingType`, `Season`, `AnimeWatchStatus`, ...). In responses, those fields stay strings (`"watching"`, `"spring"`), so a value MyAnimeList adds later doesn't break deserialization. For a season outside `Season`, the library logs a warning through `Microsoft.Extensions.Logging`. Dates the user enters (list start and finish dates, birthdays) are strings too, because MyAnimeList sends partial dates such as `2017-10` or `2017` there.
+
+When a request fails, the client throws an `ApiException`. Besides the HTTP status code and the response body, it carries MyAnimeList's error code and message, for example `bad_request` and `invalid q` (`ErrorCode`, `ErrorMessage`).
 
 ## Customization
 
@@ -117,7 +128,7 @@ When a request fails, the client throws an `ApiException`.
 
 ### Store tokens somewhere else
 
-The default `AuthCache` keeps tokens in memory, so they are gone when the app restarts. To keep users signed in, implement `IAuthCache`, for example with a file or the OS credential store. Store the whole `AuthResponse`, including `ExpiresAt`; without it the library can't tell when to refresh the token. Store only the tokens: MyAnimeList's agreement doesn't allow storing users' personal information or their passwords (see [below](#using-the-myanimelist-api-responsibly)).
+By default tokens are kept in memory, so they are gone when the app restarts. To keep users signed in, implement `IAuthCache`, for example with a file or the OS credential store. Store the whole `AuthResponse`, including `ExpiresAt`; without it the library can't tell when to refresh the token. Store only the tokens: MyAnimeList's agreement doesn't allow storing users' personal information or their passwords (see [below](#using-the-myanimelist-api-responsibly)).
 
 ```csharp
 using SoftThorn.MAL.ApiClient;
@@ -125,8 +136,9 @@ using SoftThorn.MAL.ApiClient.Authentication;
 
 public sealed class FileAuthCache : IAuthCache
 {
-    public Task<AuthResponse?> Get(CancellationToken cancellationToken = default) { /* load */ }
+    public Task<AuthResponse?> GetAsync(CancellationToken cancellationToken = default) { /* load */ }
     public Task SaveAsync(AuthResponse authResponse, CancellationToken cancellationToken = default) { /* save */ }
+    public Task ClearAsync(CancellationToken cancellationToken = default) { /* delete */ }
 }
 
 services.AddSingleton<IAuthCache, FileAuthCache>();
@@ -135,7 +147,7 @@ services.AddMalApiClient(config);
 
 ### Open the login page differently
 
-Implement `IBrowserLoginHandler` to show the login page in an embedded web view, or to automate it. The test project does this with Playwright.
+Implement `IBrowserLoginHandler` to show the login page in an embedded web view, or to automate it. Its `HandleAsync` gets the cancellation token of `StartOAuthFlowAsync`, so a web view can close when the login is cancelled. The test project does this with Playwright.
 
 ```csharp
 using SoftThorn.MAL.ApiClient;
@@ -153,7 +165,7 @@ Your application, not this library, is bound by MyAnimeList's [API License and D
 - **Don't ask for, store or keep users' passwords** (4(f)). Sign users in through the OAuth flow, which this library uses.
 - **Don't alter MyAnimeList content** such as titles or synopses (3(a)(xii)). Showing it in your own layout is fine.
 - **Use MyAnimeList's name and logos only to attribute it as the source** of the content (3(a)(xiii), 17), not in your app's or business's name.
-- **Don't hide your app's identity** (3(a)(x)). The library sends `User-Agent: SoftThorn.MAL.ApiClient/<version>`; add your own product token if you like.
+- **Don't hide your app's identity** (3(a)(x)). The library sends `User-Agent: SoftThorn.MAL.ApiClient/<version>`. To name your app as well, add its product token to the clients' defaults, which also applies to your app's other `IHttpClientFactory` clients: `services.ConfigureHttpClientDefaults(builder => builder.ConfigureHttpClient(client => client.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp/1.0")));`. MyAnimeList then gets `MyApp/1.0 SoftThorn.MAL.ApiClient/<version> (+...)`.
 - **Don't scrape** MyAnimeList's website for data the API doesn't provide (4(i)).
 - **Keep your Client ID to yourself** (3(c)): don't share it or tokens with third parties.
 - **Tell MyAnimeList before you make your app available to users** (4(b)). They may ask to review it.
@@ -167,9 +179,11 @@ You are also responsible for what your users do with your app (4(d)).
 - **Desktop and console apps only.** The login waits for the redirect on a local `HttpListener`, so it doesn't fit server-side web apps, where the redirect goes to your web server instead.
 - **Public clients only.** The library sends a Client ID but no client secret.
 - **PKCE uses `code_challenge_method=plain`**, because that is the only method MyAnimeList supports.
-- **No retry on `401 Unauthorized`.** Tokens are refreshed shortly before they expire. If MyAnimeList revokes a token earlier, requests fail until the user signs in again.
-- **User lists have no `fields` parameter.** MyAnimeList's OpenAPI spec doesn't define one for `Users.AnimelistAsync` and `Users.MangalistAsync`, so `list_status` can't be requested and each entry only contains id, title and picture.
-- **No XML documentation on the generated clients.** MyAnimeList's agreement doesn't allow copying its API documentation, so the descriptions are stripped from the spec. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for what each endpoint and field means.
+- **No retry on `401 Unauthorized`.** Tokens are refreshed shortly before they expire. If MyAnimeList revokes an access token earlier, requests that need a signed-in user fail until the user signs in again. A rejected refresh token removes the tokens, so `StartOAuthFlowAsync` opens the login page again.
+- **Not Native AOT or trimming compatible.** The clients use reflection-based `System.Text.Json`, which is off by default in Native AOT apps, so requests would fail at runtime there. Adding support would need source-generated JSON metadata for every model, so it isn't planned for now.
+- **Built on an imperfect spec.** MyAnimeList's OpenAPI spec doesn't always match the live API. The build corrects most differences, for example by adding the missing `nsfw` parameter and by marking the fields MyAnimeList always sends as required. A few remain, such as limits that the library doesn't check before sending. [openapi-spec-issues.md](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/openapi-spec-issues.md) lists every issue we found and what the library does about it.
+- **Brief XML documentation.** MyAnimeList's agreement doesn't allow copying its API documentation, so the generated clients and models carry short descriptions written for this library. See the [MyAnimeList API reference](https://myanimelist.net/apiconfig/references/api/v2) for the details of each endpoint and field.
+- **Sealed implementations.** Only interfaces are public: `IMalApiService` and the client interfaces it returns. To test code that uses the API, mock `IMalApiService` or the client interfaces. To test error handling, throw an `ApiException` from the mock, for example `new ApiException(404, """{"message":"","error":"not_found"}""")`.
 
 ## Repository layout
 
@@ -177,7 +191,7 @@ You are also responsible for what your users do with your app (4(d)).
 SoftThorn.MAL.ApiClient.slnx   The library and its tests (Build.slnx holds the Cake build)
 src/            The library (SoftThorn.MAL.ApiClient.csproj)
   Authentication/            OAuth flow, token cache, and MalLoginHandler, which adds the Bearer token
-  MalApiService.cs           The entry point that groups the API clients
+  IMalApiService.cs          The entry point that groups the API clients
   RegistrationExtensions.cs  AddMalApiClient, the User-Agent and the HttpClient setup
   MalRetryHandler.cs         Retries 429 and 503 responses with jittered backoff
   AutoGeneratedClient.cs     API clients generated by NSwag (do not edit by hand)
@@ -208,7 +222,7 @@ The full build pipeline (clean, version stamping, tests, coverage report, packin
 | Target | What it does |
 | --- | --- |
 | `Default` | Clean, update assembly info, run tests with coverage, pack, and push packages (to nuget.org only on Azure Pipelines) |
-| `ReleaseNotes` | Write release notes for the commits since the last `v*` tag to `tmp_build/results/release-notes.md` (and a plain-text version for the package) |
+| `ReleaseNotes` | Write release notes for the commits since the last `v*` tag to `tmp_build/results/release-notes/release-notes.md` (and a plain-text version for the package) |
 | `UpdateOpenApiSpec` | Download the latest OpenAPI spec from MyAnimeList's API reference page, strip its documentation, and regenerate `src/AutoGeneratedClient.cs` with NSwag. Add `--skip-download` to regenerate from the committed spec instead |
 
 Packages are written to `tmp_build/packages`. CI runs on Azure Pipelines in a Linux container (Microsoft's Playwright .NET image), see [azure-pipelines.yml](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/azure-pipelines.yml). Versions come from [Nerdbank.GitVersioning](https://github.com/dotnet/Nerdbank.GitVersioning) (see [version.json](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/version.json) and [versioning.md](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/versioning.md)).
@@ -268,7 +282,7 @@ The integration tests compare responses with [Verify](https://github.com/VerifyT
 Issues and pull requests are welcome. A few things to know:
 
 - **Don't edit `src/AutoGeneratedClient.cs` by hand.** NSwag generates it from `assets/`. Change the spec or the Liquid templates and regenerate with `./build.ps1 --target UpdateOpenApiSpec`.
-- **Fix spec errors in the build, not only in the JSON.** MyAnimeList's published spec doesn't always match the live API. `UpdateOpenApiSpec` re-downloads the spec and then patches it in `build/Tasks/UpdateOpenApiSpecTask.cs`. A fix made only in `assets/SoftThorn.MAL.ApiClient_OpenApiSpec.json` is lost on the next download.
+- **Fix spec errors in the build, not only in the JSON.** MyAnimeList's published spec doesn't always match the live API. `UpdateOpenApiSpec` re-downloads the spec and then patches it in `build/Tasks/UpdateOpenApiSpecTask.cs`. A fix made only in `assets/SoftThorn.MAL.ApiClient_OpenApiSpec.json` is lost on the next download. Add what you find to [openapi-spec-issues.md](https://github.com/Insire/SoftThorn.MAL.ApiClient/blob/main/openapi-spec-issues.md).
 - **Don't add MyAnimeList's documentation text.** The task strips descriptions, summaries and examples from the spec, because MyAnimeList's agreement doesn't allow copying its API documentation. Write your own wording for docs and comments, and link to the official reference.
 - **Download the spec only when you need to.** `UpdateOpenApiSpec` reads the spec out of MyAnimeList's API reference page, so it's run by hand, never in CI. Use `--skip-download` when you only change the fixes or the templates.
 - **Put tests in the right project.** Tests that don't call MyAnimeList go in `SoftThorn.MAL.ApiClient.UnitTests`, which must never use the network.

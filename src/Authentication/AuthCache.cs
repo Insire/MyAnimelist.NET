@@ -1,31 +1,39 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-
-namespace SoftThorn.MAL.ApiClient.Authentication
+﻿namespace SoftThorn.MAL.ApiClient.Authentication
 {
-    public sealed class AuthCache : IAuthCache
+    // the default IAuthCache: keeps the token in memory only, so it is gone after a restart
+    internal sealed class AuthCache : IAuthCache
     {
-        private const string MemoryCache_KEY = "SoftThorn.MAL.ApiClient_TokenCache_Key";
-
-        private readonly IMemoryCache _memoryCache;
-
-        public AuthCache(IMemoryCache memoryCache)
-        {
-            _memoryCache = memoryCache;
-        }
+        // AuthResponse is a struct that is too large to read or write atomically
+        private readonly Lock _lock = new();
+        private AuthResponse? _token;
 
         // kept past the access token's expiry, since the refresh token is still needed to get a new one
         public Task SaveAsync(AuthResponse authResponse, CancellationToken cancellationToken = default)
         {
-            _memoryCache.Set(MemoryCache_KEY, authResponse);
+            lock (_lock)
+            {
+                _token = authResponse;
+            }
 
             return Task.CompletedTask;
         }
 
-        public Task<AuthResponse?> Get(CancellationToken cancellationToken = default)
+        public Task<AuthResponse?> GetAsync(CancellationToken cancellationToken = default)
         {
-            var token = _memoryCache.Get<AuthResponse?>(MemoryCache_KEY);
+            lock (_lock)
+            {
+                return Task.FromResult(_token);
+            }
+        }
 
-            return Task.FromResult(token);
+        public Task ClearAsync(CancellationToken cancellationToken = default)
+        {
+            lock (_lock)
+            {
+                _token = null;
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

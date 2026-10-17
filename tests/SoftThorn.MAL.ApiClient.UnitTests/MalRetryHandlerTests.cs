@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -25,7 +27,7 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         // without a jitter function the handler's own random source is used
         private HttpClient CreateClient(Func<double>? jitter)
         {
-            var handler = new MalRetryHandler(new FixedTimeProvider(Now))
+            var handler = new MalRetryHandler(new FixedTimeProvider(Now), NullLogger<MalRetryHandler>.Instance)
             {
                 InnerHandler = _endpoint,
                 Delay = (delay, _) =>
@@ -224,6 +226,88 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             Assert.Equal(["status=watching", "status=watching"], _endpoint.Bodies);
         }
 
+        [Theory]
+        [InlineData("https://api.myanimelist.net/error.json")]
+        [InlineData("/error.json")]
+        public async Task SendAsync_Should_Retry_Get_Redirected_To_Error_Page(string location)
+        {
+            _endpoint.Responses.Enqueue(() => ErrorRedirect(location));
+            _endpoint.Responses.Enqueue(() => new HttpResponseMessage(HttpStatusCode.OK));
+
+            var response = await _sut.GetAsync("https://api.myanimelist.net/v2/anime/1", TestContext.Current.CancellationToken);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(["https://api.myanimelist.net/v2/anime/1", "https://api.myanimelist.net/v2/anime/1"], _endpoint.Uris);
+            Assert.Equal([TimeSpan.FromSeconds(0.5)], _delays);
+        }
+
+        [Fact]
+        public async Task SendAsync_Should_Return_Error_Redirect_After_Max_Retries()
+        {
+            for (var i = 0; i <= MalRetryHandler.MaxRetries; i++)
+            {
+                _endpoint.Responses.Enqueue(() => ErrorRedirect("https://api.myanimelist.net/error.json"));
+            }
+
+            var response = await _sut.GetAsync("https://api.myanimelist.net/v2/anime/1", TestContext.Current.CancellationToken);
+
+            Assert.Equal(HttpStatusCode.TemporaryRedirect, response.StatusCode);
+            Assert.Equal(MalRetryHandler.MaxRetries + 1, _endpoint.Calls);
+        }
+
+        [Fact]
+        public async Task SendAsync_Should_Not_Retry_Patch_Redirected_To_Error_Page()
+        {
+            // like a timeout, the redirect doesn't tell whether MAL applied the PATCH
+            _endpoint.Responses.Enqueue(() => ErrorRedirect("https://api.myanimelist.net/error.json"));
+
+            using var content = new FormUrlEncodedContent([new("score", "9")]);
+            var response = await _sut.PatchAsync("https://api.myanimelist.net/v2/anime/1/my_list_status", content, TestContext.Current.CancellationToken);
+
+            Assert.Equal(HttpStatusCode.TemporaryRedirect, response.StatusCode);
+            Assert.Equal(1, _endpoint.Calls);
+            Assert.Empty(_delays);
+        }
+
+        [Fact]
+        public async Task SendAsync_Should_Not_Retry_Other_Redirects()
+        {
+            _endpoint.Responses.Enqueue(() => ErrorRedirect("https://api.myanimelist.net/v2/anime/2"));
+
+            var response = await _sut.GetAsync("https://api.myanimelist.net/v2/anime/1", TestContext.Current.CancellationToken);
+
+            Assert.Equal(HttpStatusCode.TemporaryRedirect, response.StatusCode);
+            Assert.Equal(1, _endpoint.Calls);
+        }
+
+        [Fact]
+        public void AddMalApiClient_Should_Not_Follow_Redirects()
+        {
+            var services = new ServiceCollection();
+            services.AddMalApiClient(new() { ClientId = "client-id", RedirectUrl = "http://localhost:5000/" });
+
+            using var provider = services.BuildServiceProvider();
+            var handlerFactory = provider.GetRequiredService<IHttpMessageHandlerFactory>();
+
+            foreach (var name in new[] { MalApiService.HttpClientName, Authentication.TokenClient.HttpClientName })
+            {
+                var handler = handlerFactory.CreateHandler(name);
+                while (handler is DelegatingHandler delegatingHandler)
+                {
+                    handler = delegatingHandler.InnerHandler!;
+                }
+
+                var allowAutoRedirect = handler switch
+                {
+                    HttpClientHandler httpClientHandler => httpClientHandler.AllowAutoRedirect,
+                    SocketsHttpHandler socketsHttpHandler => socketsHttpHandler.AllowAutoRedirect,
+                    _ => throw new InvalidOperationException($"Unexpected primary handler {handler.GetType()} for {name}"),
+                };
+
+                Assert.False(allowAutoRedirect, name);
+            }
+        }
+
         [Fact]
         public void AddMalApiClient_Should_Send_Library_User_Agent()
         {
@@ -233,12 +317,55 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             using var provider = services.BuildServiceProvider();
             var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
 
-            foreach (var name in new[] { typeof(MalApiService).Name, Authentication.TokenClient.HttpClientName })
+            foreach (var name in new[] { MalApiService.HttpClientName, Authentication.TokenClient.HttpClientName })
             {
                 var userAgent = httpClientFactory.CreateClient(name).DefaultRequestHeaders.UserAgent.ToString();
 
                 Assert.StartsWith("SoftThorn.MAL.ApiClient/", userAgent);
                 Assert.EndsWith("(+https://github.com/Insire/SoftThorn.MAL.ApiClient)", userAgent);
+            }
+        }
+
+        [Fact]
+        public void AddMalApiClient_Should_Keep_The_Applications_User_Agent()
+        {
+            // the README shows this way for apps to name themselves next to the library
+            var services = new ServiceCollection();
+            services.ConfigureHttpClientDefaults(builder => builder.ConfigureHttpClient(client => client.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp/1.0")));
+            services.AddMalApiClient(new() { ClientId = "client-id", RedirectUrl = "http://localhost:5000/" });
+
+            using var provider = services.BuildServiceProvider();
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+
+            foreach (var name in new[] { MalApiService.HttpClientName, Authentication.TokenClient.HttpClientName })
+            {
+                var userAgent = httpClientFactory.CreateClient(name).DefaultRequestHeaders.UserAgent.ToString();
+
+                Assert.StartsWith("MyApp/1.0 SoftThorn.MAL.ApiClient/", userAgent);
+            }
+        }
+
+        [Fact]
+        public void AddMalApiClient_Should_Resolve_IMalApiService()
+        {
+            // MalApiService is internal, so IMalApiService is registered through a typed client factory
+            var services = new ServiceCollection();
+            services.AddMalApiClient(new() { ClientId = "client-id", RedirectUrl = "http://localhost:5000/" });
+
+            using var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+            var service = provider.GetRequiredService<IMalApiService>();
+
+            Assert.NotNull(service.Catalog);
+            Assert.NotNull(service.Login);
+        }
+
+        [Fact]
+        public void IMalApiService_Should_Expose_Only_Public_Interfaces()
+        {
+            // consumers mock IMalApiService, which only works when everything it returns can be mocked as well
+            foreach (var property in typeof(IMalApiService).GetProperties())
+            {
+                Assert.True(property.PropertyType is { IsInterface: true, IsPublic: true }, property.Name);
             }
         }
 
@@ -262,6 +389,14 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             return response;
         }
 
+        // what MAL's edge sends instead of an error status
+        private static HttpResponseMessage ErrorRedirect(string location)
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.TemporaryRedirect);
+            response.Headers.Location = new Uri(location, UriKind.RelativeOrAbsolute);
+            return response;
+        }
+
         private sealed class FixedTimeProvider(DateTimeOffset now) : TimeProvider
         {
             public override DateTimeOffset GetUtcNow() => now;
@@ -276,11 +411,14 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
 
             public List<string> Bodies { get; } = [];
 
+            public List<string> Uris { get; } = [];
+
             public int Calls { get; private set; }
 
             protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
                 Calls++;
+                Uris.Add(request.RequestUri!.ToString());
 
                 if (request.Content is not null)
                 {

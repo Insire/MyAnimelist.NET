@@ -1,0 +1,81 @@
+﻿{
+  data: [
+    {
+      list_status: {
+        comments: string,
+        is_rereading: bool,
+        num_chapters_read: int,
+        num_times_reread: int,
+        num_volumes_read: int,
+        priority: int,
+        reread_value: int,
+        score: int,
+        status: string,
+        tags: [
+          string
+        ],
+        updated_at: date
+      },
+      node: {
+        alternative_titles: {
+          en: string,
+          ja: string,
+          synonyms: [
+            string
+          ]
+        },
+        authors: [
+          {
+            node: {
+              first_name: string,
+              id: int,
+              last_name: string
+            },
+            role: string
+          }
+        ],
+        created_at: date,
+        genres: [
+          {
+            id: int,
+            name: string
+          }
+        ],
+        id: int,
+        main_picture: {
+          large: uri,
+          medium: uri
+        },
+        mean: number,
+        media_type: string,
+        my_list_status: {
+          comments: string,
+          is_rereading: bool,
+          num_chapters_read: int,
+          num_times_reread: int,
+          num_volumes_read: int,
+          priority: int,
+          reread_value: int,
+          score: int,
+          status: string,
+          tags: [
+            string
+          ],
+          updated_at: date
+        },
+        nsfw: string,
+        num_chapters: int,
+        num_list_users: int,
+        num_scoring_users: int,
+        num_volumes: int,
+        popularity: int,
+        rank: int,
+        start_date: string,
+        status: string,
+        synopsis: string,
+        title: string,
+        updated_at: date
+      }
+    }
+  ]
+}

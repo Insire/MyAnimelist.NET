@@ -7,26 +7,26 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
     public sealed class ForumTests(OAuthFlowTestFixture fixture)
     {
         [Fact]
-        public async Task BoardsAsync_Should_Return_Expected_Data()
+        public async Task GetBoardsAsync_Should_Return_Expected_Data()
         {
             // Arrange
             var sut = fixture.GetMalApiService();
 
             // Act
-            var response = await sut.Forum.BoardsAsync(TestContext.Current.CancellationToken);
+            var response = await sut.Forum.GetBoardsAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verify(response, SnapshotSettings.ForStableEntity());
         }
 
         [Fact]
-        public async Task TopicsAsync_Should_Return_Expected_Structure()
+        public async Task GetTopicsAsync_Should_Return_Expected_Structure()
         {
             // Arrange
             var sut = fixture.GetMalApiService();
 
             // Act
-            var response = await sut.Forum.TopicsAsync(q: "cowboy bebop", limit: 5, cancellationToken: TestContext.Current.CancellationToken);
+            var response = await sut.Forum.GetTopicsAsync(q: "cowboy bebop", limit: 5, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotEmpty(response.Data!);
@@ -34,15 +34,15 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
         }
 
         [Fact]
-        public async Task TopicAsync_Should_Return_Expected_Structure()
+        public async Task GetTopicAsync_Should_Return_Expected_Structure()
         {
             // Arrange
             var sut = fixture.GetMalApiService();
-            var topics = await sut.Forum.TopicsAsync(q: "cowboy bebop", limit: 1, cancellationToken: TestContext.Current.CancellationToken);
-            var topicId = Assert.Single(topics.Data!).Id!.Value;
+            var topics = await sut.Forum.GetTopicsAsync(q: "cowboy bebop", limit: 1, cancellationToken: TestContext.Current.CancellationToken);
+            var topicId = Assert.Single(topics.Data).Id;
 
             // Act
-            var response = await sut.Forum.TopicAsync(topicId, limit: 5, cancellationToken: TestContext.Current.CancellationToken);
+            var response = await sut.Forum.GetTopicAsync(topicId, limit: 5, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotEmpty(response.Data!.Posts!);

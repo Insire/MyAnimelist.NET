@@ -10,10 +10,6 @@
           ]
         },
         average_episode_duration: int,
-        broadcast: {
-          day_of_the_week: string,
-          start_time: string
-        },
         created_at: date,
         end_date: string,
         genres: [
@@ -27,19 +23,17 @@
           large: uri,
           medium: uri
         },
-        mean: number,
         media_type: string,
         nsfw: string,
         num_episodes: int,
         num_list_users: int,
         num_scoring_users: int,
         popularity: int,
-        rank: int,
         rating: string,
         source: string,
         start_date: string,
         start_season: {
-          season: enum,
+          season: string,
           year: int
         },
         status: string,

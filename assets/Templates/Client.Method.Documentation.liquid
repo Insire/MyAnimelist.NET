@@ -16,7 +16,7 @@
 {% if operation.HasResultDescription -%}
 /// <returns>{{ operation.ResultDescription | csharpdocs }}</returns>
 {% endif -%}
-/// <exception cref="{{ ExceptionClass }}">A server side error occurred.</exception>
+/// <exception cref="{{ ExceptionClass }}">MyAnimeList answered with an error status, or its response couldn't be read.</exception>
 {% for exception in operation.ExceptionDescriptions -%}
 /// <exception cref="{{ exception.Type }}">{{ exception.Description }}</exception>
 {% endfor -%}

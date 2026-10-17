@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging.Abstractions;
 using SoftThorn.MAL.ApiClient.Authentication;
 using System.Net;
 using System.Text;
@@ -11,14 +11,14 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         private static readonly DateTimeOffset Now = new(2026, 10, 16, 12, 0, 0, TimeSpan.Zero);
 
         private readonly StubTokenEndpoint _endpoint = new();
-        private readonly AuthCache _authCache = new(new MemoryCache(new MemoryCacheOptions()));
+        private readonly AuthCache _authCache = new();
         private readonly TokenClient _sut;
 
         public TokenClientTests()
         {
             var clientConfiguration = new ClientConfiguration() { ClientId = "client-id", RedirectUrl = "http://localhost:5000/" };
 
-            _sut = new TokenClient(new StubHttpClientFactory(_endpoint), clientConfiguration, _authCache, new FixedTimeProvider(Now));
+            _sut = new TokenClient(new StubHttpClientFactory(_endpoint), clientConfiguration, _authCache, new FixedTimeProvider(Now), NullLogger<TokenClient>.Instance);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
 
             Assert.Equal("new-access", token?.AccessToken);
             Assert.Equal(Now.AddSeconds(3600), token?.ExpiresAt);
-            Assert.Equal("new-access", (await _authCache.Get(TestContext.Current.CancellationToken))?.AccessToken);
+            Assert.Equal("new-access", (await _authCache.GetAsync(TestContext.Current.CancellationToken))?.AccessToken);
 
             var request = Assert.Single(_endpoint.Requests);
             Assert.Contains("grant_type=refresh_token", request);
@@ -82,14 +82,60 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         }
 
         [Fact]
-        public async Task GetValidTokenAsync_Should_Return_Null_When_Refresh_Fails()
+        public async Task GetValidTokenAsync_Should_Store_Refreshed_Token_When_Caller_Cancels_During_Refresh()
+        {
+            // MAL has used up the old refresh token once it received it, so losing the new tokens would sign the user out
+            await _authCache.SaveAsync(CreateToken("old-access", "old-refresh", Now.AddMinutes(-5)), TestContext.Current.CancellationToken);
+            _endpoint.Delay = TimeSpan.FromMilliseconds(200);
+            using var cancellation = new CancellationTokenSource();
+
+            var refresh = _sut.GetValidTokenAsync(cancellation.Token);
+            await _endpoint.RequestReceived.Task.WaitAsync(TestContext.Current.CancellationToken);
+            await cancellation.CancelAsync();
+            await refresh;
+
+            Assert.Equal("new-refresh", (await _authCache.GetAsync(TestContext.Current.CancellationToken))?.RefreshToken);
+        }
+
+        [Theory]
+        [InlineData(HttpStatusCode.BadRequest)]
+        [InlineData(HttpStatusCode.Unauthorized)]
+        public async Task GetValidTokenAsync_Should_Clear_Tokens_When_Refresh_Is_Rejected(HttpStatusCode statusCode)
         {
             await _authCache.SaveAsync(CreateToken("old-access", "old-refresh", Now.AddMinutes(-5)), TestContext.Current.CancellationToken);
-            _endpoint.StatusCode = HttpStatusCode.BadRequest;
+            _endpoint.StatusCode = statusCode;
+
+            var token = await _sut.GetValidTokenAsync(TestContext.Current.CancellationToken);
+            var secondToken = await _sut.GetValidTokenAsync(TestContext.Current.CancellationToken);
+
+            Assert.Null(token);
+            Assert.Null(secondToken);
+            Assert.Null(await _authCache.GetAsync(TestContext.Current.CancellationToken));
+            // the rejected refresh token isn't sent again with every request
+            Assert.Single(_endpoint.Requests);
+        }
+
+        [Fact]
+        public async Task GetValidTokenAsync_Should_Keep_Tokens_When_Refresh_Fails_Temporarily()
+        {
+            await _authCache.SaveAsync(CreateToken("old-access", "old-refresh", Now.AddMinutes(-5)), TestContext.Current.CancellationToken);
+            _endpoint.StatusCode = HttpStatusCode.ServiceUnavailable;
 
             var token = await _sut.GetValidTokenAsync(TestContext.Current.CancellationToken);
 
             Assert.Null(token);
+            Assert.Equal("old-refresh", (await _authCache.GetAsync(TestContext.Current.CancellationToken))?.RefreshToken);
+        }
+
+        [Fact]
+        public async Task ClearAsync_Should_Remove_Cached_Token()
+        {
+            await _authCache.SaveAsync(CreateToken("access", "refresh", Now.AddHours(1)), TestContext.Current.CancellationToken);
+
+            await _sut.ClearAsync(TestContext.Current.CancellationToken);
+
+            Assert.Null(await _sut.GetValidTokenAsync(TestContext.Current.CancellationToken));
+            Assert.Empty(_endpoint.Requests);
         }
 
         [Fact]
@@ -99,7 +145,7 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
 
             Assert.True(success);
 
-            var token = await _authCache.Get(TestContext.Current.CancellationToken);
+            var token = await _authCache.GetAsync(TestContext.Current.CancellationToken);
             Assert.Equal("new-access", token?.AccessToken);
             Assert.Equal(Now.AddSeconds(3600), token?.ExpiresAt);
 
@@ -135,6 +181,7 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             public List<string> Requests { get; } = [];
             public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
             public TimeSpan Delay { get; set; } = TimeSpan.Zero;
+            public TaskCompletionSource RequestReceived { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
             protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
@@ -144,6 +191,8 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
                 {
                     Requests.Add(body);
                 }
+
+                RequestReceived.TrySetResult();
 
                 await Task.Delay(Delay, cancellationToken);
 

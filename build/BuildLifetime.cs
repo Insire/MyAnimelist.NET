@@ -1,3 +1,4 @@
+using Build.Util;
 using Cake.Common;
 using Cake.Common.Diagnostics;
 using Cake.Common.IO;
@@ -35,7 +36,7 @@ namespace Build
             context.Information($"dotnet-coverage ({context.Tools.Resolve("dotnet-coverage.dll")}) {(context.FileExists(context.Tools.Resolve("dotnet-coverage.dll")) ? "was found" : "is missing")}.");
 
             context.Information($"NUGETORG_APIKEY was{(string.IsNullOrEmpty(context.EnvironmentVariable("NUGETORG_APIKEY")) ? " not" : "")} set.");
-            context.Information($"CODECOV_TOKEN was{(string.IsNullOrEmpty(context.EnvironmentVariable("CODECOV_TOKEN")) ? " not" : "")} set.");
+            context.Information($"CODECOV_TOKEN was{(context.GetSecretEnvironmentVariable("CODECOV_TOKEN") is null ? " not" : "")} set.");
 
             context.Information("reportsFolder: {0}", context.ReportsFolder.FullPath);
             context.Information("coberturaResultFile: {0}", context.CoberturaResultFile.FullPath);
