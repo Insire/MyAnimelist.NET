@@ -17,7 +17,7 @@ namespace Build
             context.Branch = gitVersion.BranchName;
             context.Commit = gitVersion.Sha;
 
-            context.IsPublicRelease = context.Branch == "master";
+            context.IsPublicRelease = context.Branch == "main";
 
             context.Information("Branch: {0}", context.Branch);
 
