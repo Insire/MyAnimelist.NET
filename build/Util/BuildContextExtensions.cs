@@ -6,6 +6,7 @@ using Cake.Core;
 using Cake.Core.IO;
 using Cake.Incubator.Project;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Build.Util
 {
@@ -43,6 +44,18 @@ namespace Build.Util
         public static void RunGitOrThrow(this BuildContext context, string arguments)
         {
             context.RunProcess("git", new ProcessSettings().UseWorkingDirectory(".").WithArguments(builder => builder.Append(arguments)));
+        }
+
+        /// <summary>
+        /// Returns a property from Directory.Build.props, the single source of the package and assembly metadata.
+        /// </summary>
+        public static string GetDirectoryBuildProperty(this BuildContext context, string name)
+        {
+            var document = XDocument.Load(context.MakeAbsolute(new FilePath(Constants.DirectoryBuildPropsPath)).FullPath);
+
+            // every element is in MSBuild's namespace, so match the local name only
+            return document.Descendants().FirstOrDefault(element => element.Name.LocalName == name)?.Value
+                ?? throw new CakeException($"{Constants.DirectoryBuildPropsPath} has no {name} property.");
         }
 
         public static void MergeReports(this BuildContext context, FilePathCollection files, ReportGeneratorReportType type, string subFolder)

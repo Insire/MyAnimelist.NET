@@ -8,28 +8,29 @@ using System.Globalization;
 
 namespace Build.Tasks
 {
+    /// <summary>
+    /// Generates SharedAssemblyInfo.cs (not tracked), which Directory.Build.targets compiles into every project when it exists.
+    /// </summary>
     [TaskName("UpdateAssemblyInfo")]
+    [IsDependentOn(typeof(UpdateCopyrightTask))]
     public sealed class UpdateAssemblyInfoTask : FrostingTask<BuildContext>
     {
         public override void Run(BuildContext context)
         {
-            var assemblyInfoParseResult = context.ParseAssemblyInfo(Constants.AssemblyInfoPath);
             var version = context.GitVersion ?? throw new CakeException("The version hasn't been calculated.");
 
             var settings = new AssemblyInfoSettings()
             {
-                Product = assemblyInfoParseResult.Product,
-                Company = assemblyInfoParseResult.Company,
-                Trademark = assemblyInfoParseResult.Trademark,
-                Copyright = $"Copyright (c) {DateTime.Today.Year} Peter Vietense",
+                // the same values as the package metadata
+                Product = context.GetDirectoryBuildProperty("Product"),
+                Company = context.GetDirectoryBuildProperty("Company"),
+                Copyright = context.GetDirectoryBuildProperty("Copyright"),
 
                 // GenerateAssemblyInfo is off (see Directory.Build.targets), so this file is the only source of the version attributes
                 Version = version.AssemblyVersion.ToString(),
                 FileVersion = version.AssemblyFileVersion.ToString(),
                 // the same version as the package (BuildAndPackTask), which the library sends in its User-Agent
                 InformationalVersion = version.SemVer2,
-
-                InternalsVisibleTo = assemblyInfoParseResult.InternalsVisibleTo,
 
                 MetaDataAttributes = new[]
                 {

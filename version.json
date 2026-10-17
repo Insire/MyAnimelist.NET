@@ -9,7 +9,6 @@
         ":!/tests",
         ":!README.md",
         ":!LICENSE",
-        ":!SharedAssemblyInfo.cs",
         ":!SoftThorn.MAL.ApiClient.slnx",
         ":!codecov.yml"
     ]
