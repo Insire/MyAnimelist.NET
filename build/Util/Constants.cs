@@ -28,5 +28,11 @@ namespace Build.Util
         public const string CodecovCliSha256Windows = "d43733506ed2561533a7182ed5c4c2b23711dda1f03cbe9d120bcc888ac4e10a";
         public const string CodecovCliSha256Linux = "ca1d64196d2d34771084afe76ea657d581bf628e31d993ff8e52ea09cc88a56d";
         public const string CodecovCliSha256MacOS = "ffb2b821551076b69d3267508b2d5dc10925c821c436521f2216f5ead62cb138";
+
+        public const string AzurePipelinesPath = "./azure-pipelines.yml";
+
+        // service-schema.json from https://github.com/microsoft/azure-pipelines-vscode, pinned to the commit that last changed it (schema v1.261.1, 2025-09-25)
+        public const string AzurePipelinesSchemaCommit = "9e40e814abd20917f273dd587497086f0476a563";
+        public const string AzurePipelinesSchemaSha256 = "f00a9630f6550204148634d9a13f634b5750a225559886effe09a751482f0459";
     }
 }

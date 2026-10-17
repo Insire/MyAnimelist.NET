@@ -33,10 +33,6 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-# Runs every step in Microsoft's Playwright image: .NET 10 SDK (dotnet/sdk:10.0-noble), pwsh, git and the browsers with their system libraries.
-# The tag must match the Microsoft.Playwright.Xunit.v3 version in Directory.Packages.props, or the tests won't find their browser.
-container: mcr.microsoft.com/playwright/dotnet:v1.63.0-noble
-
 variables:
   - group: SoftThorn.MAL.ApiClient
   - name: DOTNET_NOLOGO
@@ -52,6 +48,9 @@ jobs:
     # A normal run takes a few minutes (the integration tests about 20s). The limit stops a hung run, e.g. on a request MAL never answers.
     timeoutInMinutes: 30
     cancelTimeoutInMinutes: 5
+    # Runs every step in Microsoft's Playwright image: .NET 10 SDK (dotnet/sdk:10.0-noble), pwsh, git and the browsers with their system libraries.
+    # The tag must match the Microsoft.Playwright.Xunit.v3 version in Directory.Packages.props, or the tests won't find their browser.
+    container: mcr.microsoft.com/playwright/dotnet:v1.63.0-noble
     steps:
       - checkout: self
         fetchDepth: 0 # Nerdbank.GitVersioning needs the full history, the release notes need the tags

@@ -5,12 +5,22 @@ using Cake.Common.Tools.ReportGenerator;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Incubator.Project;
+using System.Security.Cryptography;
 using System.Xml.Linq;
 
 namespace Build.Util
 {
     internal static class BuildContextExtensions
     {
+        /// <summary>
+        /// Returns the SHA-256 of a file as lowercase hex, for checking downloads against a pinned hash.
+        /// </summary>
+        public static string GetSha256(FilePath path)
+        {
+            using var stream = File.OpenRead(path.FullPath);
+            return Convert.ToHexStringLower(SHA256.HashData(stream));
+        }
+
         /// <summary>
         /// Starts a process and fails the task when it exits with a non-zero exit code.
         /// </summary>

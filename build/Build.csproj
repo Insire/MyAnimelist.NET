@@ -11,6 +11,8 @@
     <PackageReference Include="Cake.Incubator" />
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="Jint" />
+    <PackageReference Include="JsonSchema.Net" />
     <PackageReference Include="ReportGenerator" />
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
 </Project>

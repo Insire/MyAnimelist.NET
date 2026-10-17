@@ -9,7 +9,6 @@ using Cake.Core.Diagnostics;
 using Cake.Core.IO;
 using Cake.Frosting;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 
 namespace Build.Tasks
 {
@@ -110,12 +109,12 @@ namespace Build.Tasks
             var (folder, fileName, expectedSha256) = GetPlatform()!.Value;
             var path = context.MakeAbsolute(new DirectoryPath("./tools/codecov-cli").Combine(Constants.CodecovCliVersion).CombineWithFilePath(fileName));
 
-            if (!context.FileExists(path) || GetSha256(path) != expectedSha256)
+            if (!context.FileExists(path) || BuildContextExtensions.GetSha256(path) != expectedSha256)
             {
                 context.EnsureDirectoryExists(path.GetDirectory());
                 context.DownloadFile($"https://cli.codecov.io/{Constants.CodecovCliVersion}/{folder}/{fileName}", path);
 
-                var actualSha256 = GetSha256(path);
+                var actualSha256 = BuildContextExtensions.GetSha256(path);
                 if (actualSha256 != expectedSha256)
                 {
                     context.DeleteFile(path);
@@ -129,12 +128,6 @@ namespace Build.Tasks
             }
 
             return path;
-        }
-
-        private static string GetSha256(FilePath path)
-        {
-            using var stream = File.OpenRead(path.FullPath);
-            return Convert.ToHexStringLower(SHA256.HashData(stream));
         }
     }
 }
