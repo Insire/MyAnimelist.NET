@@ -8,8 +8,6 @@ using Cake.Core;
 using Cake.Core.Diagnostics;
 using Cake.Core.IO;
 using Cake.Frosting;
-using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 

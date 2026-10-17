@@ -5,7 +5,6 @@ using Cake.Common.Tools.ReportGenerator;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Incubator.Project;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace Build.Util

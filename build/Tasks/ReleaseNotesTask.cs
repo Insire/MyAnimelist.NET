@@ -3,10 +3,6 @@ using Cake.Common.Diagnostics;
 using Cake.Common.IO;
 using Cake.Core;
 using Cake.Frosting;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace Build.Tasks
 {
