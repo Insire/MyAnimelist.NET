@@ -21,7 +21,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
 
             // Assert
             Assert.NotEmpty(response.Data!);
-            await Verify(ModelShape.Of(response)).UseParameters(rankingType);
+            await Verify(ModelShape.Of(response, ModelShape.AccountDependent)).UseParameters(rankingType);
         }
     }
 }

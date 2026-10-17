@@ -10,8 +10,5 @@
         title: string
       }
     }
-  ],
-  paging: {
-    next: string
-  }
+  ]
 }

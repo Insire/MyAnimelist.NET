@@ -12,12 +12,13 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
         {
             // Arrange
             var sut = fixture.GetMalApiService();
+            await TestAccount.EnsureSeededAsync(sut, TestContext.Current.CancellationToken);
 
             // Act
             var response = await sut.Users.AnimelistAsync("@me", sort: "anime_title", limit: 5, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            Assert.NotNull(response.Data);
+            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedAnimeId);
             await Verify(ModelShape.Of(response));
         }
 
@@ -26,12 +27,13 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
         {
             // Arrange
             var sut = fixture.GetMalApiService();
+            await TestAccount.EnsureSeededAsync(sut, TestContext.Current.CancellationToken);
 
             // Act
             var response = await sut.Users.MangalistAsync("@me", sort: "manga_title", limit: 5, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            Assert.NotNull(response.Data);
+            Assert.Contains(response.Data!, entry => entry.Node?.Id == TestAccount.SeedMangaId);
             await Verify(ModelShape.Of(response));
         }
     }

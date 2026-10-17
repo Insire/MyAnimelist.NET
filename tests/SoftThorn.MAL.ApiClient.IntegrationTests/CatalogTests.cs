@@ -21,7 +21,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
 
             // Assert
             Assert.NotEmpty(response.Data!);
-            await Verify(ModelShape.Of(response));
+            await Verify(ModelShape.Of(response, ModelShape.AccountDependent));
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
 
             // Assert
             Assert.NotEmpty(response.Data!);
-            await Verify(ModelShape.Of(response));
+            await Verify(ModelShape.Of(response, ModelShape.AccountDependent));
         }
 
         [Fact]

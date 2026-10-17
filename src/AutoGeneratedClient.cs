@@ -628,9 +628,8 @@ namespace SoftThorn.MAL.ApiClient
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(body, JsonSerializerSettings);
-                    var dictionary_ = System.Text.Json.JsonSerializer.Deserialize<System.Collections.Generic.Dictionary<string, string>>(json_, JsonSerializerSettings);
-                    var content_ = new System.Net.Http.FormUrlEncodedContent(dictionary_);
+                    // MalFormUrlEncoder (src/MalFormUrlEncoder.cs) handles numbers and booleans and leaves out unset fields
+                    var content_ = new System.Net.Http.FormUrlEncodedContent(MalFormUrlEncoder.Encode(body, JsonSerializerSettings));
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("PATCH");
@@ -1593,9 +1592,8 @@ namespace SoftThorn.MAL.ApiClient
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(body, JsonSerializerSettings);
-                    var dictionary_ = System.Text.Json.JsonSerializer.Deserialize<System.Collections.Generic.Dictionary<string, string>>(json_, JsonSerializerSettings);
-                    var content_ = new System.Net.Http.FormUrlEncodedContent(dictionary_);
+                    // MalFormUrlEncoder (src/MalFormUrlEncoder.cs) handles numbers and booleans and leaves out unset fields
+                    var content_ = new System.Net.Http.FormUrlEncodedContent(MalFormUrlEncoder.Encode(body, JsonSerializerSettings));
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("PATCH");

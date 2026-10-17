@@ -13,6 +13,44 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests.Snapshots
     /// </summary>
     internal static class ModelShape
     {
+        /// <summary>
+        /// Members whose presence depends on the test account's lists rather than on the model:
+        /// MAL only sends <c>my_list_status</c> for works on the account's list, which the list status tests change.
+        /// They are covered by <see cref="ListStatusTests"/> instead.
+        /// </summary>
+        public static readonly string[] AccountDependent = ["my_list_status"];
+
+        public static object? Of(object? value, string[] ignoredMembers) => Without(Of(value), ignoredMembers);
+
+        private static object? Without(object? shape, string[] ignoredMembers)
+        {
+            switch (shape)
+            {
+                case SortedDictionary<string, object?> members:
+                    foreach (var name in ignoredMembers)
+                    {
+                        members.Remove(name);
+                    }
+
+                    foreach (var (_, member) in members)
+                    {
+                        Without(member, ignoredMembers);
+                    }
+
+                    break;
+
+                case object[] elements:
+                    foreach (var element in elements)
+                    {
+                        Without(element, ignoredMembers);
+                    }
+
+                    break;
+            }
+
+            return shape;
+        }
+
         public static object? Of(object? value)
         {
             switch (value)

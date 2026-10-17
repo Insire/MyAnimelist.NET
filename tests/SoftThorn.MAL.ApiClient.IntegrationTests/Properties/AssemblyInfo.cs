@@ -19,3 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: Guid("66a6e703-08fa-46ce-88e0-5165b822b529")]
 
 [assembly: UserSecretsId("cc5b08ee-4b6b-4874-bfba-75c8768beed0")]
+
+// MAL stops answering some requests when too many arrive at once (they hang until HttpClient's 100s timeout),
+// and its API agreement asks to respect usage limits, so the live tests run one at a time
+[assembly: Xunit.v3.Parallelization(Mode = Xunit.Sdk.ParallelMode.None)]

@@ -15,6 +15,11 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
 
         public const string MangaDetails = MangaList + ",pictures,background,related_anime,related_manga,recommendations,serialization{name}";
 
-        public const string User = "id,name,picture,gender,birthday,location,joined_at,anime_statistics,time_zone,is_supporter";
+        // without the nested selection MAL only sends status, score, progress, is_re* and updated_at
+        public const string AnimeListStatus = "my_list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments}";
+
+        public const string MangaListStatus = "my_list_status{start_date,finish_date,priority,num_times_reread,reread_value,tags,comments}";
+
+        public const string User ="id,name,picture,gender,birthday,location,joined_at,anime_statistics,time_zone,is_supporter";
     }
 }

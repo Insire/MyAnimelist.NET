@@ -24,13 +24,6 @@
           medium: uri
         },
         media_type: string,
-        my_list_status: {
-          is_rewatching: bool,
-          num_episodes_watched: int,
-          score: int,
-          status: string,
-          updated_at: date
-        },
         nsfw: string,
         num_episodes: int,
         num_list_users: int,

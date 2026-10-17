@@ -22,7 +22,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
 
             // Assert
             Assert.NotEmpty(response.Data!);
-            await Verify(ModelShape.Of(response)).UseParameters(rankingType);
+            await Verify(ModelShape.Of(response, ModelShape.AccountDependent)).UseParameters(rankingType);
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
 
             // Assert
             Assert.NotEmpty(response.Data!);
-            await Verify(ModelShape.Of(response));
+            await Verify(ModelShape.Of(response, ModelShape.AccountDependent));
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace SoftThorn.MAL.ApiClient.IntegrationTests
             var response = await sut.Anime.SuggestionsAsync(limit: 5, fields: Fields.AnimeList, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert: suggestions depend on the account, so they may be empty
-            await Verify(ModelShape.Of(response));
+            await Verify(ModelShape.Of(response, ModelShape.AccountDependent));
         }
     }
 }

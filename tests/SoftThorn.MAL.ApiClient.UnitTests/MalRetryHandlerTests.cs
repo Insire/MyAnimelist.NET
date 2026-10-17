@@ -9,11 +9,21 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
     {
         private static readonly DateTimeOffset Now = new(2026, 10, 17, 12, 0, 0, TimeSpan.Zero);
 
+        // real timers (FixedTimeProvider only fixes the clock), kept short so the hanging requests time out quickly
+        private static readonly TimeSpan AttemptTimeout = TimeSpan.FromMilliseconds(100);
+
         private readonly StubEndpoint _endpoint = new();
         private readonly List<TimeSpan> _delays = [];
         private readonly HttpClient _sut;
+        private double _jitter;
 
         public MalRetryHandlerTests()
+        {
+            _sut = CreateClient(jitter: () => _jitter);
+        }
+
+        // without a jitter function the handler's own random source is used
+        private HttpClient CreateClient(Func<double>? jitter)
         {
             var handler = new MalRetryHandler(new FixedTimeProvider(Now))
             {
@@ -23,9 +33,11 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
                     _delays.Add(delay);
                     return Task.CompletedTask;
                 },
+                Jitter = jitter ?? Random.Shared.NextDouble,
+                AttemptTimeout = AttemptTimeout,
             };
 
-            _sut = new HttpClient(handler);
+            return new HttpClient(handler);
         }
 
         [Fact]
@@ -51,18 +63,39 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
             Assert.Equal(1, _endpoint.Calls);
         }
 
-        [Fact]
-        public async Task SendAsync_Should_Back_Off_Exponentially_Without_Retry_After()
+        [Theory]
+        [InlineData(0.0, 500, 1000, 2000)]
+        [InlineData(0.5, 750, 1500, 3000)]
+        [InlineData(0.999, 999.5, 1999, 3998)]
+        public async Task SendAsync_Should_Back_Off_Exponentially_With_Jitter_Without_Retry_After(double jitter, double first, double second, double third)
         {
+            _jitter = jitter;
             _endpoint.Responses.Enqueue(() => new HttpResponseMessage(HttpStatusCode.TooManyRequests));
             _endpoint.Responses.Enqueue(() => new HttpResponseMessage(HttpStatusCode.ServiceUnavailable));
+            _endpoint.Responses.Enqueue(() => new HttpResponseMessage(HttpStatusCode.TooManyRequests));
             _endpoint.Responses.Enqueue(() => new HttpResponseMessage(HttpStatusCode.OK));
 
             var response = await _sut.GetAsync("https://api.myanimelist.net/v2/anime/1", TestContext.Current.CancellationToken);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(3, _endpoint.Calls);
-            Assert.Equal([TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2)], _delays);
+            Assert.Equal(4, _endpoint.Calls);
+            Assert.Equal([TimeSpan.FromMilliseconds(first), TimeSpan.FromMilliseconds(second), TimeSpan.FromMilliseconds(third)], _delays);
+        }
+
+        [Fact]
+        public async Task SendAsync_Should_Keep_Random_Backoff_Within_Its_Window()
+        {
+            using var sut = CreateClient(jitter: null);
+
+            for (var i = 0; i < 50; i++)
+            {
+                _endpoint.Responses.Enqueue(() => new HttpResponseMessage(HttpStatusCode.TooManyRequests));
+                _endpoint.Responses.Enqueue(() => new HttpResponseMessage(HttpStatusCode.OK));
+                await sut.GetAsync("https://api.myanimelist.net/v2/anime/1", TestContext.Current.CancellationToken);
+            }
+
+            Assert.All(_delays, delay => Assert.InRange(delay, TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(1)));
+            Assert.True(_delays.Distinct().Count() > 1, "the jitter should spread the delays");
         }
 
         [Fact]
@@ -76,6 +109,18 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal([TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10)], _delays);
+        }
+
+        [Fact]
+        public async Task SendAsync_Should_Add_Jitter_On_Top_Of_Retry_After()
+        {
+            _jitter = 0.5;
+            _endpoint.Responses.Enqueue(() => TooManyRequests(new RetryConditionHeaderValue(TimeSpan.FromSeconds(5))));
+            _endpoint.Responses.Enqueue(() => new HttpResponseMessage(HttpStatusCode.OK));
+
+            await _sut.GetAsync("https://api.myanimelist.net/v2/anime/1", TestContext.Current.CancellationToken);
+
+            Assert.Equal([TimeSpan.FromSeconds(5.5)], _delays);
         }
 
         [Fact]
@@ -102,6 +147,69 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
 
             Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
             Assert.Equal(MalRetryHandler.MaxRetries + 1, _endpoint.Calls);
+        }
+
+        [Fact]
+        public async Task SendAsync_Should_Retry_Get_That_Timed_Out()
+        {
+            _endpoint.HangingCalls = 1;
+            _endpoint.Responses.Enqueue(() => new HttpResponseMessage(HttpStatusCode.OK));
+
+            var response = await _sut.GetAsync("https://api.myanimelist.net/v2/anime/1", TestContext.Current.CancellationToken);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(2, _endpoint.Calls);
+            Assert.Equal([TimeSpan.FromSeconds(0.5)], _delays);
+        }
+
+        [Fact]
+        public async Task SendAsync_Should_Throw_Timeout_When_Every_Attempt_Times_Out()
+        {
+            _endpoint.HangingCalls = int.MaxValue;
+
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(() => _sut.GetAsync("https://api.myanimelist.net/v2/anime/1", TestContext.Current.CancellationToken));
+
+            Assert.IsType<TimeoutException>(exception.InnerException);
+            Assert.Equal(MalRetryHandler.MaxRetries + 1, _endpoint.Calls);
+        }
+
+        [Fact]
+        public void Default_Attempt_Timeouts_And_Backoff_Should_Fit_Into_HttpClient_Timeout()
+        {
+            // otherwise HttpClient.Timeout cancels the whole request before the last attempt can run
+            var longestBackoff = Enumerable.Range(0, MalRetryHandler.MaxRetries).Sum(attempt => MalRetryHandler.InitialDelay.TotalSeconds * Math.Pow(2, attempt));
+            var worstCase = TimeSpan.FromSeconds(((MalRetryHandler.MaxRetries + 1) * MalRetryHandler.DefaultAttemptTimeout.TotalSeconds) + longestBackoff);
+
+            using var httpClient = new HttpClient();
+            Assert.True(worstCase < httpClient.Timeout, $"{worstCase} doesn't fit into {httpClient.Timeout}");
+        }
+
+        [Fact]
+        public async Task SendAsync_Should_Not_Time_Out_Or_Retry_Patch()
+        {
+            // a PATCH that timed out may still have reached MAL, so it is left to the caller's cancellation
+            _endpoint.HangingCalls = 1;
+            using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+            cancellation.CancelAfter(AttemptTimeout * 5);
+
+            using var content = new FormUrlEncodedContent([new("score", "9")]);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => _sut.PatchAsync("https://api.myanimelist.net/v2/anime/1/my_list_status", content, cancellation.Token));
+
+            Assert.Equal(1, _endpoint.Calls);
+            Assert.Empty(_delays);
+        }
+
+        [Fact]
+        public async Task SendAsync_Should_Not_Retry_When_The_Caller_Cancels()
+        {
+            _endpoint.HangingCalls = 1;
+            using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+            cancellation.CancelAfter(AttemptTimeout / 4);
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => _sut.GetAsync("https://api.myanimelist.net/v2/anime/1", cancellation.Token));
+
+            Assert.Equal(1, _endpoint.Calls);
+            Assert.Empty(_delays);
         }
 
         [Fact]
@@ -163,6 +271,9 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
         {
             public Queue<Func<HttpResponseMessage>> Responses { get; } = new();
 
+            // the first calls that never answer
+            public int HangingCalls { get; set; }
+
             public List<string> Bodies { get; } = [];
 
             public int Calls { get; private set; }
@@ -174,6 +285,12 @@ namespace SoftThorn.MAL.ApiClient.UnitTests
                 if (request.Content is not null)
                 {
                     Bodies.Add(await request.Content.ReadAsStringAsync(cancellationToken));
+                }
+
+                if (Calls <= HangingCalls)
+                {
+                    // like MAL when it never answers: only cancellation ends the request
+                    await Task.Delay(Timeout.Infinite, cancellationToken);
                 }
 
                 return Responses.Dequeue()();
